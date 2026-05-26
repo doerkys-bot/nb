@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Falcon Eye-Tracking Matrix</title>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+<style>
+:root {   
+  --neon: #00f2ff;   
+  --bg: #060a13;   
+  --gold: #ffcc00;   
+  --box-bg: #111e36;   
+  --selected-blue: #1d4ed8;
+}
+body {  
+  margin:0; background: var(--bg); overflow: hidden;  
+  width: 100vw; height: 100vh;
+}
+*{ box-sizing:border-box; }
+
+/* 4x4 Grid - z-index angepasst, damit es unter dem Regler liegt */
+.game-container { 
+  position: absolute; top: 2%; bottom: 10%; left: 2%; right: 2%; z-index: 10; 
+}
+.grid-matrix { 
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); 
+  width: 100%; height: 100%; gap: 15px; 
+}
+.matrix-box {   
+  background: var(--box-bg); border: 2px solid rgba(0, 242, 255, 0.15); border-radius: 14px;   
+  transition: background-color 0.15s;
+}
+.matrix-box.just-selected { background: var(--selected-blue) !important; } 
+.matrix-box.confirmed-yellow { background: var(--gold) !important; } 
+
+/* Blickpunkt-Indikator */
+#gaze-dot {  
+  position: fixed; width: 24px; height: 24px; background: #ffffff !important; border-radius: 50%; z-index: 999999;   
+  pointer-events: none; border: 4px solid var(--neon) !important;  
+  left: 50vw; top: 50vh; transform: translate(-50%, -50%);
+}
+
+/* Tracking-Regler mit erhöhtem z-index (200000), um Klicks direkt zu erlauben */
+.tracking-corner-widget {
+  position: fixed; bottom: 15px; right: 2%; width: 280px; z-index: 200000;
+  background: rgba(17, 24, 39, 0.95); border: 1px solid rgba(0, 242, 255, 0.4);
+  border-radius: 10px; padding: 10px; font-family: monospace; color: white;
+}
+.tracking-corner-widget input[type="range"] { 
+  width: 100%; height: 20px; cursor: pointer; accent-color: var(--neon); margin: 5px 0;
+  position: relative; z-index: 200001;
+}
+.slider-labels { display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; }
+#tracking-label { text-align: center; font-size: 11px; color: var(--neon); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<div id="gaze-dot"></div>
+<video id="v" style="display:none" autoplay playsinline></video>
+
+<div class="game-container">
+  <div id="matrixGrid" class="grid-matrix"></div>
+</div>
+
+<div class="tracking-corner-widget">
+  <div class="slider-labels">
+    <span style="color:#ffcc00;">KOPF</span>
+    <span style="color:var(--neon);">IRIS</span>
+  </div>
+  <input type="range" id="tracking-slider" min="0" max="100" value="80" oninput="updateTrackingMode(this.value)"/>
+  <div id="tracking-label">IRIS-DOMINANT (Mischmodus)</div>
+</div>
+
+<script>
+  let faceMesh, camRunning = false;
+  let sX = window.innerWidth / 2, sY = window.innerHeight / 2;
+  let tX = sX, tY = sY;
+  
+  const EMA_ALPHA = 0.04; 
+  
+  let smoothedIrisX = window.innerWidth / 2;
+  let smoothedIrisY = window.innerHeight / 2;
+
+  let lastBlinkTime = 0;
+  let lastBlinkVal = 0;
+  let blinkArmed = true;
+  let blinkHistory = []; 
+  let trackingMix = 80; 
+
+  window.addEventListener('DOMContentLoaded', () => {
+    drawEmptyMatrix();
+    startCameraLocal();
+    const saved = localStorage.getItem('aurion_tracking_mix');
+    if (saved !== null) {
+      trackingMix = parseInt(saved);
+      document.getElementById('tracking-slider').value = trackingMix;
+      updateTrackingLabel(trackingMix);
+    }
+  });
+
+  function drawEmptyMatrix() {
+    const grid = document.getElementById('matrixGrid');
+    grid.innerHTML = "";
+    for (let i = 0; i < 16; i++) {
+      let box = document.createElement('div'); 
+      box.className = "matrix-box";
+      box.dataset.index = i; 
+      grid.appendChild(box);
+    }
+  }
+
+  async function startCameraLocal() {
+    const videoElement = document.getElementById('v');
+    try {
+      let streamCam = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" }
+      });
+      videoElement.srcObject = streamCam;
+      camRunning = true;
+      
+      faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+      faceMesh.setOptions({ refineLandmarks: true, minDetectionConfidence: 0.4, trackingConfidence: 0.4 });
+      faceMesh.onResults(onResults);
+      
+      new Camera(videoElement, {
+        onFrame: async () => { if(camRunning) await faceMesh.send({ image: videoElement }); }
+      }).start();
+    } catch(e) {
+      console.error("Kamerafehler:", e);
+    }
+  }
+
+  function onResults(r) {
+    if (!r.multiFaceLandmarks?.[0]) return;
+    const lm = r.multiFaceLandmarks[0];
+    
+    const irisLeft = lm[468];  
+    const irisRight = lm[473]; 
+    const nose = lm[1];
+    
+    if (!irisLeft || !irisRight) return;
+
+    // Mathematische Mittelung der Irisstellungen
+    const avgIrisX = (irisLeft.x + irisRight.x) / 2;
+    const avgIrisY = (irisLeft.y + irisRight.y) / 2;
+
+    // Umrechnung mit harmonisierten Skalierungsfaktoren
+    let rawIrisX = (0.5 - avgIrisX) * 85 * window.innerWidth  + (window.innerWidth  / 2);
+    let rawIrisY = (avgIrisY - 0.5) * 100 * window.innerHeight + (window.innerHeight / 2);
+    
+    // Beruhigungsfilter gegen Mikrozittern bei asynchroner Iris
+    smoothedIrisX = (rawIrisX * 0.15) + (smoothedIrisX * 0.85);
+    smoothedIrisY = (rawIrisY * 0.15) + (smoothedIrisY * 0.85);
+
+    // Kopfkoordinaten
+    let headX = (0.5 - nose.x) * 60 * window.innerWidth  + (window.innerWidth  / 2);
+    let headY = (nose.y - 0.5) * 70 * window.innerHeight + (window.innerHeight / 2);
+
+    // Auslesung und Berechnung des stufenlosen Mixes
+    const mix = trackingMix / 100;
+    let rawX = headX * (1 - mix) + smoothedIrisX * mix;
+    let rawY = headY * (1 - mix) + smoothedIrisY * mix;
+
+    // Endgültige Trägheitsglättung
+    tX = (rawX * EMA_ALPHA) + (tX * (1 - EMA_ALPHA));
+    tY = (rawY * EMA_ALPHA) + (tY * (1 - EMA_ALPHA));
+    
+    tX = Math.max(15, Math.min(window.innerWidth  - 15, tX));
+    tY = Math.max(15, Math.min(window.innerHeight - 15, tY));
+
+    // EAR Blinzel-Erkennung
+    const leftEAR  = (Math.hypot(lm[159].x-lm[145].x, lm[159].y-lm[145].y) + Math.hypot(lm[160].x-lm[144].x, lm[160].y-lm[144].y)) / (2*Math.hypot(lm[33].x-lm[133].x, lm[33].y-lm[133].y)+1e-6);
+    const rightEAR = (Math.hypot(lm[386].x-lm[374].x, lm[386].y-lm[374].y) + Math.hypot(lm[385].x-lm[380].x, lm[385].y-lm[380].y)) / (2*Math.hypot(lm[362].x-lm[263].x, lm[362].y-lm[263].y)+1e-6);
+    const leftBlink  = 1 - Math.max(0, Math.min(1, leftEAR  / 0.35));
+    const rightBlink = 1 - Math.max(0, Math.min(1, rightEAR / 0.35));
+    const currentBlinkVal = Math.max(leftBlink, rightBlink);
+    const delta = currentBlinkVal - lastBlinkVal;
+    lastBlinkVal = currentBlinkVal;
+
+    if (delta > 0.15 && blinkArmed) {
+      blinkArmed = false;
+      const nowMs = performance.now();
+      if (nowMs - lastBlinkTime > 150) {
+        lastBlinkTime = nowMs;
+        handleBlinkAction();
+      }
+    } else if (delta < -0.05 || currentBlinkVal < 0.15) {
+      blinkArmed = true;
+    }
+  }
+
+  function getTargetBox() {
+    let foundBox = null;
+    document.querySelectorAll('.matrix-box').forEach(node => {
+      const rect = node.getBoundingClientRect();
+      if (sX >= rect.left && sX <= rect.right && sY >= rect.top && sY <= rect.bottom) foundBox = node;
+    });
+    return foundBox;
+  }
+
+  function handleBlinkAction() {
+    const now = performance.now();
+    blinkHistory = blinkHistory.filter(t => now - t < 3000); 
+    blinkHistory.push(now);
+    
+    const isDouble = blinkHistory.length >= 2;
+    const box = getTargetBox();
+    
+    if (box) {
+      if (isDouble) {
+        blinkHistory = [];
+        document.querySelectorAll('.matrix-box').forEach(b => b.classList.remove('confirmed-yellow'));
+        box.classList.add('confirmed-yellow');
+      } else {
+        document.querySelectorAll('.matrix-box').forEach(b => {
+          if(!b.classList.contains('confirmed-yellow')) b.className = "matrix-box";
+        });
+        if(!box.classList.contains('confirmed-yellow')) box.classList.add('just-selected');
+      }
+    }
+  }
+
+  function updateTrackingMode(val) {
+    trackingMix = parseInt(val);
+    updateTrackingLabel(trackingMix);
+    localStorage.setItem('aurion_tracking_mix', trackingMix);
+  }
+  
+  function updateTrackingLabel(val) {
+    let label = (val === 0) ? 'KOPF · 100%' : (val === 100) ? 'IRIS · 100%' : `KOPF ${100-val}% · IRIS ${val}%`;
+    document.getElementById('tracking-label').textContent = label;
+  }
+
+  document.addEventListener('mousemove', e => {
+    if (!camRunning) { sX = e.clientX; sY = e.clientY; tX = sX; tY = sY; }
+  });
+
+  function render() {
+    sX += (tX - sX) * 0.04; sY += (tY - sY) * 0.04;
+    sX = Math.max(20, Math.min(window.innerWidth - 20, sX));
+    sY = Math.max(20, Math.min(window.innerHeight - 20, sY));
+    
+    const dot = document.getElementById('gaze-dot');
+    dot.style.left = sX + 'px'; dot.style.top = sY + 'px';
+    
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+</script>
+</body>
+</html>
+

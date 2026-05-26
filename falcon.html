@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Aurion V52.6.3 - Grid Matrix Border-Lock</title>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <style>
+    :root { --neon: #00f2ff; --bg: #010208; --gold: #ffcc00; }
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: white; font-family: sans-serif; overflow: hidden; }
+    
+    #willens-pfad { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+    
+    #gaze-dot { 
+      position: fixed; width: 28px; height: 28px; background: #fff; border-radius: 50%; 
+      z-index: 999999; box-shadow: 0 0 35px var(--neon), 0 0 15px var(--neon); 
+      transform: translate(-50%, -50%); pointer-events: none; border: 4px solid var(--neon);
+    }
+    
+    .grid-matrix { 
+      display: grid; 
+      grid-template-columns: repeat(4, 1fr); 
+      grid-template-rows: repeat(4, 1fr); 
+      width: 100vw; 
+      height: 100vh; 
+      box-sizing: border-box;
+      padding: 20px;
+      gap: 15px;
+      position: relative; 
+      z-index: 20; 
+    }
+    
+    .matrix-box { 
+      background: rgba(255,255,255,0.01); 
+      border: 1px solid rgba(0, 242, 255, 0.08); 
+      border-radius: 15px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 1.5rem; 
+      font-weight: bold; 
+      color: rgba(0, 242, 255, 0.4);
+      transition: all 0.1s ease; 
+    }
+    
+    .matrix-box.captured { 
+      border-color: var(--gold); 
+      background: rgba(255, 204, 0, 0.12); 
+      color: var(--gold);
+      box-shadow: inset 0 0 30px rgba(255, 204, 0, 0.2);
+    }
+
+    #ai-log { position: fixed; bottom: 35px; left: 35px; width: 250px; font-size: 14px; font-family: monospace; color: var(--neon); background: rgba(0,0,0,0.9); padding: 15px; border: 1px solid var(--neon); border-radius: 8px; z-index: 1000000; pointer-events: none; }
+    #overlay { position: fixed; inset: 0; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 2000000; }
+    .btn { background: transparent; color: var(--neon); border: 2px solid var(--neon); padding: 20px 50px; cursor: pointer; letter-spacing: 2px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+<div id="overlay"><button class="btn" onclick="initSystem()">START BORDER-LOCK EXAM</button></div>
+<canvas id="willens-pfad"></canvas>
+<div id="gaze-dot"></div>
+<div id="ai-log">PRÜFSTAND BEREIT</div>
+
+<div class="grid-matrix">
+  <div class="matrix-box" data-label="A1">A1</div><div class="matrix-box" data-label="A2">A2</div><div class="matrix-box" data-label="A3">A3</div><div class="matrix-box" data-label="A4">A4</div>
+  <div class="matrix-box" data-label="B1">B1</div><div class="matrix-box" data-label="B2">B2</div><div class="matrix-box" data-label="B3">B3</div><div class="matrix-box" data-label="B4">B4</div>
+  <div class="matrix-box" data-label="C1">C1</div><div class="matrix-box" data-label="C2">C2</div><div class="matrix-box" data-label="C3">C3</div><div class="matrix-box" data-label="C4">C4</div>
+  <div class="matrix-box" data-label="D1">D1</div><div class="matrix-box" data-label="D2">D2</div><div class="matrix-box" data-label="D3">D3</div><div class="matrix-box" data-label="D4">D4</div>
+</div>
+
+<video id="v" style="display:none" autoplay playsinline></video>
+
+<script>
+  let canvas, ctx, faceMesh, camRunning = false;
+  let sX = window.innerWidth/2, sY = window.innerHeight/2;
+  let tX = sX, tY = sY, history = [];
+  
+  let bufferX = [], bufferY = [];
+  const BUFFER_SIZE = 5; 
+
+  const logger = (msg) => { document.getElementById('ai-log').innerText = msg; };
+
+  async function initSystem() {
+    document.getElementById('overlay').style.display = 'none';
+    const videoElement = document.getElementById('v');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      videoElement.srcObject = stream;
+      camRunning = true;
+      canvas = document.getElementById('willens-pfad');
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      ctx = canvas.getContext('2d');
+
+      faceMesh = new FaceMesh({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
+      faceMesh.setOptions({ refineLandmarks: true, minDetectionConfidence: 0.5 });
+      faceMesh.onResults(onResults);
+
+      new Camera(videoElement, { onFrame: async () => { if(camRunning) await faceMesh.send({image: videoElement}) }, width: 640, height: 480 }).start();
+      logger("PRÜFUNG MIT RANDBEGRENZUNG...");
+    } catch(e) { logger("ERR: " + e.message); }
+  }
+
+  function onResults(r) {
+    if (!r.multiFaceLandmarks?.[0]) return;
+    const iris = r.multiFaceLandmarks[0][468];
+    
+    // Die bewährte Übersetzung
+    let rawX = (0.5 - iris.x) * 12 * window.innerWidth + (window.innerWidth/2);
+    let rawY = (iris.y - 0.5) * 15 * window.innerHeight + (window.innerHeight/2);
+
+    // Stabilitätsfilter
+    bufferX.push(rawX); bufferY.push(rawY);
+    if (bufferX.length > BUFFER_SIZE) { bufferX.shift(); bufferY.shift(); }
+    
+    let avgX = bufferX.reduce((a, b) => a + b, 0) / bufferX.length;
+    let avgY = bufferY.reduce((a, b) => a + b, 0) / bufferY.length;
+
+    const cX = window.innerWidth / 2;
+    const cY = window.innerHeight / 2;
+    const dist = Math.sqrt(Math.pow(avgX - cX, 2) + Math.pow(avgY - cY, 2));
+
+    // Weicher Fokus-Anker im absoluten Zentrum
+    if (dist < 80) {
+        tX = cX + (avgX - cX) * 0.2; 
+        tY = cY + (avgY - cY) * 0.2;
+    } else {
+        tX = avgX; 
+        tY = avgY;
+    }
+
+    // DIE NEUE BILDSCHIRMBEGRENZUNG (Fin)
+    // Verhindert, dass tX und tY kleiner als 15px oder größer als Bildschirm-15px werden
+    tX = Math.max(15, Math.min(window.innerWidth - 15, tX));
+    tY = Math.max(15, Math.min(window.innerHeight - 15, tY));
+
+    // Abfrage der 16 Boxen basierend auf dem begrenzten Punkt
+    let currentBox = "KEINE";
+    document.querySelectorAll('.matrix-box').forEach(node => {
+      const rect = node.getBoundingClientRect();
+      if (tX >= rect.left && tX <= rect.right && tY >= rect.top && tY <= rect.bottom) {
+        node.classList.add('captured');
+        currentBox = node.dataset.label;
+      } else {
+        node.classList.remove('captured');
+      }
+    });
+    
+    logger("BOX: " + currentBox);
+  }
+
+  function render() {
+    sX += (tX - sX) * 0.3; 
+    sY += (tY - sY) * 0.3;
+    
+    document.getElementById('gaze-dot').style.left = sX + 'px';
+    document.getElementById('gaze-dot').style.top = sY + 'px';
+
+    if(ctx) {
+      history.push({x: sX, y: sY}); 
+      if (history.length > 12) history.shift();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath(); ctx.strokeStyle = "rgba(0, 242, 255, 0.6)"; ctx.lineWidth = 4;
+      for(let i=0; i<history.length; i++) { 
+        ctx.globalAlpha = i/history.length; 
+        ctx.lineTo(history[i].x, history[i].y); 
+      }
+      ctx.stroke();
+    }
+    requestAnimationFrame(render);
+  }
+  render();
+</script>
+</body>
+</html>
