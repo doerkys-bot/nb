@@ -4,283 +4,250 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Aurion · Memory</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-
 <style>
 :root {
-  --bg:      #060a13;
-  --neon:    #00f2ff;
-  --gold:    #ffcc00;
-  --blink1:  #3b82f6;
-  --blink2:  #10b981;
-  --border:  rgba(0,242,255,0.12);
-  --buf:     16%;
-  --sidebar-w: 148px;
+  --bg:       #060a13;
+  --neon:     #00f2ff;
+  --gold:     #ffcc00;
+  --blink1:   #3b82f6;
+  --blink2:   #10b981;
+  --border:   rgba(0,242,255,0.12);
+  --buf:      16%;
+  --sidebar-w:148px;
+  --admin-w:  420px;
 }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body, html {
-  width: 100vw; height: 100vh;
-  background: var(--bg);
-  overflow: hidden;
-  font-family: 'Courier New', monospace;
-  color: white;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-family:'Courier New',monospace;color:white;}
 
 /* ── PUFFERZONEN ── */
-.buffer-zone {
-  position: fixed; background: transparent; z-index: 500;
-  transition: background 0.2s; pointer-events: none;
-}
-.buffer-zone.active { background: rgba(0,242,255,0.06); }
-#buf-top    { top:0;    left:0; right:0;  height: var(--buf); }
-#buf-bottom { bottom:0; left:0; right:0;  height: var(--buf); }
-#buf-left   { top:0;    left:0; bottom:0; width:  var(--buf); }
-#buf-right  { top:0;    right:0;bottom:0; width:  var(--buf); }
+.buffer-zone{position:fixed;background:transparent;z-index:500;transition:background 0.2s;pointer-events:none;}
+.buffer-zone.active{background:rgba(0,242,255,0.06);}
+#buf-top   {top:0;left:0;right:0;height:var(--buf);}
+#buf-bottom{bottom:0;left:0;right:0;height:var(--buf);}
+#buf-left  {top:0;left:0;bottom:0;width:var(--buf);}
+#buf-right {top:0;right:0;bottom:0;width:var(--buf);}
 
 /* ── SPIELFELD ── */
-#play-area {
-  position: fixed;
-  top: var(--buf); bottom: var(--buf);
-  left: var(--buf); right: var(--buf);
-  z-index: 20;
-  transition: right 0.6s cubic-bezier(0.16,1,0.3,1);
+#play-area{
+  position:fixed;top:var(--buf);bottom:var(--buf);
+  left:var(--buf);right:var(--buf);
+  z-index:20;transition:right 0.6s cubic-bezier(0.16,1,0.3,1);
 }
-/* Memory bleibt voll breit – Sidebar legt sich drüber */
-#play-area.sidebar-open {
-  right: var(--buf);
+#play-area.sidebar-open{right:var(--buf);}
+
+.grid-memory{
+  display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);
+  width:100%;height:100%;gap:12px;
 }
 
-.grid-memory {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  width: 100%; height: 100%;
-  gap: 12px;
+/* ── KARTEN ── */
+.mem-card{position:relative;cursor:pointer;user-select:none;perspective:600px;}
+.card-inner{
+  width:100%;height:100%;position:relative;
+  transform-style:preserve-3d;transition:transform 0.45s ease;border-radius:14px;
 }
-
-/* ── KARTE ── */
-.mem-card {
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-  perspective: 600px;
+.mem-card.flipped .card-inner,.mem-card.matched .card-inner{transform:rotateY(180deg);}
+.card-front,.card-back{
+  position:absolute;inset:0;border-radius:14px;
+  backface-visibility:hidden;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
 }
-
-.card-inner {
-  width: 100%; height: 100%;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.45s ease;
-  border-radius: 14px;
-}
-
-.mem-card.flipped .card-inner { transform: rotateY(180deg); }
-.mem-card.matched .card-inner { transform: rotateY(180deg); }
-
-.card-front, .card-back {
-  position: absolute; inset: 0;
-  border-radius: 14px;
-  backface-visibility: hidden;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-}
-
-.card-back {
-  background: rgba(0,242,255,0.04);
-  border: 1.5px solid var(--border);
-  font-size: 1.8rem; color: rgba(0,242,255,0.2);
-}
-
-.card-front {
-  background: rgba(255,255,255,0.04);
-  border: 1.5px solid rgba(0,242,255,0.3);
-  transform: rotateY(180deg);
-  font-size: 2rem;
-}
-
-.card-front .label {
-  font-size: 0.6rem; margin-top: 4px;
-  color: rgba(0,242,255,0.4);
-  letter-spacing: 2px; text-transform: uppercase;
-}
-
-/* Fokus */
-.mem-card.focused .card-back {
-  border-color: rgba(0,242,255,0.6);
-  background: rgba(0,242,255,0.08);
-  box-shadow: 0 0 14px rgba(0,242,255,0.15);
-}
-.mem-card.focused.flipped .card-front,
-.mem-card.focused.matched .card-front {
-  border-color: rgba(0,242,255,0.6);
-}
-
-/* Matched */
-.mem-card.matched .card-front {
-  background: rgba(16,185,129,0.18);
-  border-color: var(--blink2);
-  box-shadow: inset 0 0 30px rgba(16,185,129,0.2), 0 0 20px rgba(16,185,129,0.3);
-}
-
-/* Falsch */
-.mem-card.wrong .card-front {
-  background: rgba(239,68,68,0.2);
-  border-color: #ef4444;
-  box-shadow: 0 0 20px rgba(239,68,68,0.3);
-}
+.card-back{background:rgba(0,242,255,0.04);border:1.5px solid var(--border);font-size:1.8rem;color:rgba(0,242,255,0.2);}
+.card-front{background:rgba(255,255,255,0.04);border:1.5px solid rgba(0,242,255,0.3);transform:rotateY(180deg);font-size:2rem;}
+.card-front .label{font-size:0.6rem;margin-top:4px;color:rgba(0,242,255,0.4);letter-spacing:2px;text-transform:uppercase;}
+.mem-card.focused .card-back{border-color:rgba(0,242,255,0.6);background:rgba(0,242,255,0.08);box-shadow:0 0 14px rgba(0,242,255,0.15);}
+.mem-card.matched .card-front{background:rgba(16,185,129,0.18);border-color:var(--blink2);box-shadow:inset 0 0 30px rgba(16,185,129,0.2),0 0 20px rgba(16,185,129,0.3);}
+.mem-card.wrong .card-front{background:rgba(239,68,68,0.2);border-color:#ef4444;box-shadow:0 0 20px rgba(239,68,68,0.3);}
 
 /* ── SIDEBAR ── */
-#sidebar {
-  position: fixed;
-  top: 0; bottom: 0;
-  right: 0;
-  width: var(--sidebar-w);
-  z-index: 501;   /* eine Ebene über Pufferzone (500) */
-  opacity: 0;
-  transform: translateX(120%);
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1);
-  pointer-events: none;
-  background: rgba(6,10,19,0.72);
-  backdrop-filter: blur(6px);
-  border-left: 1px solid rgba(0,242,255,0.1);
+#sidebar{
+  position:fixed;top:0;bottom:0;right:0;
+  width:var(--sidebar-w);z-index:501;
+  opacity:0;transform:translateX(120%);
+  transition:opacity 0.7s ease,transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  pointer-events:none;
+  background:rgba(6,10,19,0.72);backdrop-filter:blur(6px);
+  border-left:1px solid rgba(0,242,255,0.1);
 }
-#sidebar.visible {
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: all;
+#sidebar.visible{opacity:1;transform:translateX(0);pointer-events:all;}
+
+.game-tab{
+  position:absolute;width:110px;height:28px;
+  transform:rotate(270deg);transform-origin:center center;
+  background:rgba(14,30,60,0.92);border:1.5px solid rgba(0,242,255,0.2);
+  border-radius:10px;padding:0 10px;font-size:0.6rem;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(0,242,255,0.5);cursor:pointer;
+  user-select:none;white-space:nowrap;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s,border-color 0.15s,color 0.15s,box-shadow 0.15s;
+}
+.game-tab:nth-child(1){left:10px;top:3%;}
+.game-tab:nth-child(2){left:10px;top:28%;}
+.game-tab:nth-child(3){left:10px;top:53%;}
+.game-tab:nth-child(4){left:10px;top:78%;}
+.game-tab:nth-child(5){left:52px;top:15%;}
+.game-tab:nth-child(6){left:52px;top:43%;}
+.game-tab:nth-child(7){left:52px;top:68%;}
+.game-tab.focused{background:rgba(0,242,255,0.12);border-color:var(--neon);color:white;box-shadow:0 0 16px rgba(0,242,255,0.2);}
+.game-tab.active-game{background:rgba(16,185,129,0.15);border-color:var(--blink2);color:var(--blink2);}
+
+/* ── ADMIN PANEL ── */
+#admin-gate{
+  position:fixed;inset:0;z-index:8000;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+}
+#admin-gate.visible{display:flex;}
+#admin-gate h2{color:#f59e0b;font-size:1.4rem;letter-spacing:6px;text-transform:uppercase;}
+#admin-gate p{color:rgba(255,255,255,0.4);font-size:0.8rem;letter-spacing:2px;text-align:center;line-height:1.8;}
+#gesture-ring{
+  width:90px;height:90px;border-radius:50%;
+  border:3px solid rgba(245,158,11,0.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;position:relative;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+#gesture-ring.active{border-color:#f59e0b;box-shadow:0 0 30px rgba(245,158,11,0.4);}
+#gesture-progress{
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  font-size:11px;color:#f59e0b;letter-spacing:2px;white-space:nowrap;
+}
+#admin-close-btn{
+  margin-top:10px;background:transparent;color:rgba(255,255,255,0.3);
+  border:1px solid rgba(255,255,255,0.15);padding:8px 24px;
+  border-radius:8px;cursor:pointer;font-size:0.75rem;letter-spacing:2px;
 }
 
-/* Jede Tab-Box: absolut positioniert, 270° gedreht, schmal & hoch */
-.game-tab {
-  position: absolute;
-  /* Natürliche Breite (horizontal) → wird durch rotate zur Höhe */
-  width: 110px;
-  height: 28px;
-  transform: rotate(270deg);
-  transform-origin: center center;
-  background: rgba(14,30,60,0.92);
-  border: 1.5px solid rgba(0,242,255,0.2);
-  border-radius: 10px;
-  padding: 0 10px;
-  font-size: 0.6rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(0,242,255,0.5);
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+#admin-panel{
+  position:fixed;top:0;bottom:0;left:0;
+  width:var(--admin-w);z-index:7000;
+  background:rgba(8,14,30,0.97);backdrop-filter:blur(12px);
+  border-right:2px solid rgba(245,158,11,0.3);
+  transform:translateX(-110%);
+  transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  overflow-y:auto;scrollbar-width:none;
+  padding:30px 24px 60px 24px;
+}
+#admin-panel.open{transform:translateX(0);}
+
+#admin-panel h1{
+  color:#f59e0b;font-size:1.1rem;letter-spacing:5px;
+  text-transform:uppercase;margin-bottom:8px;
+  border-bottom:1px solid rgba(245,158,11,0.2);padding-bottom:12px;
+}
+#admin-panel .admin-subtitle{
+  color:rgba(255,255,255,0.25);font-size:0.7rem;
+  letter-spacing:2px;margin-bottom:24px;
 }
 
-/* ── SPALTE 1 (left: 10px) – 4 Titel, gleichmäßig verteilt, ungerade höher ── */
-.game-tab:nth-child(1) { left: 10px; top:  3%;  }
-.game-tab:nth-child(2) { left: 10px; top: 28%;  }
-.game-tab:nth-child(3) { left: 10px; top: 53%;  }
-.game-tab:nth-child(4) { left: 10px; top: 78%;  }
-
-/* ── SPALTE 2 (left: 52px) – 3 Titel, versetzt gegenüber Spalte 1 ── */
-.game-tab:nth-child(5) { left: 52px; top: 15%;  }
-.game-tab:nth-child(6) { left: 52px; top: 43%;  }
-.game-tab:nth-child(7) { left: 52px; top: 68%;  }
-
-.game-tab.focused {
-  background: rgba(0,242,255,0.12);
-  border-color: var(--neon);
-  color: white;
-  box-shadow: 0 0 16px rgba(0,242,255,0.2);
+/* Spiel-Buttons im Admin */
+.admin-game-btn{
+  width:100%;padding:16px 20px;margin-bottom:10px;
+  background:rgba(255,255,255,0.03);
+  border:1.5px solid rgba(245,158,11,0.2);
+  border-radius:12px;color:rgba(245,158,11,0.7);
+  font-family:'Courier New',monospace;font-size:0.75rem;
+  letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;text-align:left;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background 0.15s,border-color 0.15s,color 0.15s;
 }
-.game-tab.active-game {
-  background: rgba(16,185,129,0.15);
-  border-color: var(--blink2);
-  color: var(--blink2);
+.admin-game-btn:hover,.admin-game-btn.focused{
+  background:rgba(245,158,11,0.08);border-color:#f59e0b;color:#f59e0b;
 }
+.admin-game-btn .arrow{font-size:0.9rem;opacity:0.5;transition:transform 0.2s;}
+.admin-game-btn.open .arrow{transform:rotate(90deg);}
+
+/* Einstellungs-Drawer */
+.settings-drawer{
+  overflow:hidden;max-height:0;
+  transition:max-height 0.4s ease;
+  background:rgba(0,0,0,0.3);border-radius:10px;
+  margin-bottom:10px;
+}
+.settings-drawer.open{max-height:400px;}
+.settings-inner{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+
+.setting-row{display:flex;flex-direction:column;gap:6px;}
+.setting-label{font-size:0.65rem;color:rgba(0,242,255,0.4);letter-spacing:2px;text-transform:uppercase;}
+.setting-options{display:flex;gap:6px;flex-wrap:wrap;}
+.setting-opt{
+  padding:6px 12px;border-radius:8px;font-size:0.65rem;
+  letter-spacing:1px;cursor:pointer;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.4);
+  transition:background 0.15s,border-color 0.15s,color 0.15s;
+}
+.setting-opt.active{background:rgba(245,158,11,0.15);border-color:#f59e0b;color:#f59e0b;}
+
+#admin-close{
+  position:sticky;bottom:0;width:100%;padding:12px;
+  background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.3);
+  border-radius:10px;color:rgba(220,38,38,0.8);
+  font-family:'Courier New',monospace;font-size:0.7rem;
+  letter-spacing:3px;text-transform:uppercase;cursor:pointer;
+  transition:background 0.15s;margin-top:20px;
+}
+#admin-close:hover{background:rgba(220,38,38,0.25);}
 
 /* ── GAZE DOT ── */
-#gaze-dot {
-  position: fixed; width: 24px; height: 24px;
-  background: white; border-radius: 50%;
-  border: 3px solid var(--neon);
-  transform: translate(-50%,-50%);
-  pointer-events: none; z-index: 999999;
-  box-shadow: 0 0 18px var(--neon);
-  transition: border-color 0.1s, box-shadow 0.1s, transform 0.1s;
+#gaze-dot{
+  position:fixed;width:24px;height:24px;background:white;border-radius:50%;
+  border:3px solid var(--neon);transform:translate(-50%,-50%);
+  pointer-events:none;z-index:999999;box-shadow:0 0 18px var(--neon);
+  transition:border-color 0.1s,box-shadow 0.1s,transform 0.1s;
 }
-#gaze-dot.waiting { border-color: var(--blink1); box-shadow: 0 0 22px var(--blink1); transform: translate(-50%,-50%) scale(1.3); }
-#gaze-dot.fired   { border-color: var(--blink2); box-shadow: 0 0 30px var(--blink2); transform: translate(-50%,-50%) scale(1.7); }
-#gaze-dot.voice   { border-color: var(--gold);   box-shadow: 0 0 28px var(--gold);   transform: translate(-50%,-50%) scale(1.5); }
-#gaze-dot.buf     { border-color: #a855f7;        box-shadow: 0 0 22px #a855f7;       transform: translate(-50%,-50%) scale(1.2); }
-
-#trail-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+#gaze-dot.waiting{border-color:var(--blink1);box-shadow:0 0 22px var(--blink1);transform:translate(-50%,-50%) scale(1.3);}
+#gaze-dot.fired  {border-color:var(--blink2);box-shadow:0 0 30px var(--blink2);transform:translate(-50%,-50%) scale(1.7);}
+#gaze-dot.voice  {border-color:var(--gold);  box-shadow:0 0 28px var(--gold);  transform:translate(-50%,-50%) scale(1.5);}
+#gaze-dot.buf    {border-color:#a855f7;       box-shadow:0 0 22px #a855f7;      transform:translate(-50%,-50%) scale(1.2);}
+#trail-canvas{position:fixed;inset:0;pointer-events:none;z-index:10;}
 
 /* ── STATUSZEILE ── */
-#status-bar {
-  position: fixed; bottom: 0; left: 0; right: 0; height: 34px;
-  background: rgba(0,0,0,0.92); border-top: 1px solid rgba(0,242,255,0.15);
-  display: flex; align-items: center; padding: 0 14px; gap: 16px;
-  z-index: 1000000; pointer-events: none;
-  font-family: 'Courier New', monospace; font-size: 11px;
+#status-bar{
+  position:fixed;bottom:0;left:0;right:0;height:34px;
+  background:rgba(0,0,0,0.92);border-top:1px solid rgba(0,242,255,0.15);
+  display:flex;align-items:center;padding:0 14px;gap:16px;
+  z-index:1000000;pointer-events:none;font-size:11px;
 }
-.sb-item { display: flex; align-items: center; gap: 5px; }
-.sb-label { color: rgba(0,242,255,0.35); letter-spacing: 1px; font-size: 10px; }
-.sb-value { color: var(--gold); font-weight: bold; }
-#sb-dot-state {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.15);
-  transition: background 0.1s, box-shadow 0.1s;
-}
-#sb-dot-state.s-idle    { background: rgba(255,255,255,0.15); }
-#sb-dot-state.s-waiting { background: var(--blink1); box-shadow: 0 0 7px var(--blink1); }
-#sb-dot-state.s-fired   { background: var(--blink2); box-shadow: 0 0 7px var(--blink2); }
-#sb-dot-state.s-voice   { background: var(--gold);   box-shadow: 0 0 7px var(--gold); }
-#sb-dot-state.s-buf     { background: #a855f7;        box-shadow: 0 0 7px #a855f7; }
-#sb-mic-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #475569; transition: background 0.2s;
-}
-#sb-mic-dot.on        { background: var(--blink2); box-shadow: 0 0 5px var(--blink2); }
-#sb-mic-dot.listening { background: var(--gold);   box-shadow: 0 0 5px var(--gold); animation: pulse 0.8s infinite; }
-.sb-divider { width:1px; height:18px; background: rgba(0,242,255,0.1); }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.sb-item{display:flex;align-items:center;gap:5px;}
+.sb-label{color:rgba(0,242,255,0.35);letter-spacing:1px;font-size:10px;}
+.sb-value{color:var(--gold);font-weight:bold;}
+#sb-dot-state{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.15);transition:background 0.1s,box-shadow 0.1s;}
+#sb-dot-state.s-idle   {background:rgba(255,255,255,0.15);}
+#sb-dot-state.s-waiting{background:var(--blink1);box-shadow:0 0 7px var(--blink1);}
+#sb-dot-state.s-fired  {background:var(--blink2);box-shadow:0 0 7px var(--blink2);}
+#sb-dot-state.s-voice  {background:var(--gold);  box-shadow:0 0 7px var(--gold);}
+#sb-dot-state.s-buf    {background:#a855f7;       box-shadow:0 0 7px #a855f7;}
+#sb-mic-dot{width:8px;height:8px;border-radius:50%;background:#475569;transition:background 0.2s;}
+#sb-mic-dot.on       {background:var(--blink2);box-shadow:0 0 5px var(--blink2);}
+#sb-mic-dot.listening{background:var(--gold);  box-shadow:0 0 5px var(--gold);animation:pulse 0.8s infinite;}
+.sb-divider{width:1px;height:18px;background:rgba(0,242,255,0.1);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
 /* ── SCORE ── */
-#score-display {
-  position: fixed; top: calc(var(--buf) - 28px); left: var(--buf);
-  font-size: 12px; color: rgba(0,242,255,0.4);
-  letter-spacing: 2px; z-index: 700;
-}
+#score-display{position:fixed;top:calc(var(--buf) - 28px);left:var(--buf);font-size:12px;color:rgba(0,242,255,0.4);letter-spacing:2px;z-index:700;}
 
 /* ── OVERLAY ── */
-#overlay {
-  position: fixed; inset: 0; background: var(--bg);
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  z-index: 2000000; gap: 14px;
+#overlay{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  z-index:2000000;gap:14px;
 }
-#overlay h1 { color: var(--neon); font-size: 2rem; letter-spacing: 6px; text-transform: uppercase; }
-#overlay p  { color: rgba(0,242,255,0.5); font-size: 0.85rem; letter-spacing: 3px; }
-.start-btn {
-  background: transparent; color: var(--neon);
-  border: 2px solid var(--neon); padding: 14px 46px;
-  font-size: 1rem; font-weight: bold; letter-spacing: 3px;
-  border-radius: 10px; cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s; margin-top: 8px;
+#overlay h1{color:var(--neon);font-size:2rem;letter-spacing:6px;text-transform:uppercase;}
+#overlay p {color:rgba(0,242,255,0.5);font-size:0.85rem;letter-spacing:3px;}
+.start-btn{
+  background:transparent;color:var(--neon);border:2px solid var(--neon);
+  padding:14px 46px;font-size:1rem;font-weight:bold;letter-spacing:3px;
+  border-radius:10px;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;margin-top:8px;
 }
-.start-btn:hover { background: rgba(0,242,255,0.08); box-shadow: 0 0 20px rgba(0,242,255,0.3); }
+.start-btn:hover{background:rgba(0,242,255,0.08);box-shadow:0 0 20px rgba(0,242,255,0.3);}
 
-/* ── WIN FLASH ── */
-#win-flash {
-  position: fixed; inset: 0; z-index: 5000;
-  background: rgba(16,185,129,0); pointer-events: none;
-  transition: background 0.3s;
-}
-#win-flash.on { background: rgba(16,185,129,0.18); }
+#win-flash{position:fixed;inset:0;z-index:5000;background:rgba(16,185,129,0);pointer-events:none;transition:background 0.3s;}
+#win-flash.on{background:rgba(16,185,129,0.18);}
 </style>
 </head>
 <body>
@@ -297,7 +264,6 @@ body, html {
 <div class="buffer-zone" id="buf-left"></div>
 <div class="buffer-zone" id="buf-right"></div>
 
-<!-- SCORE -->
 <div id="score-display">PAARE: <span id="pair-count">0</span> / 8</div>
 
 <!-- SPIELFELD -->
@@ -307,25 +273,255 @@ body, html {
 
 <!-- SIDEBAR -->
 <div id="sidebar">
-  <!-- Spalte 1 -->
   <div class="game-tab active-game" data-game="memory">Memory</div>
   <div class="game-tab" data-game="sequence">Sequence</div>
   <div class="game-tab" data-game="wortbild">Wort-Bild</div>
   <div class="game-tab" data-game="kategorien">Kategorien</div>
-  <!-- Spalte 2 -->
   <div class="game-tab" data-game="oddone">Odd-One-Out</div>
   <div class="game-tab" data-game="suchfeld">Suchfeld</div>
   <div class="game-tab" data-game="blitz">Blitz-Ziel</div>
 </div>
 
-<!-- WIN -->
-<div id="win-flash"></div>
+<!-- ADMIN GATE (Gesten-Abfrage) -->
+<div id="admin-gate">
+  <h2>⚙ Admin-Zugang</h2>
+  <div id="gesture-ring">
+    <span id="gesture-icon">😐</span>
+    <div id="gesture-progress">Augenbrauen hoch + Mund-O halten…</div>
+  </div>
+  <p>Augenbrauen hochziehen<br>und Mund zu einem O öffnen<br>für ca. 1 Sekunde halten</p>
+  <button id="admin-close-btn" onclick="closeAdminGate()">ABBRECHEN</button>
+</div>
 
-<!-- GAZE -->
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <h1>⚙ Adminbereich</h1>
+  <p class="admin-subtitle">AURION · SPIELEINSTELLUNGEN</p>
+
+  <!-- Memory -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-memory',this)">
+    Memory Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-memory">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Anzahl Paare</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="memory-pairs" data-val="4">4 Paare</div>
+          <div class="setting-opt active" data-key="memory-pairs" data-val="6">6 Paare</div>
+          <div class="setting-opt" data-key="memory-pairs" data-val="8">8 Paare</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Umdeckzeit bei Fehler</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="memory-flip" data-val="800">0.8s</div>
+          <div class="setting-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
+          <div class="setting-opt" data-key="memory-flip" data-val="2500">2.5s</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Symbolset</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="memory-set" data-val="natur">Natur</div>
+          <div class="setting-opt" data-key="memory-set" data-val="alltag">Alltag</div>
+          <div class="setting-opt" data-key="memory-set" data-val="zahlen">Zahlen</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sequence -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-sequence',this)">
+    Sequence Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-sequence">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Sequenzlänge</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="seq-len" data-val="3">3</div>
+          <div class="setting-opt active" data-key="seq-len" data-val="5">5</div>
+          <div class="setting-opt" data-key="seq-len" data-val="7">7</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Anzeigedauer Symbol</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="seq-dur" data-val="800">0.8s</div>
+          <div class="setting-opt active" data-key="seq-dur" data-val="1200">1.2s</div>
+          <div class="setting-opt" data-key="seq-dur" data-val="2000">2.0s</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Automatisch schwerer</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="seq-auto" data-val="ja">Ja</div>
+          <div class="setting-opt" data-key="seq-auto" data-val="nein">Nein</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wort-Bild -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-wortbild',this)">
+    Wort-Bild Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-wortbild">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Sprache</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="wb-lang" data-val="de">Deutsch</div>
+          <div class="setting-opt" data-key="wb-lang" data-val="en">Englisch</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Schwierigkeit</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="wb-diff" data-val="easy">Einfach</div>
+          <div class="setting-opt" data-key="wb-diff" data-val="mid">Mittel</div>
+          <div class="setting-opt" data-key="wb-diff" data-val="hard">Schwer</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Wort vorlesen</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="wb-speak" data-val="ja">Ja</div>
+          <div class="setting-opt" data-key="wb-speak" data-val="nein">Nein</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kategorien -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-kat',this)">
+    Kategorien Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-kat">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Kategorienpool</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="kat-pool" data-val="natur">Natur</div>
+          <div class="setting-opt" data-key="kat-pool" data-val="technik">Technik</div>
+          <div class="setting-opt" data-key="kat-pool" data-val="gemischt">Gemischt</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Auswahloptionen</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="kat-opts" data-val="3">3</div>
+          <div class="setting-opt active" data-key="kat-opts" data-val="4">4</div>
+          <div class="setting-opt" data-key="kat-opts" data-val="6">6</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Sprachausgabe</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="kat-speak" data-val="ja">Ja</div>
+          <div class="setting-opt" data-key="kat-speak" data-val="nein">Nein</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Odd-One-Out -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-odd',this)">
+    Odd-One-Out Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-odd">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Kategoriengröße</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="odd-size" data-val="3">3</div>
+          <div class="setting-opt active" data-key="odd-size" data-val="4">4</div>
+          <div class="setting-opt" data-key="odd-size" data-val="6">6</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Zeitdruck</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="odd-time" data-val="ja">Ja</div>
+          <div class="setting-opt active" data-key="odd-time" data-val="nein">Nein</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Hilfe-Hinweis</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="odd-hint" data-val="ja">Ja</div>
+          <div class="setting-opt" data-key="odd-hint" data-val="nein">Nein</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suchfeld -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-such',this)">
+    Suchfeld Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-such">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Rastergröße</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="such-grid" data-val="3">3×3</div>
+          <div class="setting-opt active" data-key="such-grid" data-val="4">4×4</div>
+          <div class="setting-opt" data-key="such-grid" data-val="5">5×5</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Zeitlimit</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="such-time" data-val="15">15s</div>
+          <div class="setting-opt active" data-key="such-time" data-val="30">30s</div>
+          <div class="setting-opt" data-key="such-time" data-val="60">60s</div>
+          <div class="setting-opt" data-key="such-time" data-val="0">Kein</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blitz-Ziel -->
+  <button class="admin-game-btn" onclick="toggleDrawer('drawer-blitz',this)">
+    Blitz-Ziel Adminbereich <span class="arrow">▶</span>
+  </button>
+  <div class="settings-drawer" id="drawer-blitz">
+    <div class="settings-inner">
+      <div class="setting-row">
+        <div class="setting-label">Leuchtdauer</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="blitz-dur" data-val="500">0.5s</div>
+          <div class="setting-opt active" data-key="blitz-dur" data-val="1000">1.0s</div>
+          <div class="setting-opt" data-key="blitz-dur" data-val="2000">2.0s</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Ziele pro Runde</div>
+        <div class="setting-options">
+          <div class="setting-opt" data-key="blitz-count" data-val="5">5</div>
+          <div class="setting-opt active" data-key="blitz-count" data-val="10">10</div>
+          <div class="setting-opt" data-key="blitz-count" data-val="20">20</div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Automatisch schwerer</div>
+        <div class="setting-options">
+          <div class="setting-opt active" data-key="blitz-auto" data-val="ja">Ja</div>
+          <div class="setting-opt" data-key="blitz-auto" data-val="nein">Nein</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="admin-close" onclick="closeAdmin()">✕ Adminbereich schließen</button>
+</div>
+
+<div id="win-flash"></div>
 <canvas id="trail-canvas"></canvas>
 <div id="gaze-dot"></div>
 
-<!-- STATUSZEILE -->
 <div id="status-bar">
   <div class="sb-item">
     <div id="sb-dot-state" class="s-idle"></div>
@@ -358,394 +554,469 @@ body, html {
 <video id="v" style="display:none" autoplay playsinline muted></video>
 
 <script>
-// ═══════════════════════════════════════
-//  SYMBOLE (8 Paare = 16 Karten)
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
+//  SYMBOLE
+// ═══════════════════════════════════
 const BASE = [
-  { sym:"🌊", name:"Wasser"   }, { sym:"🔥", name:"Feuer"    },
-  { sym:"🌿", name:"Natur"    }, { sym:"⚡", name:"Energie"  },
-  { sym:"🌙", name:"Mond"     }, { sym:"☀️", name:"Sonne"    },
-  { sym:"❄️", name:"Eis"      }, { sym:"🌪️", name:"Wind"     }
+  {sym:"🌊",name:"Wasser"},{sym:"🔥",name:"Feuer"},
+  {sym:"🌿",name:"Natur"},{sym:"⚡",name:"Energie"},
+  {sym:"🌙",name:"Mond"},{sym:"☀️",name:"Sonne"},
+  {sym:"❄️",name:"Eis"},{sym:"🌪️",name:"Wind"}
 ];
 
-// ═══════════════════════════════════════
-//  PARAMETER
-// ═══════════════════════════════════════
-const EAR_THRESH    = 0.175;
-const BLINK_MIN     = 80;
-const BLINK_GAP_MIN = 150;
-const BLINK_WIN     = 600;
-const COOLDOWN      = 1800;
-const SCALE_X = 12, SCALE_Y = 15, BUFFER_SZ = 5;
-const CENTER_R = 80, CENTER_F = 0.2, BORDER = 15, SMOOTH = 0.12;
-const BUF_PCT = 0.16;
+// ═══════════════════════════════════
+//  TRACKING PARAMETER
+// ═══════════════════════════════════
+const EAR_THRESH=0.175,BLINK_MIN=80,BLINK_GAP_MIN=150,BLINK_WIN=600,COOLDOWN=1800;
+const SCALE_X=12,SCALE_Y=15,BUFFER_SZ=5,CENTER_R=80,CENTER_F=0.2,BORDER=15,SMOOTH=0.12;
+const BUF_PCT=0.16;
 
-// ═══════════════════════════════════════
+// Gesten-Schwellen
+const BROW_THRESH = 0.072;   // Augenbraue-zu-Auge Abstand (normalisiert)
+const MOUTH_VERT  = 0.045;   // Mund vertikale Öffnung
+const MOUTH_RATIO = 0.55;    // vertikal/horizontal → Rundheit (O-Form)
+const GESTURE_HOLD_MS = 1000;
+
+// ═══════════════════════════════════
 //  GAME STATE
-// ═══════════════════════════════════════
-let cards = [];
-let flipped = [];       // max 2 Indizes
-let matched = [];       // gefundene Paare
-let locked = false;     // kurz sperren nach falschem Paar
-let pairsFound = 0;
-let sidebarShown = false;
-let sidebarAnnouncedThisSession = false;
+// ═══════════════════════════════════
+let cards=[],flipped=[],matched=[],locked=false,pairsFound=0;
+let sidebarShown=false,sidebarAnnouncedThisSession=false;
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
 //  TRACKING STATE
-// ═══════════════════════════════════════
-let canvas, ctx, camRunning = false;
-let sX = innerWidth/2, sY = innerHeight/2, tX = sX, tY = sY;
-let bufX = [], bufY = [], trailHist = [];
-let blinkStart = null, lastBlinkEnd = 0, blinkCooldown = 0, waitTimer = null;
-let currentZone = null;
+// ═══════════════════════════════════
+let canvas,ctx,camRunning=false;
+let sX=innerWidth/2,sY=innerHeight/2,tX=sX,tY=sY;
+let bufX=[],bufY=[],trailHist=[];
+let blinkStart=null,lastBlinkEnd=0,blinkCooldown=0,waitTimer=null;
+let blinkCount=0;          // zählt Blinks im aktuellen Fenster
+let currentZone=null;
+let zoneUnlocked=false;    // Triple-Blink hat Pufferzone freigeschaltet
 
-// ═══════════════════════════════════════
-//  GRID AUFBAUEN
-// ═══════════════════════════════════════
-function buildGame() {
-  // Paare mischen
-  const deck = [...BASE, ...BASE].map((s,i) => ({ ...s, id: i }));
-  for (let i = deck.length-1; i > 0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
-  cards = deck;
-  flipped = []; matched = []; pairsFound = 0; locked = false;
+// Gesten-State
+let gestureStart=null;
+let adminGateOpen=false;
 
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  deck.forEach((c, idx) => {
-    const card = document.createElement('div');
-    card.className = 'mem-card';
-    card.dataset.idx = idx;
-    card.dataset.sym = c.sym;
-    card.dataset.name = c.name;
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="card-back">✦</div>
-        <div class="card-front">
-          <span>${c.sym}</span>
-          <span class="label">${c.name}</span>
-        </div>
-      </div>`;
+// Einstellungen
+const settings={};
+
+// ═══════════════════════════════════
+//  GRID
+// ═══════════════════════════════════
+function buildGame(){
+  const deck=[...BASE,...BASE].map((s,i)=>({...s,id:i}));
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  cards=deck;flipped=[];matched=[];pairsFound=0;locked=false;
+  const grid=document.getElementById('grid');grid.innerHTML='';
+  deck.forEach((c,idx)=>{
+    const card=document.createElement('div');
+    card.className='mem-card';card.dataset.idx=idx;card.dataset.sym=c.sym;card.dataset.name=c.name;
+    card.innerHTML=`<div class="card-inner"><div class="card-back">✦</div><div class="card-front"><span>${c.sym}</span><span class="label">${c.name}</span></div></div>`;
     grid.appendChild(card);
   });
-  updateScore();
+  document.getElementById('pair-count').textContent=0;
 }
 
-function updateScore() {
-  document.getElementById('pair-count').textContent = pairsFound;
+// ═══════════════════════════════════
+//  KARTEN LOGIK
+// ═══════════════════════════════════
+function selectCard(card){
+  if(locked)return;
+  const idx=parseInt(card.dataset.idx);
+  if(matched.includes(idx)||flipped.includes(idx)||flipped.length>=2)return;
+  card.classList.add('flipped');flipped.push(idx);
+  setLastAction('▶ '+card.dataset.name);
+  if(flipped.length===2)checkPair();
 }
 
-// ═══════════════════════════════════════
-//  KARTE AUSWÄHLEN
-// ═══════════════════════════════════════
-function selectCard(card) {
-  if (locked) return;
-  const idx = parseInt(card.dataset.idx);
-  if (matched.includes(idx)) return;
-  if (flipped.includes(idx)) return;
-  if (flipped.length >= 2) return;
-
-  card.classList.add('flipped');
-  flipped.push(idx);
-  setLastAction('▶ ' + card.dataset.name);
-
-  if (flipped.length === 2) checkPair();
-}
-
-function checkPair() {
-  locked = true;
-  const [i1, i2] = flipped;
-  const c1 = cards[i1], c2 = cards[i2];
-  const allCards = document.querySelectorAll('.mem-card');
-
-  if (c1.sym === c2.sym) {
-    // ✅ PAAR
-    matched.push(i1, i2);
-    allCards[i1].classList.add('matched');
-    allCards[i2].classList.add('matched');
-    pairsFound++;
-    updateScore();
-    speak(c1.name + '! Gefunden!');
-    setLastAction('✓ PAAR: ' + c1.name);
-
-    if (pairsFound === 1 && !sidebarAnnouncedThisSession) {
-      sidebarAnnouncedThisSession = true;
-      setTimeout(showSidebar, 800);
-    }
-
-    if (pairsFound === 8) {
-      setTimeout(triggerWin, 600);
-    }
-
-    flipped = [];
-    locked = false;
+function checkPair(){
+  locked=true;
+  const [i1,i2]=flipped;
+  const allCards=document.querySelectorAll('.mem-card');
+  if(cards[i1].sym===cards[i2].sym){
+    matched.push(i1,i2);
+    allCards[i1].classList.add('matched');allCards[i2].classList.add('matched');
+    pairsFound++;document.getElementById('pair-count').textContent=pairsFound;
+    speak(cards[i1].name+'! Gefunden!');setLastAction('✓ PAAR: '+cards[i1].name);
+    if(pairsFound===1&&!sidebarAnnouncedThisSession){sidebarAnnouncedThisSession=true;setTimeout(showSidebar,800);}
+    if(pairsFound===8)setTimeout(triggerWin,600);
+    flipped=[];locked=false;
   } else {
-    // ❌ FALSCH
-    allCards[i1].classList.add('wrong');
-    allCards[i2].classList.add('wrong');
-    setLastAction('✗ ' + c1.name + ' ≠ ' + c2.name);
-    setTimeout(() => {
-      allCards[i1].classList.remove('flipped','wrong');
-      allCards[i2].classList.remove('flipped','wrong');
-      flipped = [];
-      locked = false;
-    }, 1100);
+    allCards[i1].classList.add('wrong');allCards[i2].classList.add('wrong');
+    setLastAction('✗ '+cards[i1].name+' ≠ '+cards[i2].name);
+    setTimeout(()=>{
+      allCards[i1].classList.remove('flipped','wrong');allCards[i2].classList.remove('flipped','wrong');
+      flipped=[];locked=false;
+    },1100);
   }
 }
 
-function triggerWin() {
+function triggerWin(){
   speak('Herzlichen Glückwunsch! Alle Paare gefunden!');
-  const wf = document.getElementById('win-flash');
-  wf.classList.add('on');
-  setTimeout(() => wf.classList.remove('on'), 600);
-  setTimeout(() => { wf.classList.add('on');
-  setTimeout(() => wf.classList.remove('on'), 600); }, 700);
-  setTimeout(() => buildGame(), 3500);
+  const wf=document.getElementById('win-flash');
+  wf.classList.add('on');setTimeout(()=>wf.classList.remove('on'),600);
+  setTimeout(()=>{wf.classList.add('on');setTimeout(()=>wf.classList.remove('on'),600);},700);
+  setTimeout(()=>buildGame(),3500);
 }
 
-// ═══════════════════════════════════════
-//  SIDEBAR
-// ═══════════════════════════════════════
-function showSidebar() {
-  if (sidebarShown) return;
-  sidebarShown = true;
+function showSidebar(){
+  if(sidebarShown)return;sidebarShown=true;
   document.getElementById('sidebar').classList.add('visible');
-  document.getElementById('play-area').classList.add('sidebar-open');
-  setTimeout(() => {
-    speak('Sie sind herzlich eingeladen, Ihr Gedächtnis herauszufordern.');
-  }, 400);
+  setTimeout(()=>speak('Sie sind herzlich eingeladen, Ihr Gedächtnis herauszufordern.'),400);
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════
+function openAdminGate(){
+  adminGateOpen=true;gestureStart=null;
+  document.getElementById('admin-gate').classList.add('visible');
+  document.getElementById('gesture-icon').textContent='😐';
+  document.getElementById('gesture-progress').textContent='Augenbrauen hoch + Mund-O halten…';
+}
+
+function closeAdminGate(){
+  adminGateOpen=false;gestureStart=null;
+  document.getElementById('admin-gate').classList.remove('visible');
+  document.getElementById('gesture-ring').classList.remove('active');
+}
+
+function openAdmin(){
+  closeAdminGate();
+  document.getElementById('admin-panel').classList.add('open');
+  speak('Adminbereich geöffnet');
+}
+
+function closeAdmin(){
+  document.getElementById('admin-panel').classList.remove('open');
+}
+
+function toggleDrawer(id,btn){
+  const drawer=document.getElementById(id);
+  const isOpen=drawer.classList.contains('open');
+  document.querySelectorAll('.settings-drawer').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.admin-game-btn').forEach(b=>b.classList.remove('open'));
+  if(!isOpen){drawer.classList.add('open');btn.classList.add('open');}
+}
+
+// Einstellungs-Optionen
+document.addEventListener('click',e=>{
+  const opt=e.target.closest('.setting-opt');
+  if(!opt)return;
+  const key=opt.dataset.key;
+  document.querySelectorAll(`[data-key="${key}"]`).forEach(o=>o.classList.remove('active'));
+  opt.classList.add('active');
+  settings[key]=opt.dataset.val;
+});
+
+// ═══════════════════════════════════
+//  GESTEN ERKENNUNG
+// ═══════════════════════════════════
+function checkAdminGesture(lm){
+  if(!adminGateOpen)return;
+  const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
+
+  // Augenbrauen: Abstand Braue(70) zu Auge(159) links + Braue(300) zu Auge(386) rechts
+  const browL=d(70,159);
+  const browR=d(300,386);
+  const browAvg=(browL+browR)/2;
+
+  // Mund: vertikal(13↔14) und horizontal(61↔291)
+  const mouthV=d(13,14);
+  const mouthH=d(61,291);
+  const mouthRatio=mouthH>0?mouthV/mouthH:0;
+
+  const browOk = browAvg > BROW_THRESH;
+  const mouthOk = mouthV > MOUTH_VERT && mouthRatio > MOUTH_RATIO;
+  const gestureOk = browOk && mouthOk;
+
+  const ring=document.getElementById('gesture-ring');
+  const icon=document.getElementById('gesture-icon');
+  const prog=document.getElementById('gesture-progress');
+
+  if(gestureOk){
+    ring.classList.add('active');
+    icon.textContent='😮';
+    if(!gestureStart) gestureStart=Date.now();
+    const held=Date.now()-gestureStart;
+    const pct=Math.min(100,Math.round(held/GESTURE_HOLD_MS*100));
+    prog.textContent=`Halten… ${pct}%`;
+    if(held>=GESTURE_HOLD_MS) openAdmin();
+  } else {
+    ring.classList.remove('active');
+    gestureStart=null;
+    icon.textContent=browOk?'🤨':mouthOk?'😮':'😐';
+    prog.textContent='Augenbrauen hoch + Mund-O halten…';
+  }
+}
+
+// ═══════════════════════════════════
 //  SYSTEM START
-// ═══════════════════════════════════════
-async function initSystem() {
-  document.getElementById('overlay').style.display = 'none';
+// ═══════════════════════════════════
+async function initSystem(){
+  document.getElementById('overlay').style.display='none';
   buildGame();
-  const video = document.getElementById('v');
-  try {
-    await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    camRunning = true;
-    canvas = document.getElementById('trail-canvas');
-    canvas.width = innerWidth; canvas.height = innerHeight;
-    ctx = canvas.getContext('2d');
-
-    const fm = new FaceMesh({
-      locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`
-    });
-    fm.setOptions({ refineLandmarks: true, minDetectionConfidence: 0.55, maxNumFaces: 1 });
+  try{
+    await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    camRunning=true;
+    canvas=document.getElementById('trail-canvas');
+    canvas.width=innerWidth;canvas.height=innerHeight;
+    ctx=canvas.getContext('2d');
+    const fm=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
+    fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
     fm.onResults(onResults);
-
-    new Camera(video, {
-      onFrame: async () => { if (camRunning) await fm.send({ image: video }); },
-      width: 640, height: 480
+    new Camera(document.getElementById('v'),{
+      onFrame:async()=>{if(camRunning)await fm.send({image:document.getElementById('v')});},
+      width:640,height:480
     }).start();
-
     initSpeech();
     setDotStatus('idle','TRACKING');
-  } catch(e) { setDotStatus('idle','FEHLER'); }
+  }catch(e){setDotStatus('idle','FEHLER');}
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
 //  FACE MESH
-// ═══════════════════════════════════════
-function onResults(r) {
-  if (!r.multiFaceLandmarks?.[0]) { setDotStatus('idle','KEIN GESICHT'); return; }
-  const lm = r.multiFaceLandmarks[0];
+// ═══════════════════════════════════
+function onResults(r){
+  if(!r.multiFaceLandmarks?.[0]){setDotStatus('idle','KEIN GESICHT');return;}
+  const lm=r.multiFaceLandmarks[0];
 
-  const iris = lm[468];
-  let rawX = (0.5 - iris.x) * SCALE_X * innerWidth  + innerWidth  / 2;
-  let rawY = (iris.y - 0.5) * SCALE_Y * innerHeight + innerHeight / 2;
-  bufX.push(rawX); bufY.push(rawY);
-  if (bufX.length > BUFFER_SZ) { bufX.shift(); bufY.shift(); }
-  let avgX = bufX.reduce((a,b)=>a+b,0)/bufX.length;
-  let avgY = bufY.reduce((a,b)=>a+b,0)/bufY.length;
+  // Gesten prüfen
+  checkAdminGesture(lm);
 
-  const cX = innerWidth/2, cY = innerHeight/2;
-  const dist = Math.hypot(avgX-cX, avgY-cY);
-  tX = dist < CENTER_R ? cX+(avgX-cX)*CENTER_F : avgX;
-  tY = dist < CENTER_R ? cY+(avgY-cY)*CENTER_F : avgY;
-  tX = Math.max(BORDER, Math.min(innerWidth-BORDER,  tX));
-  tY = Math.max(BORDER, Math.min(innerHeight-BORDER, tY));
+  // Iris Tracking
+  const iris=lm[468];
+  let rawX=(0.5-iris.x)*SCALE_X*innerWidth+innerWidth/2;
+  let rawY=(iris.y-0.5)*SCALE_Y*innerHeight+innerHeight/2;
+  bufX.push(rawX);bufY.push(rawY);
+  if(bufX.length>BUFFER_SZ){bufX.shift();bufY.shift();}
+  let avgX=bufX.reduce((a,b)=>a+b,0)/bufX.length;
+  let avgY=bufY.reduce((a,b)=>a+b,0)/bufY.length;
+  const cX=innerWidth/2,cY=innerHeight/2;
+  const dist=Math.hypot(avgX-cX,avgY-cY);
+  tX=dist<CENTER_R?cX+(avgX-cX)*CENTER_F:avgX;
+  tY=dist<CENTER_R?cY+(avgY-cY)*CENTER_F:avgY;
+  tX=Math.max(BORDER,Math.min(innerWidth-BORDER,tX));
+  tY=Math.max(BORDER,Math.min(innerHeight-BORDER,tY));
 
-  const d = (p1,p2) => Math.hypot(lm[p1].x-lm[p2].x, lm[p1].y-lm[p2].y);
-  const ear = (d(159,145)/d(33,133) + d(386,374)/d(362,263)) / 2;
-  const now = Date.now();
+  // EAR
+  const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
+  const ear=(d(159,145)/d(33,133)+d(386,374)/d(362,263))/2;
+  const now=Date.now();
 
-  if (ear < EAR_THRESH) {
-    if (!blinkStart) blinkStart = now;
+  if(ear<EAR_THRESH){
+    if(!blinkStart) blinkStart=now;
   } else {
-    if (blinkStart) {
-      const dur = now - blinkStart;
-      blinkStart = null;
-      if (dur >= BLINK_MIN) {
-        const gap = now - lastBlinkEnd;
-        if (lastBlinkEnd > 0 && gap < BLINK_WIN && gap > BLINK_GAP_MIN && (now-blinkCooldown) > COOLDOWN) {
-          clearTimeout(waitTimer);
-          lastBlinkEnd = 0; blinkCooldown = now;
-          triggerAction();
+    if(blinkStart){
+      const dur=now-blinkStart;
+      blinkStart=null;
+      if(dur>=BLINK_MIN){
+        const gap=now-lastBlinkEnd;
+        const withinWindow = lastBlinkEnd>0 && gap<BLINK_WIN && gap>BLINK_GAP_MIN;
+
+        if(withinWindow){
+          blinkCount++;
         } else {
-          lastBlinkEnd = now;
-          setDotStatus('waiting','1× BLINK');
-          clearTimeout(waitTimer);
-          waitTimer = setTimeout(() => { lastBlinkEnd=0; setDotStatus('idle','TRACKING'); }, BLINK_WIN);
+          blinkCount=1;
         }
+        lastBlinkEnd=now;
+
+        clearTimeout(waitTimer);
+
+        if(blinkCount===1){
+          setDotStatus('waiting','1× BLINK');
+        } else if(blinkCount===2){
+          setDotStatus('waiting','2× BLINK…');
+        }
+
+        waitTimer=setTimeout(()=>{
+          const finalCount=blinkCount;
+          blinkCount=0;
+          lastBlinkEnd=0;
+
+          if(finalCount>=3 && (now-blinkCooldown)>COOLDOWN){
+            // TRIPLE-BLINK → Pufferzone freischalten
+            blinkCooldown=now;
+            triggerTriple();
+          } else if(finalCount===2 && (now-blinkCooldown)>COOLDOWN){
+            // DOPPEL-BLINK → Auswahl
+            blinkCooldown=now;
+            triggerAction();
+          } else {
+            setDotStatus('idle','TRACKING');
+          }
+        }, BLINK_WIN);
       }
     }
   }
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
 //  AKTIONEN
-// ═══════════════════════════════════════
-function triggerAction() {
+// ═══════════════════════════════════
+function triggerTriple(){
+  setDotStatus('buf','3× TRIPLE');
+  setTimeout(()=>setDotStatus('idle','TRACKING'),900);
+  const gd=document.getElementById('gaze-dot');
+  gd.classList.add('buf');setTimeout(()=>gd.classList.remove('buf'),400);
+  setLastAction('3× TRIPLE-BLINK');
+
+  // Prüfen ob Dot in einer Pufferzone ist
+  const bx=innerWidth*BUF_PCT, by=innerHeight*BUF_PCT;
+  let zone=null;
+  if(sY<by)zone='OBEN';
+  else if(sY>innerHeight-by)zone='UNTEN';
+  else if(sX<bx)zone='LINKS';
+  else if(sX>innerWidth-bx)zone='RECHTS';
+
+  if(zone){
+    zoneUnlocked=true;
+    speak('Zone '+zone+' geöffnet');
+    activateZone(zone);
+    setTimeout(()=>{ zoneUnlocked=false; },3000);
+  } else {
+    speak('Triple-Blink erkannt – bitte in eine Randzone schauen');
+  }
+}
+
+function activateZone(zone){
+  if(zone==='LINKS' && !adminGateOpen) openAdminGate();
+  // Weitere Zonen können hier ergänzt werden
+  setLastAction('ZONE: '+zone+' aktiviert');
+}
+function triggerAction(){
   setDotStatus('fired','2× DOPPEL');
-  setTimeout(() => setDotStatus('idle','TRACKING'), 700);
+  setTimeout(()=>setDotStatus('idle','TRACKING'),700);
+  const gd=document.getElementById('gaze-dot');
+  gd.classList.add('fired');setTimeout(()=>gd.classList.remove('fired'),300);
 
-  // Sidebar-Tab?
-  const tab = document.elementFromPoint(sX, sY)?.closest('.game-tab');
-  if (tab) {
-    handleTabSelect(tab);
-    return;
-  }
+  // Admin Panel Buttons
+  const adminBtn=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
+  if(adminBtn){adminBtn.click();return;}
 
-  // Memory-Karte
-  const card = document.elementFromPoint(sX, sY)?.closest('.mem-card');
-  if (card) {
-    selectCard(card);
-    flashDot('fired');
-  }
+  // Sidebar Tab
+  const tab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
+  if(tab){handleTabSelect(tab);return;}
+
+  // Memory Karte
+  const card=document.elementFromPoint(sX,sY)?.closest('.mem-card');
+  if(card)selectCard(card);
 }
 
-function triggerVoice() {
+function triggerVoice(){
   setDotStatus('voice','AUSWAHL');
-  setTimeout(() => setDotStatus('idle','TRACKING'), 700);
-  flashDot('voice');
+  setTimeout(()=>setDotStatus('idle','TRACKING'),700);
+  const gd=document.getElementById('gaze-dot');
+  gd.classList.add('voice');setTimeout(()=>gd.classList.remove('voice'),300);
 
-  const tab = document.elementFromPoint(sX, sY)?.closest('.game-tab');
-  if (tab) { handleTabSelect(tab); return; }
-
-  const card = document.elementFromPoint(sX, sY)?.closest('.mem-card');
-  if (card) selectCard(card);
+  const adminBtn=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
+  if(adminBtn){adminBtn.click();return;}
+  const tab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
+  if(tab){handleTabSelect(tab);return;}
+  const card=document.elementFromPoint(sX,sY)?.closest('.mem-card');
+  if(card)selectCard(card);
 }
 
-function handleTabSelect(tab) {
-  document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active-game'));
+function handleTabSelect(tab){
+  document.querySelectorAll('.game-tab').forEach(t=>t.classList.remove('active-game'));
   tab.classList.add('active-game');
-  speak(tab.textContent + ' wird gestartet');
-  setLastAction('SPIEL: ' + tab.textContent);
-  // Hier später: Navigation zu den anderen Spielen
+  speak(tab.textContent+' wird gestartet');
+  setLastAction('SPIEL: '+tab.textContent);
 }
 
-function flashDot(cls) {
-  const gd = document.getElementById('gaze-dot');
-  gd.classList.add(cls);
-  setTimeout(() => gd.classList.remove(cls), 300);
+// ═══════════════════════════════════
+//  PUFFERZONE
+// ═══════════════════════════════════
+function checkBufferZone(x,y){
+  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
+  let zone=null;
+  if(y<by)zone='OBEN';
+  else if(y>innerHeight-by)zone='UNTEN';
+  else if(x<bx)zone='LINKS';
+  else if(x>innerWidth-bx)zone='RECHTS';
+
+  document.getElementById('buf-top').classList.toggle('active',zone==='OBEN');
+  document.getElementById('buf-bottom').classList.toggle('active',zone==='UNTEN');
+  document.getElementById('buf-left').classList.toggle('active',zone==='LINKS');
+  document.getElementById('buf-right').classList.toggle('active',zone==='RECHTS');
+
+  if(zone!==currentZone){
+    currentZone=zone;setZoneStatus(zone);
+    if(zone){setDotStatus('buf',zone);setTimeout(()=>{if(currentZone===zone)setDotStatus('idle','TRACKING');},500);}
+  }
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
 //  SPRACHERKENNUNG
-// ═══════════════════════════════════════
-function initSpeech() {
-  const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!Speech) { setMicStatus('','N/A'); return; }
-  const rec = new Speech();
-  rec.lang = 'de-DE'; rec.continuous = true; rec.interimResults = false;
-  rec.onstart = () => setMicStatus('on','AKTIV');
-  rec.onresult = (e) => {
-    const t = e.results[e.results.length-1][0].transcript.trim().toLowerCase();
-    setMicStatus('listening','HÖRT…');
-    setTimeout(() => setMicStatus('on','AKTIV'), 800);
-    if (t.includes('auswahl')) triggerVoice();
-    if (t.includes('neu') || t.includes('neustart')) { buildGame(); speak('Neues Spiel!'); }
+// ═══════════════════════════════════
+function initSpeech(){
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!Speech){setMicStatus('','N/A');return;}
+  const rec=new Speech();
+  rec.lang='de-DE';rec.continuous=true;rec.interimResults=false;
+  rec.onstart=()=>setMicStatus('on','AKTIV');
+  rec.onresult=(e)=>{
+    const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
+    setMicStatus('listening','HÖRT…');setTimeout(()=>setMicStatus('on','AKTIV'),800);
+    if(t.includes('auswahl'))triggerVoice();
+    if(t.includes('neu')||t.includes('neustart')){buildGame();speak('Neues Spiel!');}
+    if(t.includes('admin'))openAdminGate();
   };
-  rec.onend = () => { if (camRunning) rec.start(); };
-  rec.onerror = () => { setTimeout(() => { if (camRunning) rec.start(); }, 1000); };
+  rec.onend=()=>{if(camRunning)rec.start();};
+  rec.onerror=()=>{setTimeout(()=>{if(camRunning)rec.start();},1000);};
   rec.start();
 }
 
-// ═══════════════════════════════════════
-//  PUFFERZONE
-// ═══════════════════════════════════════
-function checkBufferZone(x, y) {
-  const bx = innerWidth  * BUF_PCT;
-  const by = innerHeight * BUF_PCT;
-  let zone = null;
-  if (y < by)               zone = 'OBEN';
-  else if (y > innerHeight-by) zone = 'UNTEN';
-  else if (x < bx)             zone = 'LINKS';
-  else if (x > innerWidth-bx)  zone = 'RECHTS';
-
-  document.getElementById('buf-top').classList.toggle('active',    zone==='OBEN');
-  document.getElementById('buf-bottom').classList.toggle('active', zone==='UNTEN');
-  document.getElementById('buf-left').classList.toggle('active',   zone==='LINKS');
-  document.getElementById('buf-right').classList.toggle('active',  zone==='RECHTS');
-
-  if (zone !== currentZone) {
-    currentZone = zone;
-    setZoneStatus(zone);
-    if (zone) { setDotStatus('buf', zone); setTimeout(()=>{ if(currentZone===zone) setDotStatus('idle','TRACKING'); },500); }
-  }
-}
-
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
 //  RENDER
-// ═══════════════════════════════════════
-function render() {
-  sX += (tX-sX)*SMOOTH; sY += (tY-sY)*SMOOTH;
-  document.getElementById('gaze-dot').style.left = sX+'px';
-  document.getElementById('gaze-dot').style.top  = sY+'px';
+// ═══════════════════════════════════
+function render(){
+  sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
+  document.getElementById('gaze-dot').style.left=sX+'px';
+  document.getElementById('gaze-dot').style.top=sY+'px';
 
-  // Fokus Karten
-  const focusedCard = document.elementFromPoint(sX,sY)?.closest('.mem-card');
-  document.querySelectorAll('.mem-card').forEach(c => {
-    if (c !== focusedCard) c.classList.remove('focused');
-    else c.classList.add('focused');
+  const focusedCard=document.elementFromPoint(sX,sY)?.closest('.mem-card');
+  document.querySelectorAll('.mem-card').forEach(c=>{
+    if(c!==focusedCard)c.classList.remove('focused');else c.classList.add('focused');
+  });
+  const focusedTab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
+  document.querySelectorAll('.game-tab').forEach(t=>{
+    if(t!==focusedTab)t.classList.remove('focused');else t.classList.add('focused');
+  });
+  const focusedAdmin=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
+  document.querySelectorAll('.admin-game-btn').forEach(b=>{
+    if(b!==focusedAdmin)b.classList.remove('focused');else b.classList.add('focused');
   });
 
-  // Fokus Sidebar-Tabs
-  const focusedTab = document.elementFromPoint(sX,sY)?.closest('.game-tab');
-  document.querySelectorAll('.game-tab').forEach(t => {
-    if (t !== focusedTab) t.classList.remove('focused');
-    else t.classList.add('focused');
-  });
-
-  // Focus Status
-  if (focusedCard) setFocusStatus(focusedCard.dataset.name);
-  else if (focusedTab) setFocusStatus(focusedTab.textContent);
+  if(focusedCard)setFocusStatus(focusedCard.dataset.name);
+  else if(focusedTab)setFocusStatus(focusedTab.textContent);
+  else if(focusedAdmin)setFocusStatus(focusedAdmin.textContent.trim().slice(0,14));
   else setFocusStatus('–');
 
-  checkBufferZone(sX, sY);
+  checkBufferZone(sX,sY);
 
-  // Trail
-  if (ctx) {
-    trailHist.push({x:sX,y:sY});
-    if (trailHist.length>10) trailHist.shift();
+  if(ctx){
+    trailHist.push({x:sX,y:sY});if(trailHist.length>10)trailHist.shift();
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.beginPath(); ctx.strokeStyle='rgba(0,242,255,0.45)'; ctx.lineWidth=3;
+    ctx.beginPath();ctx.strokeStyle='rgba(0,242,255,0.45)';ctx.lineWidth=3;
     for(let i=0;i<trailHist.length;i++){ctx.globalAlpha=i/trailHist.length;ctx.lineTo(trailHist[i].x,trailHist[i].y);}
-    ctx.stroke(); ctx.globalAlpha=1;
+    ctx.stroke();ctx.globalAlpha=1;
   }
   requestAnimationFrame(render);
 }
 
-document.addEventListener('mousemove', e => { if(!camRunning){tX=e.clientX;tY=e.clientY;} });
+document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clientY;}});
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════
 //  STATUS HELPERS
-// ═══════════════════════════════════════
-function setDotStatus(state,text) {
-  document.getElementById('sb-dot-state').className = 's-'+state;
-  document.getElementById('sb-dot-text').textContent = text;
-}
-function setFocusStatus(n)  { document.getElementById('sb-focus-text').textContent = n||'–'; }
-function setZoneStatus(z)   { document.getElementById('sb-zone-text').textContent  = z||'–'; }
-function setLastAction(t)   { document.getElementById('sb-last-text').textContent  = t; }
-function setMicStatus(s,t)  { document.getElementById('sb-mic-dot').className=s; document.getElementById('sb-mic-text').textContent=t; }
-function speak(text)        { window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='de-DE'; window.speechSynthesis.speak(u); }
+// ═══════════════════════════════════
+function setDotStatus(s,t){document.getElementById('sb-dot-state').className='s-'+s;document.getElementById('sb-dot-text').textContent=t;}
+function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=n||'–';}
+function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
+function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
+function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
+function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
 
 render();
 </script>
