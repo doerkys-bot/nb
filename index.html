@@ -184,6 +184,28 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #win-flash{position:fixed;inset:0;z-index:5000;background:rgba(16,185,129,0);pointer-events:none;transition:background 0.3s;}
 #win-flash.on{background:rgba(16,185,129,0.18);}
 
+/* ── DATENSCHUTZ-EINWILLIGUNG ── */
+#consent-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3000000;padding:20px;}
+#consent-box{width:min(480px,94vw);background:rgba(8,14,30,0.98);border:1.5px solid rgba(0,242,255,0.3);border-radius:16px;padding:28px 26px;}
+#consent-box h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:4px;}
+.consent-sub{font-size:0.6rem;color:rgba(0,242,255,0.35);letter-spacing:2px;margin-bottom:20px;}
+.consent-item{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px;padding:11px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.07);}
+.consent-icon{font-size:1.5rem;flex-shrink:0;}
+.consent-item-title{font-size:0.67rem;color:white;letter-spacing:1px;margin-bottom:3px;}
+.consent-item-desc{font-size:0.57rem;color:rgba(255,255,255,0.45);line-height:1.7;}
+.badge-req{display:inline-block;font-size:0.5rem;padding:2px 6px;border-radius:5px;letter-spacing:1px;margin-left:6px;background:rgba(239,68,68,0.2);color:rgba(239,68,68,0.9);border:1px solid rgba(239,68,68,0.3);}
+.badge-opt{display:inline-block;font-size:0.5rem;padding:2px 6px;border-radius:5px;letter-spacing:1px;margin-left:6px;background:rgba(0,242,255,0.1);color:rgba(0,242,255,0.7);border:1px solid rgba(0,242,255,0.2);}
+.consent-notice{font-size:0.57rem;color:rgba(0,242,255,0.45);line-height:1.8;margin:16px 0;padding:11px;background:rgba(0,242,255,0.04);border-radius:8px;border-left:2px solid rgba(0,242,255,0.3);}
+.consent-btns{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
+.consent-btn{width:100%;padding:12px;border-radius:10px;font-family:'Courier New',monospace;font-size:0.67rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
+.cbtn-full{background:rgba(0,242,255,0.12);border:1.5px solid rgba(0,242,255,0.6);color:var(--neon);}
+.cbtn-full:hover{background:rgba(0,242,255,0.2);}
+.cbtn-cam{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);}
+.cbtn-cam:hover{background:rgba(255,255,255,0.1);}
+.cbtn-deny{background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);font-size:0.58rem;}
+.consent-foot{font-size:0.54rem;color:rgba(255,255,255,0.2);text-align:center;margin-top:12px;cursor:pointer;letter-spacing:1px;}
+.consent-foot:hover{color:rgba(255,255,255,0.5);}
+
 /* ── MIC-BUTTON ── */
 #mic-btn{
   position:fixed;
@@ -203,17 +225,18 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #mic-btn.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
 /* ── STATISTIK-PANEL ── */
 #stats-panel{
-  position:fixed;top:0;left:50%;
-  transform:translateX(-50%) translateY(-110%);
-  width:min(480px,92vw);z-index:7500;
-  background:rgba(8,14,30,0.97);backdrop-filter:blur(14px);
-  border:1.5px solid rgba(0,242,255,0.2);border-top:none;
+  position:fixed;top:0;left:0;right:0;
+  transform:translateY(-100%);
+  width:100%;max-width:560px;
+  margin:0 auto;
+  z-index:7500;
+  background:rgba(6,12,28,0.99);backdrop-filter:blur(14px);
+  border:2px solid rgba(0,242,255,0.5);border-top:none;
   border-radius:0 0 20px 20px;
   padding:22px 24px 20px;
-  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
   max-height:82vh;overflow-y:auto;scrollbar-width:none;
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
 }
-#stats-panel.open{transform:translateX(-50%) translateY(0);}
 #stats-panel h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:4px;text-align:center;}
 .stats-meta{font-size:0.6rem;color:rgba(0,242,255,0.3);letter-spacing:2px;text-align:center;margin-bottom:18px;}
 .stats-row{display:grid;grid-template-columns:1.6rem 1fr auto auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(0,242,255,0.07);}
@@ -233,32 +256,98 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #stats-clear:hover{background:rgba(220,38,38,0.2);}
 #stats-close:hover{background:rgba(0,242,255,0.12);}
 /* ── EINSTELLUNGS-PANEL ── */
-#settings-panel{
-  position:fixed;bottom:0;left:50%;
-  transform:translateX(-50%) translateY(110%);
-  width:min(520px,94vw);z-index:7500;
-  background:rgba(8,14,30,0.97);backdrop-filter:blur(14px);
-  border:1.5px solid rgba(0,242,255,0.2);border-bottom:none;
-  border-radius:20px 20px 0 0;
-  padding:22px 24px 28px;
-  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
-  max-height:80vh;overflow-y:auto;scrollbar-width:none;
+#panel-backdrop{
+  position:fixed;inset:0;z-index:7490;
+  background:rgba(0,0,0,0.75);
+  display:none;
+  cursor:pointer;
 }
-#settings-panel.open{transform:translateX(-50%) translateY(0);}
+#settings-panel{
+  position:fixed;bottom:0;left:0;right:0;
+  transform:translateY(100%);
+  width:100%;max-width:560px;
+  margin:0 auto;
+  z-index:7500;
+  background:rgba(6,12,28,0.99);backdrop-filter:blur(16px);
+  border:2px solid rgba(0,242,255,0.5);border-bottom:none;
+  border-radius:20px 20px 0 0;
+  box-shadow:0 -8px 40px rgba(0,242,255,0.15);
+  padding:22px 24px 28px;
+  max-height:80vh;overflow-y:auto;scrollbar-width:none;
+  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
 #settings-panel h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:18px;text-align:center;}
-.ts-section{margin-bottom:16px;}
-.ts-section-title{font-size:0.58rem;color:rgba(0,242,255,0.3);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid rgba(0,242,255,0.07);}
-.ts-row{margin-bottom:12px;}
-.ts-label{font-size:0.65rem;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:4px;}
-.ts-hint{font-size:0.57rem;color:rgba(0,242,255,0.3);letter-spacing:0.5px;line-height:1.6;margin-top:2px;}
-.ts-opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;}
-.ts-opt{padding:5px 11px;border-radius:8px;font-size:0.62rem;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);transition:background 0.15s,border-color 0.15s,color 0.15s;}
-.ts-opt.active{background:rgba(0,242,255,0.12);border-color:var(--neon);color:var(--neon);}
-.ts-close{width:100%;margin-top:18px;padding:11px;background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.2);border-radius:10px;color:rgba(0,242,255,0.6);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
-.ts-close:hover{background:rgba(0,242,255,0.12);}
+.ts-section{margin-bottom:18px;}
+.ts-section-title{font-size:0.62rem;color:rgba(0,242,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(0,242,255,0.25);}
+.ts-row{margin-bottom:14px;}
+.ts-label{font-size:0.68rem;color:rgba(255,255,255,0.9);letter-spacing:1px;margin-bottom:4px;}
+.ts-hint{font-size:0.6rem;color:rgba(0,242,255,0.55);letter-spacing:0.5px;line-height:1.7;margin-top:3px;}
+.ts-opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.ts-opt{padding:7px 13px;border-radius:8px;font-size:0.65rem;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.75);transition:background 0.15s,border-color 0.15s,color 0.15s;}
+.ts-opt.active{background:rgba(0,242,255,0.18);border-color:var(--neon);color:var(--neon);font-weight:bold;}
+.ts-opt:hover{background:rgba(255,255,255,0.12);color:white;}
+.ts-close{width:100%;margin-top:18px;padding:12px;background:rgba(0,242,255,0.1);border:1.5px solid rgba(0,242,255,0.5);border-radius:10px;color:rgba(0,242,255,0.9);font-family:'Courier New',monospace;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
+.ts-close:hover{background:rgba(0,242,255,0.2);}
+.ts-slider{
+  -webkit-appearance:none;appearance:none;
+  flex:1;height:22px;
+  background:transparent;
+  outline:none;cursor:pointer;
+}
+.ts-slider::-webkit-slider-runnable-track{
+  height:5px;background:rgba(0,242,255,0.35);border-radius:3px;
+}
+.ts-slider::-moz-range-track{
+  height:5px;background:rgba(0,242,255,0.35);border-radius:3px;
+}
+.ts-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--neon);box-shadow:0 0 10px rgba(0,242,255,0.7);cursor:pointer;
+  margin-top:-8px;
+}
+.ts-slider::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;border:none;
+  background:var(--neon);box-shadow:0 0 10px rgba(0,242,255,0.7);cursor:pointer;
+}
+.ts-slider-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.ts-slider-lbl{font-size:0.62rem;color:rgba(0,242,255,0.7);letter-spacing:1px;white-space:nowrap;text-transform:uppercase;}
+.ts-slider-val{font-size:0.72rem;color:var(--gold);min-width:42px;text-align:right;font-weight:bold;}
 </style>
 </head>
 <body>
+
+<!-- DSGVO-EINWILLIGUNG -->
+<div id="consent-overlay">
+  <div id="consent-box">
+    <h2>🔒 Datenschutz</h2>
+    <div class="consent-sub">AURION · EINWILLIGUNG NACH DSGVO ART. 6 ABS. 1 LIT. A</div>
+    <div class="consent-item">
+      <div class="consent-icon">📷</div>
+      <div>
+        <div class="consent-item-title">Kamera <span class="badge-req">Erforderlich</span></div>
+        <div class="consent-item-desc">Wird ausschließlich für das Iris-Tracking zur Blicksteuerung verwendet. Kein Bild wird gespeichert, übertragen oder aufgezeichnet. Verarbeitung erfolgt lokal im Browser.</div>
+      </div>
+    </div>
+    <div class="consent-item">
+      <div class="consent-icon">🎤</div>
+      <div>
+        <div class="consent-item-title">Mikrofon <span class="badge-opt">Optional</span></div>
+        <div class="consent-item-desc">Wird für Sprachbefehle verwendet. Kein Audio wird gespeichert oder übertragen. Verarbeitung erfolgt lokal über die Web Speech API des Browsers.</div>
+      </div>
+    </div>
+    <div class="consent-notice">
+      🔒 Alle Daten bleiben ausschließlich auf diesem Gerät.<br>
+      Kein Server · Keine Übertragung · Keine Cookies · Kein Tracking.<br>
+      Einwilligung kann jederzeit widerrufen werden.
+    </div>
+    <div class="consent-btns">
+      <button class="consent-btn cbtn-full" onclick="giveConsent('full')">📷 Kamera + 🎤 Mikrofon — Zustimmen</button>
+      <button class="consent-btn cbtn-cam" onclick="giveConsent('cam')">📷 Nur Kamera — Ohne Mikrofon fortfahren</button>
+      <button class="consent-btn cbtn-deny" onclick="giveConsent('deny')">Ablehnen — Ohne Kamera (nur Maus)</button>
+    </div>
+    <div class="consent-foot" id="consent-foot"></div>
+  </div>
+</div>
 
 <div id="overlay">
   <h1>Aurion · Gedächtnis</h1>
@@ -426,18 +515,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="gaze-dot"></div>
 <div id="mic-btn" class="mic-off"><span id="mic-btn-icon">🎙</span><span id="mic-btn-label">MIC AUS</span></div>
 
-<!-- STATISTIK -->
-<div id="stats-panel">
-  <h2>✦ Statistik</h2>
-  <div class="stats-meta" id="stats-meta">–</div>
-  <div id="stats-rows"></div>
-  <div class="stats-total" id="stats-total"></div>
-  <div class="stats-anon">🔒 Alle Daten bleiben lokal im Browser<br>Kein Server · Keine Übertragung · Anonym</div>
-  <div class="stats-btns">
-    <button class="stats-btn" id="stats-clear" onclick="clearStats()">Daten löschen</button>
-    <button class="stats-btn" id="stats-close" onclick="closeStats()">Schließen</button>
-  </div>
-</div>
+<!-- Statistik & Einstellungen werden per JS bei Bedarf ins DOM eingefügt -->
+<div id="panel-backdrop" onclick="closeAllPanels()"></div>
 
 <div id="status-bar">
   <div class="sb-item"><div id="sb-dot-state" class="s-idle"></div><span class="sb-label">DOT</span><span class="sb-value" id="sb-dot-text">IDLE</span></div>
@@ -451,133 +530,6 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <div class="sb-item"><span class="sb-label">LETZTES</span><span class="sb-value" id="sb-last-text">–</span></div>
 </div>
 
-<!-- EINSTELLUNGEN -->
-<div id="settings-panel">
-  <h2>⚙ Einstellungen</h2>
-
-  <div class="ts-section">
-    <div class="ts-section-title">Iris-Tracking · Blickbewegung</div>
-    <div class="ts-row">
-      <div class="ts-label">Empfindlichkeit horizontal
-        <div class="ts-hint">Niedrig: Blick muss weit wandern · Hoch: kleine Bewegungen genügen</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="scaleX" data-val="8">Niedrig</div>
-        <div class="ts-opt active" data-ts="scaleX" data-val="12">Normal</div>
-        <div class="ts-opt" data-ts="scaleX" data-val="16">Hoch</div>
-        <div class="ts-opt" data-ts="scaleX" data-val="20">Sehr hoch</div>
-      </div>
-    </div>
-    <div class="ts-row">
-      <div class="ts-label">Empfindlichkeit vertikal
-        <div class="ts-hint">Unabhängig von horizontal einstellbar</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="scaleY" data-val="10">Niedrig</div>
-        <div class="ts-opt active" data-ts="scaleY" data-val="15">Normal</div>
-        <div class="ts-opt" data-ts="scaleY" data-val="20">Hoch</div>
-        <div class="ts-opt" data-ts="scaleY" data-val="26">Sehr hoch</div>
-      </div>
-    </div>
-    <div class="ts-row">
-      <div class="ts-label">Glättung (Dot-Stabilität)
-        <div class="ts-hint">Direkt: Punkt folgt sofort, kann zittern · Träge: Punkt gleitet sanft, reagiert verzögert<br>Beispiel Zittern → Träge wählen</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="smooth" data-val="0.06">Sehr träge</div>
-        <div class="ts-opt" data-ts="smooth" data-val="0.09">Träge</div>
-        <div class="ts-opt active" data-ts="smooth" data-val="0.12">Normal</div>
-        <div class="ts-opt" data-ts="smooth" data-val="0.18">Direkt</div>
-        <div class="ts-opt" data-ts="smooth" data-val="0.25">Sehr direkt</div>
-      </div>
-    </div>
-    <div class="ts-row">
-      <div class="ts-label">Zentrum-Dämpfung
-        <div class="ts-hint">Stabilisiert den Punkt wenn geradeaus geschaut wird · Stark = Mitte wirkt wie ein Magnet</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="centerF" data-val="0.5">Aus</div>
-        <div class="ts-opt" data-ts="centerF" data-val="0.3">Schwach</div>
-        <div class="ts-opt active" data-ts="centerF" data-val="0.2">Normal</div>
-        <div class="ts-opt" data-ts="centerF" data-val="0.1">Stark</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ts-section">
-    <div class="ts-section-title">EAR · Blink-Erkennung</div>
-    <div class="ts-row">
-      <div class="ts-label">EAR-Schwelle (Blink-Empfindlichkeit)
-        <div class="ts-hint">Leicht: halbbewusstes Blinzeln reicht aus · Fest: Augen müssen klar und vollständig schließen<br>Beispiel: Blink wird zu oft erkannt → Leicht nach Fest korrigieren</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="earThresh" data-val="0.13">Sehr leicht</div>
-        <div class="ts-opt" data-ts="earThresh" data-val="0.155">Leicht</div>
-        <div class="ts-opt active" data-ts="earThresh" data-val="0.175">Normal</div>
-        <div class="ts-opt" data-ts="earThresh" data-val="0.20">Fest</div>
-        <div class="ts-opt" data-ts="earThresh" data-val="0.22">Sehr fest</div>
-      </div>
-    </div>
-    <div class="ts-row">
-      <div class="ts-label">Minimale Blink-Dauer
-        <div class="ts-hint">Kurz: schnelles Flattern reicht · Lang: nur bewusste Blinks werden erkannt<br>Beispiel: versehentliche Blinks → auf Lang stellen</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="blinkMin" data-val="50">Kurz (50ms)</div>
-        <div class="ts-opt active" data-ts="blinkMin" data-val="80">Normal (80ms)</div>
-        <div class="ts-opt" data-ts="blinkMin" data-val="110">Lang (110ms)</div>
-        <div class="ts-opt" data-ts="blinkMin" data-val="150">Sehr lang (150ms)</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ts-section">
-    <div class="ts-section-title">Doppelblink · Timing</div>
-    <div class="ts-row">
-      <div class="ts-label">Doppelblink-Fenster
-        <div class="ts-hint">Weit: mehr Zeit zwischen zwei Blinks erlaubt · Eng: Blinks müssen schnell hintereinander kommen<br>Beispiel: Doppelblink klappt selten → Weit wählen</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="blinkWin" data-val="400">Eng (400ms)</div>
-        <div class="ts-opt active" data-ts="blinkWin" data-val="600">Normal (600ms)</div>
-        <div class="ts-opt" data-ts="blinkWin" data-val="800">Weit (800ms)</div>
-        <div class="ts-opt" data-ts="blinkWin" data-val="1000">Sehr weit (1s)</div>
-      </div>
-    </div>
-    <div class="ts-row">
-      <div class="ts-label">Sperrzeit nach Aktion
-        <div class="ts-hint">Verhindert versehentliche Doppelaktionen · Kurz: schnell hintereinander möglich<br>Beispiel: nach Auswahl wird gleich die nächste Karte aufgedeckt → Länger stellen</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="cooldown" data-val="1000">Kurz (1s)</div>
-        <div class="ts-opt active" data-ts="cooldown" data-val="1800">Normal (1.8s)</div>
-        <div class="ts-opt" data-ts="cooldown" data-val="2500">Lang (2.5s)</div>
-        <div class="ts-opt" data-ts="cooldown" data-val="3500">Sehr lang (3.5s)</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="ts-section">
-    <div class="ts-section-title">Pufferzonen · Randbereiche</div>
-    <div class="ts-row">
-      <div class="ts-label">Zonenbreite (Triple-Blink-Bereiche)
-        <div class="ts-hint">Schmal: Randbereich kleiner, mehr Spielfläche · Breit: leichter zu erreichen<br>Links=Admin · Rechts=Sidebar · Oben=Statistik · Unten=Einstellungen</div>
-      </div>
-      <div class="ts-opts">
-        <div class="ts-opt" data-ts="bufPct" data-val="0.10">Schmal (10%)</div>
-        <div class="ts-opt" data-ts="bufPct" data-val="0.13">Klein (13%)</div>
-        <div class="ts-opt active" data-ts="bufPct" data-val="0.16">Normal (16%)</div>
-        <div class="ts-opt" data-ts="bufPct" data-val="0.20">Breit (20%)</div>
-        <div class="ts-opt" data-ts="bufPct" data-val="0.25">Sehr breit (25%)</div>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;gap:10px;margin-top:18px;">
-    <button id="profile-save-btn" onclick="saveProfile()" style="flex:1;padding:11px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.3);border-radius:10px;color:rgba(16,185,129,0.8);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s;">Profil speichern</button>
-    <button class="ts-close" onclick="closeSettings()" style="flex:1;margin-top:0;">✕ Schließen</button>
-  </div>
-</div>
 
 <video id="v" style="display:none" autoplay playsinline muted></video>
 
@@ -737,6 +689,7 @@ const trackSettings={
   centerR:    80,      // px: Radius der Zentrum-Dämpfungszone
   centerF:    0.2,     // Dämpfungsfaktor in der Mitte (0=eingefroren, 1=keine Dämpfung)
   bufPct:     0.16,    // Pufferzone-Breite als Anteil der Bildschirmgröße
+  irisHead:   1.0,     // 0 = reines Kopf-Tracking · 1 = reines Iris-Tracking
 };
 
 // ═══════════════════════════════════════════════════
@@ -779,6 +732,12 @@ let blinkStart=null,lastBlinkEnd=0,blinkCooldown=0,waitTimer=null,blinkCount=0;
 let currentZone=null,zoneUnlocked=false;
 let gestureStart=null,adminGateOpen=false;
 let sidebarShown=false,sidebarAnnouncedThisSession=false;
+
+// Gestensteuerung (Augenbrauen hoch / Stirnrunzeln)
+let browUpStart=null,frownStart=null,lastGestureTrigger=0;
+const GESTURE_HOLD=700;    // ms halten bis Auslösung
+const GESTURE_COOLDOWN_MS=2500; // ms Sperrzeit nach Auslösung
+const FROWN_THRESH=0.29;   // normalisierter innerer Brauen-Abstand beim Runzeln
 
 const settings={
   'memory-pairs':'6','memory-flip':'1500','sym-set':'natur',
@@ -847,16 +806,14 @@ function recordStat(gameId,correct,total){
   s.lastPlayed=today;
   saveStats(s);
 }
-function openStats(){
+function buildStatsContent(){
   const s=loadStats();
-  // Meta-Zeile
   const meta=document.getElementById('stats-meta');
   if(s.firstPlayed){
     meta.textContent=`Seit ${s.firstPlayed} · Zuletzt ${s.lastPlayed}`;
   } else {
     meta.textContent='Noch keine Daten';
   }
-  // Reihen
   const rows=document.getElementById('stats-rows');
   rows.innerHTML='';
   Object.entries(GAME_META).forEach(([id,m])=>{
@@ -874,15 +831,12 @@ function openStats(){
       <div class="stats-pct">${pctStr}</div>
     </div>`;
   });
-  // Gesamt
   document.getElementById('stats-total').innerHTML=
     `<span>✦ ${s.sessions} Sitzungen gesamt</span><span>${s.firstPlayed?Math.ceil((new Date(s.lastPlayed)-new Date(s.firstPlayed))/(86400000)+1)+' Tage aktiv':''}</span>`;
-  document.getElementById('stats-panel').classList.add('open');
 }
-function closeStats(){document.getElementById('stats-panel').classList.remove('open');}
 function clearStats(){
   if(confirm('Alle Statistikdaten löschen?')){
-    localStorage.removeItem(STATS_KEY);openStats();speak('Daten gelöscht');
+    localStorage.removeItem(STATS_KEY);buildStatsContent();speak('Daten gelöscht');
   }
 }
 
@@ -1434,6 +1388,51 @@ function checkAdminGesture(lm){
   }
 }
 
+// ── ZONEN-GESTEN: Augenbrauen hoch oder Stirnrunzeln ──────────
+function checkGestures(lm){
+  if(adminGateOpen)return;
+  const now=Date.now();
+  if(now-lastGestureTrigger<GESTURE_COOLDOWN_MS)return;
+  const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
+  const browAvg=(d(70,159)+d(300,386))/2;
+  const browsUp=browAvg>BROW_THRESH;
+  const eyeW=d(33,263);
+  const frowning=eyeW>0&&(d(55,285)/eyeW)<FROWN_THRESH;
+
+  if(browsUp&&!frowning){
+    if(!browUpStart)browUpStart=now;
+    const pct=Math.min(100,Math.round((now-browUpStart)/GESTURE_HOLD*100));
+    if(pct>20)setLastAction('↑ Brauen: '+pct+'%');
+    if(now-browUpStart>=GESTURE_HOLD){browUpStart=null;triggerGestureZone(now);}
+  } else { browUpStart=null; }
+
+  if(frowning&&!browsUp){
+    if(!frownStart)frownStart=now;
+    const pct=Math.min(100,Math.round((now-frownStart)/GESTURE_HOLD*100));
+    if(pct>20)setLastAction('↓ Runzeln: '+pct+'%');
+    if(now-frownStart>=GESTURE_HOLD){frownStart=null;triggerGestureZone(now);}
+  } else { frownStart=null; }
+}
+
+function triggerGestureZone(now){
+  lastGestureTrigger=now;
+  // Offenes Panel schließen hat Vorrang
+  if(document.getElementById('stats-panel')){closeStats();speak('Statistik geschlossen');return;}
+  if(document.getElementById('settings-panel')){closeSettings();speak('Einstellungen geschlossen');return;}
+  if(document.getElementById('sidebar').classList.contains('visible')){
+    document.getElementById('sidebar').classList.remove('visible');speak('Sidebar geschlossen');return;
+  }
+  const bx=innerWidth*trackSettings.bufPct,by=innerHeight*trackSettings.bufPct;
+  let zone=null;
+  if(sY<by)zone='OBEN';
+  else if(sY>innerHeight-by)zone='UNTEN';
+  else if(sX<bx)zone='LINKS';
+  else if(sX>innerWidth-bx)zone='RECHTS';
+  if(zone){speak('Zone '+zone);activateZone(zone);}
+  else speak('Geste — bitte in eine Randzone schauen');
+  setLastAction('GESTE: '+(zone||'Mitte'));
+}
+
 // ═══════════════════════════════════════════════════
 //  FACE MESH / BLINK
 // ═══════════════════════════════════════════════════
@@ -1441,10 +1440,20 @@ function onResults(r){
   if(!r.multiFaceLandmarks?.[0]){setDotStatus('idle','KEIN GESICHT');return;}
   const lm=r.multiFaceLandmarks[0];
   checkAdminGesture(lm);
+  checkGestures(lm);
   const iris=lm[468];
   const ts=trackSettings;
-  let rawX=(0.5-iris.x)*ts.scaleX*innerWidth+innerWidth/2;
-  let rawY=(iris.y-0.5)*ts.scaleY*innerHeight+innerHeight/2;
+  // Kopf-Referenzpunkt: Mittelpunkt zwischen äußeren Augenwinkeln
+  const headRef={
+    x:(lm[33].x+lm[263].x)/2,
+    y:(lm[33].y+lm[263].y)/2
+  };
+  // Stufenlos zwischen Kopf (0) und Iris (1) blenden
+  const blend=ts.irisHead;
+  const trackX=headRef.x+blend*(iris.x-headRef.x);
+  const trackY=headRef.y+blend*(iris.y-headRef.y);
+  let rawX=(0.5-trackX)*ts.scaleX*innerWidth+innerWidth/2;
+  let rawY=(trackY-0.5)*ts.scaleY*innerHeight+innerHeight/2;
   bufX.push(rawX);bufY.push(rawY);
   if(bufX.length>BUFFER_SZ){bufX.shift();bufY.shift();}
   let avgX=bufX.reduce((a,b)=>a+b,0)/bufX.length,avgY=bufY.reduce((a,b)=>a+b,0)/bufY.length;
@@ -1500,13 +1509,109 @@ function activateZone(zone){
   setLastAction('ZONE: '+zone+' aktiviert');
 }
 
-function openSettings(){
-  syncSettingsUI();
-  document.getElementById('settings-panel').classList.add('open');
-}
-function closeSettings(){document.getElementById('settings-panel').classList.remove('open');}
+// ── PANELS: erst bei Bedarf ins DOM, beim Schließen wieder raus ──
 
-// ── PROFIL SPEICHERN / LADEN ──────────────────────
+function openStats(){
+  if(document.getElementById('stats-panel'))return;
+  showBackdrop();
+  const p=document.createElement('div');
+  p.id='stats-panel';
+  p.innerHTML=`
+    <h2>✦ Statistik</h2>
+    <div class="stats-meta" id="stats-meta">–</div>
+    <div id="stats-rows"></div>
+    <div class="stats-total" id="stats-total"></div>
+    <div class="stats-anon">🔒 Alle Daten bleiben lokal im Browser<br>Kein Server · Keine Übertragung · Anonym</div>
+    <div class="stats-btns">
+      <button class="stats-btn" id="stats-clear" onclick="clearStats()">Daten löschen</button>
+      <button class="stats-btn" id="stats-close" onclick="closeStats()">Schließen</button>
+    </div>`;
+  document.body.appendChild(p);
+  buildStatsContent();
+  void p.offsetHeight;
+  p.style.transform='translateY(0)';
+}
+function closeStats(){
+  const p=document.getElementById('stats-panel');if(!p)return;
+  hideBackdrop();
+  p.style.transform='translateY(-100%)';
+  p.addEventListener('transitionend',e=>{if(e.target===p&&e.propertyName==='transform')p.remove();},{once:true});
+}
+function clearStats(){
+  if(confirm('Alle Statistikdaten löschen?')){
+    localStorage.removeItem(STATS_KEY);buildStatsContent();speak('Daten gelöscht');
+  }
+}
+
+function openSettings(){
+  if(document.getElementById('settings-panel'))return;
+  const p=document.createElement('div');
+  p.id='settings-panel';
+  p.innerHTML=`
+  <h2>⚙ Einstellungen</h2>
+  <div class="ts-section">
+    <div class="ts-section-title">Iris ↔ Kopf · Tracking-Quelle</div>
+    <div class="ts-row">
+      <div class="ts-label">Blending: Kopfbewegung ↔ Augenbewegung
+        <div class="ts-hint">Kopf: Dot folgt Kopfbewegung — gut bei eingeschränkter Augenmotorik<br>Iris: Dot folgt der Iris — präzise<br>Mitte: Kombination beider</div>
+      </div>
+      <div class="ts-slider-row">
+        <span class="ts-slider-lbl">Kopf</span>
+        <input type="range" id="iris-head-slider" class="ts-slider" min="0" max="1" step="0.01" value="${trackSettings.irisHead}"
+               oninput="trackSettings.irisHead=parseFloat(this.value);document.getElementById('iris-head-val').textContent=irisHeadLabel(this.value)">
+        <span class="ts-slider-lbl">Iris</span>
+        <span class="ts-slider-val" id="iris-head-val">${irisHeadLabel(trackSettings.irisHead)}</span>
+      </div>
+    </div>
+  </div>
+  <div class="ts-section">
+    <div class="ts-section-title">Iris-Tracking · Blickbewegung</div>
+    ${tsRow('Empfindlichkeit horizontal','Niedrig: Blick muss weit wandern · Hoch: kleine Bewegungen genügen','scaleX',[[8,'Niedrig'],[12,'Normal'],[16,'Hoch'],[20,'Sehr hoch']])}
+    ${tsRow('Empfindlichkeit vertikal','Unabhängig von horizontal einstellbar','scaleY',[[10,'Niedrig'],[15,'Normal'],[20,'Hoch'],[26,'Sehr hoch']])}
+    ${tsRow('Glättung (Dot-Stabilität)','Sehr träge: ruhig aber verzögert · Sehr direkt: sofort aber kann zittern','smooth',[[0.06,'Sehr träge'],[0.09,'Träge'],[0.12,'Normal'],[0.18,'Direkt'],[0.25,'Sehr direkt']])}
+    ${tsRow('Zentrum-Dämpfung','Stabilisiert Mitte · Stark = Mitte wirkt wie Magnet','centerF',[[0.5,'Aus'],[0.3,'Schwach'],[0.2,'Normal'],[0.1,'Stark']])}
+  </div>
+  <div class="ts-section">
+    <div class="ts-section-title">EAR · Blink-Erkennung</div>
+    ${tsRow('EAR-Schwelle','Leicht: halbbewusstes Blinzeln reicht · Fest: muss klar blinzeln<br>Beispiel: zu viele Blinks → Fest wählen','earThresh',[[0.13,'Sehr leicht'],[0.155,'Leicht'],[0.175,'Normal'],[0.20,'Fest'],[0.22,'Sehr fest']])}
+    ${tsRow('Minimale Blink-Dauer','Kurz: schnelles Flattern reicht · Lang: nur bewusste Blinks<br>Beispiel: versehentliche Blinks → Lang wählen','blinkMin',[[50,'Kurz 50ms'],[80,'Normal 80ms'],[110,'Lang 110ms'],[150,'Sehr lang 150ms']])}
+  </div>
+  <div class="ts-section">
+    <div class="ts-section-title">Doppelblink · Timing</div>
+    ${tsRow('Doppelblink-Fenster','Weit: mehr Zeit erlaubt · Eng: Blinks müssen schnell kommen<br>Beispiel: Doppelblink klappt selten → Weit wählen','blinkWin',[[400,'Eng 400ms'],[600,'Normal 600ms'],[800,'Weit 800ms'],[1000,'Sehr weit 1s']])}
+    ${tsRow('Sperrzeit nach Aktion','Verhindert versehentliche Doppelaktionen<br>Beispiel: gleich wieder ausgelöst → Länger stellen','cooldown',[[1000,'Kurz 1s'],[1800,'Normal 1.8s'],[2500,'Lang 2.5s'],[3500,'Sehr lang 3.5s']])}
+  </div>
+  <div class="ts-section">
+    <div class="ts-section-title">Pufferzonen · Randbereiche</div>
+    ${tsRow('Zonenbreite','Links=Admin · Rechts=Sidebar · Oben=Statistik · Unten=Einstellungen<br>Breit = leichter zu erreichen','bufPct',[[0.10,'Schmal 10%'],[0.13,'Klein 13%'],[0.16,'Normal 16%'],[0.20,'Breit 20%'],[0.25,'Sehr breit 25%']])}
+  </div>
+  <div style="display:flex;gap:10px;margin-top:18px;">
+    <button onclick="saveProfile()" style="flex:1;padding:11px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.4);border-radius:10px;color:rgba(16,185,129,0.9);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;" id="profile-save-btn">Profil speichern</button>
+    <button onclick="closeSettings()" style="flex:1;padding:11px;background:rgba(0,242,255,0.07);border:1px solid rgba(0,242,255,0.4);border-radius:10px;color:rgba(0,242,255,0.9);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">✕ Schließen</button>
+  </div>`;
+  document.body.appendChild(p);
+  showBackdrop();
+  void p.offsetHeight;
+  p.style.transform='translateY(0)';
+}
+function closeSettings(){
+  const p=document.getElementById('settings-panel');if(!p)return;
+  hideBackdrop();
+  p.style.transform='translateY(100%)';
+  p.addEventListener('transitionend',e=>{if(e.target===p&&e.propertyName==='transform')p.remove();},{once:true});
+}
+
+// Helper: erzeugt eine Einstellungszeile mit Optionsbuttons
+function tsRow(label,hint,key,opts){
+  const btns=opts.map(([val,txt])=>{
+    const active=Math.abs(trackSettings[key]-val)<0.0001?'active':'';
+    return `<div class="ts-opt ${active}" data-ts="${key}" data-val="${val}">${txt}</div>`;
+  }).join('');
+  return `<div class="ts-row">
+    <div class="ts-label">${label}<div class="ts-hint">${hint}</div></div>
+    <div class="ts-opts">${btns}</div>
+  </div>`;
+}
 const PROFILE_KEY='aurion_profile_v1';
 
 function saveProfile(){
@@ -1529,14 +1634,31 @@ function loadProfile(){
   }catch{}
 }
 
+function showBackdrop(){document.getElementById('panel-backdrop').style.display='block';}
+function hideBackdrop(){document.getElementById('panel-backdrop').style.display='none';}
+function closeAllPanels(){closeStats();closeSettings();}
+  const n=parseFloat(v);
+  if(n<=0.05)return'Kopf';
+  if(n<=0.25)return'Kopf+';
+  if(n<=0.45)return'Mix–';
+  if(n<=0.55)return'Mix';
+  if(n<=0.75)return'Mix+';
+  if(n<=0.95)return'Iris–';
+  return'Iris';
+}
+
 // Aktive Buttons im Einstellungs-Panel mit gespeicherten Werten synchronisieren
 function syncSettingsUI(){
   document.querySelectorAll('.ts-opt').forEach(opt=>{
     const key=opt.dataset.ts,val=parseFloat(opt.dataset.val);
     if(!key)return;
-    // Nächste Option zum gespeicherten Wert markieren
     opt.classList.toggle('active',Math.abs(trackSettings[key]-val)<0.0001);
   });
+  // Slider synchronisieren
+  const sl=document.getElementById('iris-head-slider');
+  const lbl=document.getElementById('iris-head-val');
+  if(sl){sl.value=trackSettings.irisHead;}
+  if(lbl){lbl.textContent=irisHeadLabel(trackSettings.irisHead);}
 }
 
 // Einstellungs-Option angeklickt → trackSettings sofort aktualisieren
@@ -1565,7 +1687,29 @@ function triggerVoice(){
 }
 
 function doAction(){
-  // UI-Elemente: Admin-Buttons und Tabs → elementFromPoint
+  const statsOpen=!!document.getElementById('stats-panel');
+  const settingsOpen=!!document.getElementById('settings-panel');
+  const sidebarOpen=document.getElementById('sidebar').classList.contains('visible');
+
+  // Wenn Panel offen: fokussiertes Element darin aktivieren — sonst Panel schließen
+  if(settingsOpen){
+    if(currentFocusEl?.classList.contains('ts-opt')){currentFocusEl.click();return;}
+    if(currentFocusEl?.classList.contains('stats-btn')){currentFocusEl.click();return;}
+    closeSettings();return;
+  }
+  if(statsOpen){
+    if(currentFocusEl?.classList.contains('stats-btn')){currentFocusEl.click();return;}
+    closeStats();return;
+  }
+  if(sidebarOpen){
+    // Tab in Sidebar aktivieren oder Sidebar schließen
+    const pt=document.elementFromPoint(sX,sY);
+    const tab=pt?.closest('.game-tab');
+    if(tab){handleTabSelect(tab);return;}
+    document.getElementById('sidebar').classList.remove('visible');return;
+  }
+
+  // Normal: UI-Elemente dann Spiel
   const pt=document.elementFromPoint(sX,sY);
   if(pt){
     const adminBtn=pt.closest('.admin-game-btn');
@@ -1573,11 +1717,7 @@ function doAction(){
     const tab=pt.closest('.game-tab');
     if(tab){handleTabSelect(tab);return;}
   }
-  // Spiel-Elemente: currentFocusEl aus Render-Loop (aktuell, präzise)
-  // Bugfix: FOCUS_SEL+'.focused' wäre ein kaputter CSS-Selektor der immer
-  // das erste Element der Liste findet — daher globale Variable stattdessen.
   if(currentFocusEl){dispatchAction(currentFocusEl);return;}
-  // Fallback
   if(pt)dispatchAction(pt);
 }
 
@@ -1640,16 +1780,28 @@ function initSpeech(){
     if(t.includes('mikrofon aus')||t.includes('mic aus')){stopMic();return;}
     if(t.includes('mikrofon an')||t.includes('mic an')){startMic();return;}
 
-    // Sidebar: "sidebar" + Schließwort → zu; nur "sidebar" → auf
+    // Schließen: jedes offene Panel zuerst
+    const closeWord=t.includes('weg')||t.includes('schließen')||t.includes('close');
+    if(closeWord||t.includes('zu')){
+      if(document.getElementById('stats-panel')){closeStats();speak('Statistik geschlossen');return;}
+      if(document.getElementById('settings-panel')){closeSettings();speak('Einstellungen geschlossen');return;}
+      if(document.getElementById('sidebar').classList.contains('visible')){
+        document.getElementById('sidebar').classList.remove('visible');speak('Sidebar geschlossen');return;
+      }
+    }
+
+    // Dashboard-Befehle
+    if(t.includes('dashboard')){
+      if(t.includes('unten'))  {openSettings();return;}
+      if(t.includes('links'))  {openAdminGate();return;}
+      if(t.includes('oben'))   {openStats();return;}
+      if(t.includes('rechts')) {document.getElementById('sidebar').classList.add('visible');sidebarShown=true;speak('Spielauswahl');return;}
+    }
     if(t.includes('sidebar')){
-      const close=t.includes('weg')||t.includes('zu')||t.includes('schließen')||t.includes('close');
-      if(close){document.getElementById('sidebar').classList.remove('visible');speak('Sidebar geschlossen');}
+      const close=t.includes('weg')||t.includes('zu')||t.includes('schließen');
+      if(close){document.getElementById('sidebar').classList.remove('visible');}
       else{document.getElementById('sidebar').classList.add('visible');sidebarShown=true;speak('Sidebar geöffnet');}
       return;
-    }
-    // "weg" / "schließen" allein schließt auch Sidebar wenn offen
-    if((t.includes('weg')||t.includes('schließen'))&&document.getElementById('sidebar').classList.contains('visible')){
-      document.getElementById('sidebar').classList.remove('visible');return;
     }
 
     // Spiele per Stimme aktivieren
@@ -1702,7 +1854,7 @@ function updateMicBtn(){
 // ═══════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════
-const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn';
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn,.ts-opt,.stats-btn';
 
 function render(){
   sX+=(tX-sX)*trackSettings.smooth;sY+=(tY-sY)*trackSettings.smooth;
@@ -1735,6 +1887,16 @@ function render(){
 }
 
 document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clientY;}});
+document.addEventListener('touchmove',e=>{
+  if(!camRunning&&e.touches[0]){
+    tX=e.touches[0].clientX;tY=e.touches[0].clientY;
+  }
+},{passive:true});
+document.addEventListener('touchstart',e=>{
+  if(!camRunning&&e.touches[0]){
+    tX=e.touches[0].clientX;tY=e.touches[0].clientY;
+  }
+},{passive:true});
 
 // ═══════════════════════════════════════════════════
 //  SYSTEM START
@@ -1742,37 +1904,53 @@ document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clie
 async function initSystem(){
   document.getElementById('overlay').style.display='none';
   loadGame('memory');
+
+  // Schritt 1: Kamera/Mikrofon-Zugriff
+  const micAllowed=!window._consentNoMic;
+  let stream;
   try{
-    await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-    camRunning=true;
+    stream=await navigator.mediaDevices.getUserMedia(
+      micAllowed?{video:true,audio:true}:{video:true}
+    );
+  }catch(e){
+    camRunning=false;
+    setDotStatus('idle','CAM FEHLER');
+    showCamError(e,'getUserMedia: '+(e.name||e.message||e));
+    return;
+  }
+
+  // Schritt 2: MediaPipe initialisieren
+  camRunning=true;
+  try{
     canvas=document.getElementById('trail-canvas');
     canvas.width=innerWidth;canvas.height=innerHeight;
     ctx=canvas.getContext('2d');
+    const v=document.getElementById('v');
+    // Stream direkt zuweisen statt neu anzufragen
+    v.srcObject=stream;
     const fm=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
     fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
     fm.onResults(onResults);
-    new Camera(document.getElementById('v'),{
-      onFrame:async()=>{if(camRunning)await fm.send({image:document.getElementById('v')});},
+    new Camera(v,{
+      onFrame:async()=>{if(camRunning)await fm.send({image:v});},
       width:640,height:480
     }).start();
-    initSpeech();setDotStatus('idle','TRACKING');updateMicBtn();
-  }catch(e){setDotStatus('idle','FEHLER');}
+    if(micAllowed)initSpeech();
+    setDotStatus('idle','TRACKING');updateMicBtn();
+  }catch(e){
+    camRunning=false;
+    setDotStatus('idle','MEDIAPIPE FEHLER');
+    showCamError(e,'MediaPipe: '+(e.name||e.message||e));
+  }
 }
 
-// ═══════════════════════════════════════════════════
-//  STATUS HELPERS
-// ═══════════════════════════════════════════════════
-function setDotStatus(s,t){document.getElementById('sb-dot-state').className='s-'+s;document.getElementById('sb-dot-text').textContent=t;}
-function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=n||'–';}
-function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
-function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
-function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
-function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
-
-// Gespeichertes Profil laden (vor dem ersten Render)
-loadProfile();
-
-render();
-</script>
-</body>
-</html>
+function showCamError(e,detail){
+  document.getElementById('cam-error-banner')?.remove();
+  let msg='Kamera konnte nicht gestartet werden';
+  if(e?.name==='NotAllowedError')msg='Kamerazugriff verweigert — im Browser erlauben';
+  else if(e?.name==='NotFoundError')msg='Keine Kamera gefunden';
+  else if(e?.name==='NotReadableError')msg='Kamera wird von einer anderen App verwendet';
+  else if(e?.name==='OverconstrainedError')msg='Kamera unterstützt diese Einstellungen nicht';
+  const banner=document.createElement('div');
+  banner.id='cam-error-banner';
+  banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:4000000;backgrou
