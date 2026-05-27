@@ -201,6 +201,61 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #mic-btn.focused{border-color:var(--neon);background:rgba(0,242,255,0.1);box-shadow:0 0 14px rgba(0,242,255,0.2);color:white;}
 #mic-btn.mic-on {border-color:var(--blink2);color:var(--blink2);}
 #mic-btn.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
+/* ── STATISTIK-PANEL ── */
+#stats-panel{
+  position:fixed;top:0;left:50%;
+  transform:translateX(-50%) translateY(-110%);
+  width:min(480px,92vw);z-index:7500;
+  background:rgba(8,14,30,0.97);backdrop-filter:blur(14px);
+  border:1.5px solid rgba(0,242,255,0.2);border-top:none;
+  border-radius:0 0 20px 20px;
+  padding:22px 24px 20px;
+  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  max-height:82vh;overflow-y:auto;scrollbar-width:none;
+}
+#stats-panel.open{transform:translateX(-50%) translateY(0);}
+#stats-panel h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:4px;text-align:center;}
+.stats-meta{font-size:0.6rem;color:rgba(0,242,255,0.3);letter-spacing:2px;text-align:center;margin-bottom:18px;}
+.stats-row{display:grid;grid-template-columns:1.6rem 1fr auto auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(0,242,255,0.07);}
+.stats-row:last-of-type{border-bottom:none;}
+.stats-icon{font-size:1.1rem;text-align:center;}
+.stats-name{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);}
+.stats-bar-wrap{position:relative;height:5px;background:rgba(0,242,255,0.08);border-radius:3px;overflow:hidden;margin-top:3px;}
+.stats-bar-fill{height:100%;border-radius:3px;background:var(--neon);transition:width 0.8s ease;}
+.stats-rounds{font-size:0.6rem;color:rgba(0,242,255,0.4);letter-spacing:1px;white-space:nowrap;}
+.stats-pct{font-size:0.7rem;font-weight:bold;color:var(--gold);min-width:34px;text-align:right;}
+.stats-total{margin-top:16px;padding-top:14px;border-top:1px solid rgba(0,242,255,0.1);display:flex;justify-content:space-between;align-items:center;font-size:0.6rem;color:rgba(0,242,255,0.35);letter-spacing:2px;}
+.stats-anon{font-size:0.58rem;color:rgba(0,242,255,0.25);letter-spacing:1px;text-align:center;margin-top:10px;line-height:1.7;}
+.stats-btns{display:flex;gap:10px;margin-top:16px;}
+.stats-btn{flex:1;padding:10px;border-radius:10px;font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
+#stats-clear{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);color:rgba(220,38,38,0.7);}
+#stats-close{background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.2);color:rgba(0,242,255,0.6);}
+#stats-clear:hover{background:rgba(220,38,38,0.2);}
+#stats-close:hover{background:rgba(0,242,255,0.12);}
+/* ── EINSTELLUNGS-PANEL ── */
+#settings-panel{
+  position:fixed;bottom:0;left:50%;
+  transform:translateX(-50%) translateY(110%);
+  width:min(520px,94vw);z-index:7500;
+  background:rgba(8,14,30,0.97);backdrop-filter:blur(14px);
+  border:1.5px solid rgba(0,242,255,0.2);border-bottom:none;
+  border-radius:20px 20px 0 0;
+  padding:22px 24px 28px;
+  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  max-height:80vh;overflow-y:auto;scrollbar-width:none;
+}
+#settings-panel.open{transform:translateX(-50%) translateY(0);}
+#settings-panel h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:18px;text-align:center;}
+.ts-section{margin-bottom:16px;}
+.ts-section-title{font-size:0.58rem;color:rgba(0,242,255,0.3);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid rgba(0,242,255,0.07);}
+.ts-row{margin-bottom:12px;}
+.ts-label{font-size:0.65rem;color:rgba(255,255,255,0.75);letter-spacing:1px;margin-bottom:4px;}
+.ts-hint{font-size:0.57rem;color:rgba(0,242,255,0.3);letter-spacing:0.5px;line-height:1.6;margin-top:2px;}
+.ts-opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;}
+.ts-opt{padding:5px 11px;border-radius:8px;font-size:0.62rem;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);transition:background 0.15s,border-color 0.15s,color 0.15s;}
+.ts-opt.active{background:rgba(0,242,255,0.12);border-color:var(--neon);color:var(--neon);}
+.ts-close{width:100%;margin-top:18px;padding:11px;background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.2);border-radius:10px;color:rgba(0,242,255,0.6);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
+.ts-close:hover{background:rgba(0,242,255,0.12);}
 </style>
 </head>
 <body>
@@ -371,6 +426,19 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="gaze-dot"></div>
 <div id="mic-btn" class="mic-off"><span id="mic-btn-icon">🎙</span><span id="mic-btn-label">MIC AUS</span></div>
 
+<!-- STATISTIK -->
+<div id="stats-panel">
+  <h2>✦ Statistik</h2>
+  <div class="stats-meta" id="stats-meta">–</div>
+  <div id="stats-rows"></div>
+  <div class="stats-total" id="stats-total"></div>
+  <div class="stats-anon">🔒 Alle Daten bleiben lokal im Browser<br>Kein Server · Keine Übertragung · Anonym</div>
+  <div class="stats-btns">
+    <button class="stats-btn" id="stats-clear" onclick="clearStats()">Daten löschen</button>
+    <button class="stats-btn" id="stats-close" onclick="closeStats()">Schließen</button>
+  </div>
+</div>
+
 <div id="status-bar">
   <div class="sb-item"><div id="sb-dot-state" class="s-idle"></div><span class="sb-label">DOT</span><span class="sb-value" id="sb-dot-text">IDLE</span></div>
   <div class="sb-divider"></div>
@@ -381,6 +449,134 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <div class="sb-item"><span class="sb-label">ZONE</span><span class="sb-value" id="sb-zone-text">–</span></div>
   <div class="sb-divider"></div>
   <div class="sb-item"><span class="sb-label">LETZTES</span><span class="sb-value" id="sb-last-text">–</span></div>
+</div>
+
+<!-- EINSTELLUNGEN -->
+<div id="settings-panel">
+  <h2>⚙ Einstellungen</h2>
+
+  <div class="ts-section">
+    <div class="ts-section-title">Iris-Tracking · Blickbewegung</div>
+    <div class="ts-row">
+      <div class="ts-label">Empfindlichkeit horizontal
+        <div class="ts-hint">Niedrig: Blick muss weit wandern · Hoch: kleine Bewegungen genügen</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="scaleX" data-val="8">Niedrig</div>
+        <div class="ts-opt active" data-ts="scaleX" data-val="12">Normal</div>
+        <div class="ts-opt" data-ts="scaleX" data-val="16">Hoch</div>
+        <div class="ts-opt" data-ts="scaleX" data-val="20">Sehr hoch</div>
+      </div>
+    </div>
+    <div class="ts-row">
+      <div class="ts-label">Empfindlichkeit vertikal
+        <div class="ts-hint">Unabhängig von horizontal einstellbar</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="scaleY" data-val="10">Niedrig</div>
+        <div class="ts-opt active" data-ts="scaleY" data-val="15">Normal</div>
+        <div class="ts-opt" data-ts="scaleY" data-val="20">Hoch</div>
+        <div class="ts-opt" data-ts="scaleY" data-val="26">Sehr hoch</div>
+      </div>
+    </div>
+    <div class="ts-row">
+      <div class="ts-label">Glättung (Dot-Stabilität)
+        <div class="ts-hint">Direkt: Punkt folgt sofort, kann zittern · Träge: Punkt gleitet sanft, reagiert verzögert<br>Beispiel Zittern → Träge wählen</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="smooth" data-val="0.06">Sehr träge</div>
+        <div class="ts-opt" data-ts="smooth" data-val="0.09">Träge</div>
+        <div class="ts-opt active" data-ts="smooth" data-val="0.12">Normal</div>
+        <div class="ts-opt" data-ts="smooth" data-val="0.18">Direkt</div>
+        <div class="ts-opt" data-ts="smooth" data-val="0.25">Sehr direkt</div>
+      </div>
+    </div>
+    <div class="ts-row">
+      <div class="ts-label">Zentrum-Dämpfung
+        <div class="ts-hint">Stabilisiert den Punkt wenn geradeaus geschaut wird · Stark = Mitte wirkt wie ein Magnet</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="centerF" data-val="0.5">Aus</div>
+        <div class="ts-opt" data-ts="centerF" data-val="0.3">Schwach</div>
+        <div class="ts-opt active" data-ts="centerF" data-val="0.2">Normal</div>
+        <div class="ts-opt" data-ts="centerF" data-val="0.1">Stark</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ts-section">
+    <div class="ts-section-title">EAR · Blink-Erkennung</div>
+    <div class="ts-row">
+      <div class="ts-label">EAR-Schwelle (Blink-Empfindlichkeit)
+        <div class="ts-hint">Leicht: halbbewusstes Blinzeln reicht aus · Fest: Augen müssen klar und vollständig schließen<br>Beispiel: Blink wird zu oft erkannt → Leicht nach Fest korrigieren</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="earThresh" data-val="0.13">Sehr leicht</div>
+        <div class="ts-opt" data-ts="earThresh" data-val="0.155">Leicht</div>
+        <div class="ts-opt active" data-ts="earThresh" data-val="0.175">Normal</div>
+        <div class="ts-opt" data-ts="earThresh" data-val="0.20">Fest</div>
+        <div class="ts-opt" data-ts="earThresh" data-val="0.22">Sehr fest</div>
+      </div>
+    </div>
+    <div class="ts-row">
+      <div class="ts-label">Minimale Blink-Dauer
+        <div class="ts-hint">Kurz: schnelles Flattern reicht · Lang: nur bewusste Blinks werden erkannt<br>Beispiel: versehentliche Blinks → auf Lang stellen</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="blinkMin" data-val="50">Kurz (50ms)</div>
+        <div class="ts-opt active" data-ts="blinkMin" data-val="80">Normal (80ms)</div>
+        <div class="ts-opt" data-ts="blinkMin" data-val="110">Lang (110ms)</div>
+        <div class="ts-opt" data-ts="blinkMin" data-val="150">Sehr lang (150ms)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ts-section">
+    <div class="ts-section-title">Doppelblink · Timing</div>
+    <div class="ts-row">
+      <div class="ts-label">Doppelblink-Fenster
+        <div class="ts-hint">Weit: mehr Zeit zwischen zwei Blinks erlaubt · Eng: Blinks müssen schnell hintereinander kommen<br>Beispiel: Doppelblink klappt selten → Weit wählen</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="blinkWin" data-val="400">Eng (400ms)</div>
+        <div class="ts-opt active" data-ts="blinkWin" data-val="600">Normal (600ms)</div>
+        <div class="ts-opt" data-ts="blinkWin" data-val="800">Weit (800ms)</div>
+        <div class="ts-opt" data-ts="blinkWin" data-val="1000">Sehr weit (1s)</div>
+      </div>
+    </div>
+    <div class="ts-row">
+      <div class="ts-label">Sperrzeit nach Aktion
+        <div class="ts-hint">Verhindert versehentliche Doppelaktionen · Kurz: schnell hintereinander möglich<br>Beispiel: nach Auswahl wird gleich die nächste Karte aufgedeckt → Länger stellen</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="cooldown" data-val="1000">Kurz (1s)</div>
+        <div class="ts-opt active" data-ts="cooldown" data-val="1800">Normal (1.8s)</div>
+        <div class="ts-opt" data-ts="cooldown" data-val="2500">Lang (2.5s)</div>
+        <div class="ts-opt" data-ts="cooldown" data-val="3500">Sehr lang (3.5s)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ts-section">
+    <div class="ts-section-title">Pufferzonen · Randbereiche</div>
+    <div class="ts-row">
+      <div class="ts-label">Zonenbreite (Triple-Blink-Bereiche)
+        <div class="ts-hint">Schmal: Randbereich kleiner, mehr Spielfläche · Breit: leichter zu erreichen<br>Links=Admin · Rechts=Sidebar · Oben=Statistik · Unten=Einstellungen</div>
+      </div>
+      <div class="ts-opts">
+        <div class="ts-opt" data-ts="bufPct" data-val="0.10">Schmal (10%)</div>
+        <div class="ts-opt" data-ts="bufPct" data-val="0.13">Klein (13%)</div>
+        <div class="ts-opt active" data-ts="bufPct" data-val="0.16">Normal (16%)</div>
+        <div class="ts-opt" data-ts="bufPct" data-val="0.20">Breit (20%)</div>
+        <div class="ts-opt" data-ts="bufPct" data-val="0.25">Sehr breit (25%)</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:18px;">
+    <button id="profile-save-btn" onclick="saveProfile()" style="flex:1;padding:11px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.3);border-radius:10px;color:rgba(16,185,129,0.8);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s,border-color 0.15s,color 0.15s;">Profil speichern</button>
+    <button class="ts-close" onclick="closeSettings()" style="flex:1;margin-top:0;">✕ Schließen</button>
+  </div>
 </div>
 
 <video id="v" style="display:none" autoplay playsinline muted></video>
@@ -529,6 +725,20 @@ const SCALE_X=12,SCALE_Y=15,BUFFER_SZ=5,CENTER_R=80,CENTER_F=0.2,BORDER=15,SMOOT
 const BUF_PCT=0.16;
 const BROW_THRESH=0.072,MOUTH_VERT=0.045,MOUTH_RATIO=0.55,GESTURE_HOLD_MS=1000;
 
+// Laufzeit-Tracking-Einstellungen (überschreiben die Konstanten oben)
+const trackSettings={
+  earThresh:  0.175,   // EAR-Schwelle: Empfindlichkeit der Blink-Erkennung
+  blinkMin:   80,      // ms: minimale Blink-Dauer (filtert Flattern)
+  blinkWin:   600,     // ms: Zeitfenster für Doppelblink
+  cooldown:   1800,    // ms: Sperrzeit nach einer Aktion
+  scaleX:     12,      // Blick-Verstärkung horizontal
+  scaleY:     15,      // Blick-Verstärkung vertikal
+  smooth:     0.12,    // Glättungsfaktor (0.06 träge … 0.25 direkt)
+  centerR:    80,      // px: Radius der Zentrum-Dämpfungszone
+  centerF:    0.2,     // Dämpfungsfaktor in der Mitte (0=eingefroren, 1=keine Dämpfung)
+  bufPct:     0.16,    // Pufferzone-Breite als Anteil der Bildschirmgröße
+};
+
 // ═══════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════
@@ -599,6 +809,81 @@ function resultScreen(score,total,gameid){
     <button class="start-btn" style="margin-top:12px" onclick="loadGame('${gameid}')">NOCHMAL</button>
   </div>`;
   speak(`Fertig! ${score} von ${total} richtig.`);
+}
+
+// ═══════════════════════════════════════════════════
+//  STATISTIK  (lokal · anonym · kein Server)
+// ═══════════════════════════════════════════════════
+const STATS_KEY='aurion_stats_v1';
+const GAME_META={
+  memory:    {name:'Memory',     icon:'🃏'},
+  sequence:  {name:'Sequence',   icon:'🔢'},
+  wortbild:  {name:'Wort-Bild',  icon:'🔤'},
+  kategorien:{name:'Kategorien', icon:'📂'},
+  oddone:    {name:'Odd-One-Out',icon:'🔍'},
+  suchfeld:  {name:'Suchfeld',   icon:'🔎'},
+  blitz:     {name:'Blitz-Ziel', icon:'⚡'},
+};
+function loadStats(){
+  try{return JSON.parse(localStorage.getItem(STATS_KEY))||freshStats();}
+  catch{return freshStats();}
+}
+function freshStats(){
+  const games={};
+  Object.keys(GAME_META).forEach(id=>{games[id]={played:0,correct:0,total:0};});
+  return{sessions:0,firstPlayed:null,lastPlayed:null,games};
+}
+function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
+function recordStat(gameId,correct,total){
+  if(total<=0)return;
+  const s=loadStats();
+  if(!s.games[gameId])s.games[gameId]={played:0,correct:0,total:0};
+  s.games[gameId].played++;
+  s.games[gameId].correct+=correct;
+  s.games[gameId].total+=total;
+  s.sessions++;
+  const today=new Date().toISOString().slice(0,10);
+  if(!s.firstPlayed)s.firstPlayed=today;
+  s.lastPlayed=today;
+  saveStats(s);
+}
+function openStats(){
+  const s=loadStats();
+  // Meta-Zeile
+  const meta=document.getElementById('stats-meta');
+  if(s.firstPlayed){
+    meta.textContent=`Seit ${s.firstPlayed} · Zuletzt ${s.lastPlayed}`;
+  } else {
+    meta.textContent='Noch keine Daten';
+  }
+  // Reihen
+  const rows=document.getElementById('stats-rows');
+  rows.innerHTML='';
+  Object.entries(GAME_META).forEach(([id,m])=>{
+    const g=s.games[id]||{played:0,correct:0,total:0};
+    const pct=g.total>0?Math.round(g.correct/g.total*100):null;
+    const barPct=pct!==null?pct:0;
+    const pctStr=pct!==null?pct+'%':'–';
+    rows.innerHTML+=`<div class="stats-row">
+      <div class="stats-icon">${m.icon}</div>
+      <div>
+        <div class="stats-name">${m.name}</div>
+        <div class="stats-bar-wrap"><div class="stats-bar-fill" style="width:${barPct}%"></div></div>
+      </div>
+      <div class="stats-rounds">${g.played} Runden</div>
+      <div class="stats-pct">${pctStr}</div>
+    </div>`;
+  });
+  // Gesamt
+  document.getElementById('stats-total').innerHTML=
+    `<span>✦ ${s.sessions} Sitzungen gesamt</span><span>${s.firstPlayed?Math.ceil((new Date(s.lastPlayed)-new Date(s.firstPlayed))/(86400000)+1)+' Tage aktiv':''}</span>`;
+  document.getElementById('stats-panel').classList.add('open');
+}
+function closeStats(){document.getElementById('stats-panel').classList.remove('open');}
+function clearStats(){
+  if(confirm('Alle Statistikdaten löschen?')){
+    localStorage.removeItem(STATS_KEY);openStats();speak('Daten gelöscht');
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -684,7 +969,9 @@ function checkMemPair(){
     memPairsFound++;setScore(`PAARE: ${memPairsFound} / ${memPairs}`);
     speak(memCards[i1].name+'! Gefunden!');setLastAction('✓ PAAR: '+memCards[i1].name);
     if(memPairsFound===1&&!sidebarAnnouncedThisSession){sidebarAnnouncedThisSession=true;setTimeout(showSidebar,800);}
-    if(memPairsFound===memPairs){setTimeout(()=>{flashWin();speak('Glückwunsch! Alle Paare!');setTimeout(()=>buildMemory(),3500);},600);}
+    if(memPairsFound===memPairs){setTimeout(()=>{
+      recordStat('memory',memPairs,memPairs);
+      flashWin();speak('Glückwunsch! Alle Paare!');setTimeout(()=>buildMemory(),3500);},600);}
     memFlipped=[];memLocked=false;
   } else {
     all[i1].classList.add('wrong');all[i2].classList.add('wrong');
@@ -757,6 +1044,7 @@ function selectSeqCell(cell){
     setTimeout(()=>cell.classList.remove('correct'),350);
     if(seqInput.length===seqSeq.length){
       seqPhase='idle';seqScore++;
+      recordStat('sequence',1,1);
       if(settings['seq-auto']==='ja')seqLevel++;
       setScore(`RUNDE: ${seqScore+1}`);speak('Richtig! Weiter.');
       setTimeout(()=>startSeqRound(),1200);
@@ -782,7 +1070,9 @@ function buildWortBild(){
 
 function renderWbQ(){
   if(currentGame!=='wortbild')return;
-  if(wbIdx>=wbQuestions.length){resultScreen(wbScore,wbQuestions.length,'wortbild');return;}
+  if(wbIdx>=wbQuestions.length){
+    recordStat('wortbild',wbScore,wbQuestions.length);
+    resultScreen(wbScore,wbQuestions.length,'wortbild');return;}
   const q=wbQuestions[wbIdx];
   const opts=shuffle([q.sym,...q.dist]);
   const wrap=document.createElement('div');wrap.className='game-col';
@@ -831,7 +1121,9 @@ function buildKategorien(){
 
 function renderKatItem(){
   if(currentGame!=='kategorien')return;
-  if(katIdx>=katItems.length){resultScreen(katScore,katItems.length,'kategorien');return;}
+  if(katIdx>=katItems.length){
+    recordStat('kategorien',katScore,katItems.length);
+    resultScreen(katScore,katItems.length,'kategorien');return;}
   const item=katItems[katIdx];
   const container=document.createElement('div');
   container.style.cssText='width:100%;height:100%;position:relative;display:flex;flex-direction:column;';
@@ -887,6 +1179,7 @@ function renderOddPuzzle(){
   if(currentGame!=='oddone')return;
   if(oddTimerInt){clearInterval(oddTimerInt);oddTimerInt=null;}
   if(oddIdx>=oddPuzzles.length){
+    recordStat('oddone',oddScore,oddPuzzles.length);
     gc().innerHTML=`<div class="result-screen">
       <div class="result-icon">🎉</div><div class="result-title">FERTIG!</div>
       <div class="result-score">${oddScore} PUNKTE</div>
@@ -1017,6 +1310,7 @@ function selectSuchCell(cell){
     setScore(`GEFUNDEN: ${suchFound} / ${suchTotal}`);setLastAction(`✓ SUCH: ${suchFound}/${suchTotal}`);
     if(suchFound>=suchTotal){
       if(suchTimerInt){clearInterval(suchTimerInt);suchTimerInt=null;}
+      recordStat('suchfeld',suchFound,suchTotal);
       flashWin();speak('Alle gefunden! Super!');setTimeout(()=>buildSuchfeld(),2500);
     }
   } else {
@@ -1069,7 +1363,7 @@ function hitBlitz(el){
   const rem=document.getElementById('blitz-remain');if(rem)rem.textContent=blitzRemain;
   setTimeout(()=>{
     if(el.parentNode)el.remove();
-    if(blitzRemain<=0){flashWin();speak(`Fertig! ${blitzHits} Treffer!`);setTimeout(()=>buildBlitz(),2500);}
+    if(blitzRemain<=0){recordStat('blitz',blitzHits,blitzTotal);flashWin();speak(`Fertig! ${blitzHits} Treffer!`);setTimeout(()=>buildBlitz(),2500);}
     else if(currentGame==='blitz')spawnBlitz();
   },280);
 }
@@ -1148,35 +1442,36 @@ function onResults(r){
   const lm=r.multiFaceLandmarks[0];
   checkAdminGesture(lm);
   const iris=lm[468];
-  let rawX=(0.5-iris.x)*SCALE_X*innerWidth+innerWidth/2;
-  let rawY=(iris.y-0.5)*SCALE_Y*innerHeight+innerHeight/2;
+  const ts=trackSettings;
+  let rawX=(0.5-iris.x)*ts.scaleX*innerWidth+innerWidth/2;
+  let rawY=(iris.y-0.5)*ts.scaleY*innerHeight+innerHeight/2;
   bufX.push(rawX);bufY.push(rawY);
   if(bufX.length>BUFFER_SZ){bufX.shift();bufY.shift();}
   let avgX=bufX.reduce((a,b)=>a+b,0)/bufX.length,avgY=bufY.reduce((a,b)=>a+b,0)/bufY.length;
   const cX=innerWidth/2,cY=innerHeight/2,dist=Math.hypot(avgX-cX,avgY-cY);
-  tX=dist<CENTER_R?cX+(avgX-cX)*CENTER_F:avgX;
-  tY=dist<CENTER_R?cY+(avgY-cY)*CENTER_F:avgY;
+  tX=dist<ts.centerR?cX+(avgX-cX)*ts.centerF:avgX;
+  tY=dist<ts.centerR?cY+(avgY-cY)*ts.centerF:avgY;
   tX=Math.max(BORDER,Math.min(innerWidth-BORDER,tX));
   tY=Math.max(BORDER,Math.min(innerHeight-BORDER,tY));
   const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
   const ear=(d(159,145)/d(33,133)+d(386,374)/d(362,263))/2;
   const now=Date.now();
-  if(ear<EAR_THRESH){if(!blinkStart)blinkStart=now;}
+  if(ear<ts.earThresh){if(!blinkStart)blinkStart=now;}
   else{
     if(blinkStart){
       const dur=now-blinkStart;blinkStart=null;
-      if(dur>=BLINK_MIN){
+      if(dur>=ts.blinkMin){
         const gap=now-lastBlinkEnd;
-        if(lastBlinkEnd>0&&gap<BLINK_WIN&&gap>BLINK_GAP_MIN)blinkCount++;else blinkCount=1;
+        if(lastBlinkEnd>0&&gap<ts.blinkWin&&gap>BLINK_GAP_MIN)blinkCount++;else blinkCount=1;
         lastBlinkEnd=now;clearTimeout(waitTimer);
         if(blinkCount===1)setDotStatus('waiting','1× BLINK');
         else if(blinkCount===2)setDotStatus('waiting','2× BLINK…');
         waitTimer=setTimeout(()=>{
           const fc=blinkCount;blinkCount=0;lastBlinkEnd=0;
-          if(fc>=3&&(now-blinkCooldown)>COOLDOWN){blinkCooldown=now;triggerTriple();}
-          else if(fc===2&&(now-blinkCooldown)>COOLDOWN){blinkCooldown=now;triggerAction();}
+          if(fc>=3&&(now-blinkCooldown)>ts.cooldown){blinkCooldown=now;triggerTriple();}
+          else if(fc===2&&(now-blinkCooldown)>ts.cooldown){blinkCooldown=now;triggerAction();}
           else setDotStatus('idle','TRACKING');
-        },BLINK_WIN);
+        },ts.blinkWin);
       }
     }
   }
@@ -1189,7 +1484,7 @@ function triggerTriple(){
   setDotStatus('buf','3× TRIPLE');setTimeout(()=>setDotStatus('idle','TRACKING'),900);
   const gd=document.getElementById('gaze-dot');gd.classList.add('buf');setTimeout(()=>gd.classList.remove('buf'),400);
   setLastAction('3× TRIPLE-BLINK');
-  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
+  const bx=innerWidth*trackSettings.bufPct,by=innerHeight*trackSettings.bufPct;
   let zone=null;
   if(sY<by)zone='OBEN';else if(sY>innerHeight-by)zone='UNTEN';
   else if(sX<bx)zone='LINKS';else if(sX>innerWidth-bx)zone='RECHTS';
@@ -1200,8 +1495,62 @@ function triggerTriple(){
 function activateZone(zone){
   if(zone==='LINKS'&&!adminGateOpen)openAdminGate();
   if(zone==='RECHTS')toggleSidebar();
+  if(zone==='OBEN')openStats();
+  if(zone==='UNTEN')openSettings();
   setLastAction('ZONE: '+zone+' aktiviert');
 }
+
+function openSettings(){
+  syncSettingsUI();
+  document.getElementById('settings-panel').classList.add('open');
+}
+function closeSettings(){document.getElementById('settings-panel').classList.remove('open');}
+
+// ── PROFIL SPEICHERN / LADEN ──────────────────────
+const PROFILE_KEY='aurion_profile_v1';
+
+function saveProfile(){
+  localStorage.setItem(PROFILE_KEY,JSON.stringify(trackSettings));
+  speak('Profil gespeichert');
+  const btn=document.getElementById('profile-save-btn');
+  if(btn){
+    const orig=btn.textContent;
+    btn.textContent='✓ Gespeichert';btn.style.borderColor='var(--blink2)';btn.style.color='var(--blink2)';
+    setTimeout(()=>{btn.textContent=orig;btn.style.borderColor='';btn.style.color='';},2000);
+  }
+}
+
+function loadProfile(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(PROFILE_KEY));
+    if(!saved)return;
+    Object.keys(trackSettings).forEach(k=>{if(saved[k]!==undefined)trackSettings[k]=saved[k];});
+    document.documentElement.style.setProperty('--buf',trackSettings.bufPct*100+'%');
+  }catch{}
+}
+
+// Aktive Buttons im Einstellungs-Panel mit gespeicherten Werten synchronisieren
+function syncSettingsUI(){
+  document.querySelectorAll('.ts-opt').forEach(opt=>{
+    const key=opt.dataset.ts,val=parseFloat(opt.dataset.val);
+    if(!key)return;
+    // Nächste Option zum gespeicherten Wert markieren
+    opt.classList.toggle('active',Math.abs(trackSettings[key]-val)<0.0001);
+  });
+}
+
+// Einstellungs-Option angeklickt → trackSettings sofort aktualisieren
+document.addEventListener('click',e=>{
+  const opt=e.target.closest('.ts-opt');
+  if(!opt)return;
+  const key=opt.dataset.ts,val=parseFloat(opt.dataset.val);
+  if(!key||isNaN(val))return;
+  document.querySelectorAll(`[data-ts="${key}"]`).forEach(o=>o.classList.remove('active'));
+  opt.classList.add('active');
+  trackSettings[key]=val;
+  // Pufferzone-CSS-Variable live aktualisieren
+  if(key==='bufPct') document.documentElement.style.setProperty('--buf',val*100+'%');
+});
 
 function triggerAction(){
   setDotStatus('fired','2× DOPPEL');setTimeout(()=>setDotStatus('idle','TRACKING'),700);
@@ -1254,7 +1603,7 @@ function handleTabSelect(tab){
 //  PUFFERZONE
 // ═══════════════════════════════════════════════════
 function checkBufferZone(x,y){
-  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
+  const bx=innerWidth*trackSettings.bufPct,by=innerHeight*trackSettings.bufPct;
   let zone=null;
   if(y<by)zone='OBEN';else if(y>innerHeight-by)zone='UNTEN';
   else if(x<bx)zone='LINKS';else if(x>innerWidth-bx)zone='RECHTS';
@@ -1356,7 +1705,7 @@ function updateMicBtn(){
 const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn';
 
 function render(){
-  sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
+  sX+=(tX-sX)*trackSettings.smooth;sY+=(tY-sY)*trackSettings.smooth;
   document.getElementById('gaze-dot').style.left=sX+'px';
   document.getElementById('gaze-dot').style.top=sY+'px';
 
@@ -1419,6 +1768,9 @@ function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z|
 function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
 function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
 function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
+
+// Gespeichertes Profil laden (vor dem ersten Render)
+loadProfile();
 
 render();
 </script>
