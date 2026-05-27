@@ -11,7 +11,7 @@
   --bg:#060a13;--neon:#00f2ff;--gold:#ffcc00;
   --blink1:#3b82f6;--blink2:#10b981;
   --border:rgba(0,242,255,0.12);
-  --buf:16%;--sidebar-w:296px;--admin-w:420px;
+  --buf:16%;--sidebar-w:148px;--admin-w:420px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-family:'Courier New',monospace;color:white;}
@@ -110,14 +110,14 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 /* ── SIDEBAR ── */
 #sidebar{position:fixed;top:0;bottom:0;right:0;width:var(--sidebar-w);z-index:501;opacity:0;transform:translateX(120%);transition:opacity 0.7s ease,transform 0.7s cubic-bezier(0.16,1,0.3,1);pointer-events:none;background:rgba(6,10,19,0.72);backdrop-filter:blur(6px);border-left:1px solid rgba(0,242,255,0.1);}
 #sidebar.visible{opacity:1;transform:translateX(0);pointer-events:all;}
-.game-tab{position:absolute;width:220px;height:34px;transform:rotate(270deg);transform-origin:center center;background:rgba(14,30,60,0.92);border:1.5px solid rgba(0,242,255,0.2);border-radius:10px;padding:0 14px;font-size:0.64rem;letter-spacing:2px;text-transform:uppercase;color:rgba(0,242,255,0.5);cursor:pointer;user-select:none;white-space:nowrap;display:flex;align-items:center;justify-content:center;transition:background 0.15s,border-color 0.15s,color 0.15s,box-shadow 0.15s;}
-.game-tab:nth-child(1){left:34px;top:8%;}
-.game-tab:nth-child(2){left:34px;top:32%;}
-.game-tab:nth-child(3){left:34px;top:56%;}
-.game-tab:nth-child(4){left:34px;top:80%;}
-.game-tab:nth-child(5){left:140px;top:20%;}
-.game-tab:nth-child(6){left:140px;top:48%;}
-.game-tab:nth-child(7){left:140px;top:74%;}
+.game-tab{position:absolute;width:110px;height:28px;transform:rotate(270deg);transform-origin:center center;background:rgba(14,30,60,0.92);border:1.5px solid rgba(0,242,255,0.2);border-radius:10px;padding:0 10px;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:rgba(0,242,255,0.5);cursor:pointer;user-select:none;white-space:nowrap;display:flex;align-items:center;justify-content:center;transition:background 0.15s,border-color 0.15s,color 0.15s,box-shadow 0.15s;}
+.game-tab:nth-child(1){left:10px;top:3%;}
+.game-tab:nth-child(2){left:10px;top:28%;}
+.game-tab:nth-child(3){left:10px;top:53%;}
+.game-tab:nth-child(4){left:10px;top:78%;}
+.game-tab:nth-child(5){left:52px;top:15%;}
+.game-tab:nth-child(6){left:52px;top:43%;}
+.game-tab:nth-child(7){left:52px;top:68%;}
 .game-tab.focused{background:rgba(0,242,255,0.12);border-color:var(--neon);color:white;box-shadow:0 0 16px rgba(0,242,255,0.2);}
 .game-tab.active-game{background:rgba(16,185,129,0.15);border-color:var(--blink2);color:var(--blink2);}
 
@@ -181,12 +181,26 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #overlay p {color:rgba(0,242,255,0.5);font-size:0.85rem;letter-spacing:3px;}
 .start-btn{background:transparent;color:var(--neon);border:2px solid var(--neon);padding:14px 46px;font-size:1rem;font-weight:bold;letter-spacing:3px;border-radius:10px;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;margin-top:8px;}
 .start-btn:hover{background:rgba(0,242,255,0.08);box-shadow:0 0 20px rgba(0,242,255,0.3);}
-
-#sound-toggle{position:fixed;top:14px;right:14px;z-index:1500000;background:rgba(6,10,19,0.86);backdrop-filter:blur(6px);color:var(--gold);border:1.5px solid rgba(255,204,0,0.45);border-radius:12px;padding:10px 16px;font-family:'Courier New',monospace;font-size:0.72rem;font-weight:bold;letter-spacing:2px;text-transform:uppercase;cursor:pointer;box-shadow:0 0 18px rgba(255,204,0,0.12);transition:background 0.2s,border-color 0.2s,box-shadow 0.2s,color 0.2s;}
-#sound-toggle:hover,#sound-toggle.focused{background:rgba(255,204,0,0.12);border-color:var(--gold);box-shadow:0 0 20px rgba(255,204,0,0.25);color:white;}
-#sound-toggle.off{color:rgba(255,255,255,0.35);border-color:rgba(255,255,255,0.18);box-shadow:none;}
 #win-flash{position:fixed;inset:0;z-index:5000;background:rgba(16,185,129,0);pointer-events:none;transition:background 0.3s;}
 #win-flash.on{background:rgba(16,185,129,0.18);}
+
+/* ── MIC-BUTTON ── */
+#mic-btn{
+  position:fixed;
+  top:8px;
+  right:8px;
+  z-index:900;
+  background:rgba(14,30,60,0.95);
+  border:1.5px solid rgba(0,242,255,0.4);
+  border-radius:10px;padding:8px 14px;
+  font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(0,242,255,0.7);cursor:pointer;user-select:none;
+  transition:background 0.15s,border-color 0.15s,box-shadow 0.15s,color 0.15s;
+  display:flex;align-items:center;gap:6px;
+}
+#mic-btn.focused{border-color:var(--neon);background:rgba(0,242,255,0.1);box-shadow:0 0 14px rgba(0,242,255,0.2);color:white;}
+#mic-btn.mic-on {border-color:var(--blink2);color:var(--blink2);}
+#mic-btn.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
 </style>
 </head>
 <body>
@@ -194,9 +208,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="overlay">
   <h1>Aurion · Gedächtnis</h1>
   <p>Sieben Spiele · Blick · Blink · Stimme</p>
-  <button id="start-btn" class="start-btn" type="button" onclick="initSystem()">START</button>
+  <button class="start-btn" onclick="startFromOverlay()">START</button>
 </div>
-<button id="sound-toggle" onclick="toggleSound()" title="Sprachausgabe ein- oder ausschalten">TON AN</button>
 
 <div class="buffer-zone" id="buf-top"></div>
 <div class="buffer-zone" id="buf-bottom"></div>
@@ -210,7 +223,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 </div>
 
 <div id="sidebar">
-  <div class="game-tab active-game" data-game="memory">Anfängerhund</div>
+  <div class="game-tab active-game" data-game="memory">Memory</div>
   <div class="game-tab" data-game="sequence">Sequence</div>
   <div class="game-tab" data-game="wortbild">Wort-Bild</div>
   <div class="game-tab" data-game="kategorien">Kategorien</div>
@@ -356,6 +369,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="win-flash"></div>
 <canvas id="trail-canvas"></canvas>
 <div id="gaze-dot"></div>
+<div id="mic-btn" class="mic-off"><span id="mic-btn-icon">🎙</span><span id="mic-btn-label">MIC AUS</span></div>
 
 <div id="status-bar">
   <div class="sb-item"><div id="sb-dot-state" class="s-idle"></div><span class="sb-label">DOT</span><span class="sb-value" id="sb-dot-text">IDLE</span></div>
@@ -541,6 +555,12 @@ let suchTarget='',suchFound=0,suchTotal=0,suchTimerInt=null,suchTimeLeft=0;
 // Blitz
 let blitzHits=0,blitzTotal=10,blitzRemain=0,blitzTimeout=null,blitzSize=90;
 
+// Fokussiertes Element (vom Render-Loop aktuell gehalten)
+let currentFocusEl=null;
+
+// Mikrofon
+let recInstance=null,micActive=false;
+
 // Tracking
 let canvas,ctx,camRunning=false;
 let sX=innerWidth/2,sY=innerHeight/2,tX=sX,tY=sY;
@@ -549,7 +569,6 @@ let blinkStart=null,lastBlinkEnd=0,blinkCooldown=0,waitTimer=null,blinkCount=0;
 let currentZone=null,zoneUnlocked=false;
 let gestureStart=null,adminGateOpen=false;
 let sidebarShown=false,sidebarAnnouncedThisSession=false;
-let lastActionEl=null,lastPointerTapTime=0,lastPointerTapEl=null;
 
 const settings={
   'memory-pairs':'6','memory-flip':'1500','sym-set':'natur',
@@ -560,18 +579,6 @@ const settings={
   'such-grid':'4','such-time':'30',
   'blitz-dur':'1000','blitz-count':'10','blitz-auto':'ja'
 };
-
-const GAME_NAMES={
-  memory:'Anfängerhund',
-  sequence:'Sequence',
-  wortbild:'Wort Bild',
-  kategorien:'Kategorien',
-  oddone:'Odd One Out',
-  suchfeld:'Suchfeld',
-  blitz:'Blitz Ziel'
-};
-let soundEnabled=localStorage.getItem('aurion_sound_enabled')!=='0';
-let systemStarted=false;
 
 // ═══════════════════════════════════════════════════
 //  HELPERS
@@ -611,7 +618,6 @@ function loadGame(id){
     case 'suchfeld':  buildSuchfeld();  break;
     case 'blitz':     buildBlitz();     break;
   }
-  announceGame(id);
 }
 
 function stopCurrentGame(){
@@ -621,6 +627,19 @@ function stopCurrentGame(){
 }
 
 function buildGame(){loadGame('memory');}
+
+function goHome(){
+  stopCurrentGame();
+  gc().innerHTML='';
+  currentFocusEl=null;
+  document.getElementById('sidebar').classList.remove('visible');
+  document.getElementById('overlay').style.display='flex';
+  speak('Startseite');
+}
+function startFromOverlay(){
+  document.getElementById('overlay').style.display='none';
+  if(camRunning){loadGame('memory');}else{initSystem();}
+}
 
 // ═══════════════════════════════════════════════════
 //  1. MEMORY
@@ -1059,24 +1078,14 @@ function hitBlitz(el){
 //  SIDEBAR
 // ═══════════════════════════════════════════════════
 function showSidebar(){
-  if(sidebarShown)return;sidebarShown=true;
+  sidebarShown=true;
   document.getElementById('sidebar').classList.add('visible');
-  setTimeout(()=>speak('Weitere Spiele rechts verfügbar.'),400);
+  setTimeout(()=>speak('Weitere Spiele verfügbar.'),400);
 }
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
   if(sb.classList.contains('visible'))sb.classList.remove('visible');
   else{sb.classList.add('visible');sidebarShown=true;}
-}
-
-function goBackToBeginnerDog(){
-  // Sprachbefehl: „zurück“
-  // Geht zuverlässig auf das einfache Startspiel und öffnet rechts die Spielauswahl.
-  loadGame('memory');
-  const sb=document.getElementById('sidebar');
-  if(sb){sb.classList.add('visible');sidebarShown=true;}
-  setLastAction('ZURÜCK: Anfängerhund + Sidebar');
-  setTimeout(()=>speak('Zurück zum Anfängerhund. Spiele rechts verfügbar.'),180);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1197,25 +1206,34 @@ function activateZone(zone){
 function triggerAction(){
   setDotStatus('fired','2× DOPPEL');setTimeout(()=>setDotStatus('idle','TRACKING'),700);
   const gd=document.getElementById('gaze-dot');gd.classList.add('fired');setTimeout(()=>gd.classList.remove('fired'),300);
-  const el=document.elementFromPoint(sX,sY)||lastActionEl;if(!el)return;
-  const soundBtn=el.closest('#sound-toggle');if(soundBtn){toggleSound();return;}
-  const adminBtn=el.closest('.admin-game-btn');if(adminBtn){adminBtn.click();return;}
-  const tab=el.closest('.game-tab');if(tab){handleTabSelect(tab);return;}
-  dispatchAction(el);
+  doAction();
 }
 
 function triggerVoice(){
   setDotStatus('voice','AUSWAHL');setTimeout(()=>setDotStatus('idle','TRACKING'),700);
   const gd=document.getElementById('gaze-dot');gd.classList.add('voice');setTimeout(()=>gd.classList.remove('voice'),300);
-  const el=document.elementFromPoint(sX,sY)||lastActionEl;if(!el)return;
-  const soundBtn=el.closest('#sound-toggle');if(soundBtn){toggleSound();return;}
-  const adminBtn=el.closest('.admin-game-btn');if(adminBtn){adminBtn.click();return;}
-  const tab=el.closest('.game-tab');if(tab){handleTabSelect(tab);return;}
-  dispatchAction(el);
+  doAction();
+}
+
+function doAction(){
+  // UI-Elemente: Admin-Buttons und Tabs → elementFromPoint
+  const pt=document.elementFromPoint(sX,sY);
+  if(pt){
+    const adminBtn=pt.closest('.admin-game-btn');
+    if(adminBtn){adminBtn.click();return;}
+    const tab=pt.closest('.game-tab');
+    if(tab){handleTabSelect(tab);return;}
+  }
+  // Spiel-Elemente: currentFocusEl aus Render-Loop (aktuell, präzise)
+  // Bugfix: FOCUS_SEL+'.focused' wäre ein kaputter CSS-Selektor der immer
+  // das erste Element der Liste findet — daher globale Variable stattdessen.
+  if(currentFocusEl){dispatchAction(currentFocusEl);return;}
+  // Fallback
+  if(pt)dispatchAction(pt);
 }
 
 function dispatchAction(el){
-  const soundBtn=el.closest?.('#sound-toggle');if(soundBtn){toggleSound();return;}
+  if(el.closest('#mic-btn')){toggleMic();return;}
   if(currentGame==='memory'){const c=el.closest('.mem-card');if(c)selectCard(c);}
   else if(currentGame==='sequence'){const c=el.closest('.seq-cell');if(c)selectSeqCell(c);}
   else if(currentGame==='wortbild'){const c=el.closest('.wb-opt');if(c)selectWbOpt(c);}
@@ -1255,27 +1273,87 @@ function checkBufferZone(x,y){
 // ═══════════════════════════════════════════════════
 function initSpeech(){
   const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!Speech){setMicStatus('','N/A');return;}
-  const rec=new Speech();rec.lang='de-DE';rec.continuous=true;rec.interimResults=false;
-  rec.onstart=()=>setMicStatus('on','AKTIV');
-  rec.onresult=(e)=>{
+  if(!Speech){setMicStatus('','N/A');updateMicBtn();return;}
+  recInstance=new Speech();
+  recInstance.lang='de-DE';recInstance.continuous=true;recInstance.interimResults=false;
+  recInstance.onstart=()=>{micActive=true;setMicStatus('on','AKTIV');updateMicBtn();};
+  recInstance.onresult=(e)=>{
     const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
     setMicStatus('listening','HÖRT…');setTimeout(()=>setMicStatus('on','AKTIV'),800);
-    if(t.includes('zurück')||t.includes('zurueck')){goBackToBeginnerDog();return;}
+
+    // Auswahl / Neustart / Admin
     if(t.includes('auswahl'))triggerVoice();
-    if(t.includes('neu')||t.includes('neustart')){loadGame(currentGame);speak('Neues Spiel!');}
+    if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
+    if(t==='zurück'||t.includes('zurück zur')){ goHome(); return; }
     if(t.includes('admin'))openAdminGate();
-    if(t.includes('spiele')||t.includes('sidebar'))toggleSidebar();
+
+    // Mikrofon
+    if(t.includes('mikrofon aus')||t.includes('mic aus')){stopMic();return;}
+    if(t.includes('mikrofon an')||t.includes('mic an')){startMic();return;}
+
+    // Sidebar: "sidebar" + Schließwort → zu; nur "sidebar" → auf
+    if(t.includes('sidebar')){
+      const close=t.includes('weg')||t.includes('zu')||t.includes('schließen')||t.includes('close');
+      if(close){document.getElementById('sidebar').classList.remove('visible');speak('Sidebar geschlossen');}
+      else{document.getElementById('sidebar').classList.add('visible');sidebarShown=true;speak('Sidebar geöffnet');}
+      return;
+    }
+    // "weg" / "schließen" allein schließt auch Sidebar wenn offen
+    if((t.includes('weg')||t.includes('schließen'))&&document.getElementById('sidebar').classList.contains('visible')){
+      document.getElementById('sidebar').classList.remove('visible');return;
+    }
+
+    // Spiele per Stimme aktivieren
+    const GAME_VOICE=[
+      ['memory','memory'],
+      ['sequence','sequence'],
+      ['wortbild','wortbild'],['wort bild','wortbild'],
+      ['kategorien','kategorien'],['kategorie','kategorien'],
+      ['odd one out','oddone'],['odd','oddone'],
+      ['suchfeld','suchfeld'],['suchen','suchfeld'],
+      ['blitz ziel','blitz'],['blitz','blitz'],
+    ];
+    for(const [kw,id] of GAME_VOICE){
+      if(t.includes(kw)){
+        document.getElementById('sidebar').classList.remove('visible');
+        loadGame(id);speak(kw+' gestartet');
+        break;
+      }
+    }
   };
-  rec.onend=()=>{if(camRunning)rec.start();};
-  rec.onerror=()=>{setTimeout(()=>{if(camRunning)rec.start();},1000);};
-  rec.start();
+  recInstance.onend=()=>{if(camRunning&&micActive)recInstance.start();};
+  recInstance.onerror=()=>{setTimeout(()=>{if(camRunning&&micActive)recInstance.start();},1000);};
+  recInstance.start();
+}
+
+function startMic(){
+  if(!recInstance||micActive)return;
+  micActive=true;
+  try{recInstance.start();}catch(e){}
+  setMicStatus('on','AKTIV');updateMicBtn();speak('Mikrofon an');
+}
+function stopMic(){
+  if(!recInstance||!micActive)return;
+  micActive=false;
+  try{recInstance.stop();}catch(e){}
+  setMicStatus('','AUS');updateMicBtn();
+}
+function toggleMic(){
+  if(micActive)stopMic();else startMic();
+}
+function updateMicBtn(){
+  const btn=document.getElementById('mic-btn');if(!btn)return;
+  const icon=document.getElementById('mic-btn-icon');
+  const lbl=document.getElementById('mic-btn-label');
+  btn.className=micActive?'mic-on':'mic-off';
+  if(icon)icon.textContent=micActive?'🎤':'🎙';
+  if(lbl)lbl.textContent=micActive?'MIC AN':'MIC AUS';
 }
 
 // ═══════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════
-const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target';
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn';
 
 function render(){
   sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
@@ -1284,12 +1362,11 @@ function render(){
 
   const focEl=document.elementFromPoint(sX,sY)?.closest(FOCUS_SEL);
   document.querySelectorAll(FOCUS_SEL).forEach(el=>el.classList.toggle('focused',el===focEl));
+  currentFocusEl=focEl||null;  // global merken → für Blink-Dispatch
   const focTab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
   document.querySelectorAll('.game-tab').forEach(t=>t.classList.toggle('focused',t===focTab));
   const focAdmin=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
   document.querySelectorAll('.admin-game-btn').forEach(b=>b.classList.toggle('focused',b===focAdmin));
-
-  lastActionEl=focAdmin||focTab||focEl||lastActionEl;
 
   if(focEl)setFocusStatus(focEl.dataset.name||focEl.dataset.sym||focEl.textContent.slice(0,8).trim());
   else if(focTab)setFocusStatus(focTab.textContent.trim());
@@ -1314,106 +1391,24 @@ document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clie
 //  SYSTEM START
 // ═══════════════════════════════════════════════════
 async function initSystem(){
-  if(window.__aurionStarting)return;
-  window.__aurionStarting=true;
-  // Start muss immer sichtbar etwas tun – auch wenn Kamera/MediaPipe blockiert.
-  const overlay=document.getElementById('overlay');
-  const startBtn=document.getElementById('start-btn');
-  if(startBtn){startBtn.textContent='STARTET…';startBtn.style.background='rgba(0,242,255,0.14)';}
-
-  systemStarted=true;
-  updateSoundButton();
-  if(overlay) overlay.style.display='none';
+  document.getElementById('overlay').style.display='none';
   loadGame('memory');
-  announceGame('memory');
-  setLastAction('SYSTEM START');
-
-  canvas=document.getElementById('trail-canvas');
-  if(canvas){canvas.width=innerWidth;canvas.height=innerHeight;ctx=canvas.getContext('2d');}
-
-  // Maus-Fallback sofort aktiv: Spiel ist bedienbar, selbst wenn Kamera nicht startet.
-  camRunning=false;
-  setDotStatus('idle','MAUS OK');
-
   try{
-    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-      setLastAction('KAMERA NICHT VERFÜGBAR');
-      return;
-    }
-
-    // Nur Video anfordern. Audio kann auf Android/Browsern den Start unnötig blockieren.
-    const stream=await navigator.mediaDevices.getUserMedia({video:true,audio:false});
-    const video=document.getElementById('v');
-    if(video){video.srcObject=stream;await video.play().catch(()=>{});}
-
-    if(typeof FaceMesh==='undefined' || typeof Camera==='undefined'){
-      setDotStatus('idle','KAMERA OK');
-      setLastAction('MEDIAPIPE FEHLT');
-      return;
-    }
-
+    await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    camRunning=true;
+    canvas=document.getElementById('trail-canvas');
+    canvas.width=innerWidth;canvas.height=innerHeight;
+    ctx=canvas.getContext('2d');
     const fm=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
     fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
     fm.onResults(onResults);
-
-    camRunning=true;
-    new Camera(video,{
-      onFrame:async()=>{if(camRunning)await fm.send({image:video});},
+    new Camera(document.getElementById('v'),{
+      onFrame:async()=>{if(camRunning)await fm.send({image:document.getElementById('v')});},
       width:640,height:480
     }).start();
-
-    initSpeech();
-    setDotStatus('idle','TRACKING');
-    setLastAction('KAMERA AN');
-  }catch(e){
-    console.error('Aurion Startfehler:',e);
-    camRunning=false;
-    setDotStatus('idle','MAUS OK');
-    setLastAction('KAMERA BLOCKIERT');
-  } finally {
-    window.__aurionStarting=false;
-  }
+    initSpeech();setDotStatus('idle','TRACKING');updateMicBtn();
+  }catch(e){setDotStatus('idle','FEHLER');}
 }
-
-
-// ═══════════════════════════════════════════════════
-//  MAUS / TOUCH FALLBACK
-//  - echter Doppelklick dreht Memory-Karten um
-//  - Doppelklick auf Spieltitel startet das Spiel
-//  - Doppel-Tap auf Touchscreens funktioniert ebenfalls
-// ═══════════════════════════════════════════════════
-function handlePointerChoice(target,e){
-  const card=target.closest('.mem-card');
-  if(card&&currentGame==='memory'){
-    if(e)e.preventDefault();
-    selectCard(card);
-    return true;
-  }
-  const tab=target.closest('.game-tab');
-  if(tab){
-    if(e)e.preventDefault();
-    handleTabSelect(tab);
-    return true;
-  }
-  return false;
-}
-
-document.addEventListener('dblclick',e=>{
-  handlePointerChoice(e.target,e);
-});
-
-document.addEventListener('touchend',e=>{
-  const target=e.target;
-  const now=Date.now();
-  if(target===lastPointerTapEl && now-lastPointerTapTime<420){
-    handlePointerChoice(target,e);
-    lastPointerTapTime=0;
-    lastPointerTapEl=null;
-  }else{
-    lastPointerTapTime=now;
-    lastPointerTapEl=target;
-  }
-},{passive:false});
 
 // ═══════════════════════════════════════════════════
 //  STATUS HELPERS
@@ -1423,52 +1418,7 @@ function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=
 function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
 function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
 function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
-function updateSoundButton(){
-  const b=document.getElementById('sound-toggle');
-  if(!b)return;
-  b.textContent=soundEnabled?'TON AN':'TON AUS';
-  b.classList.toggle('off',!soundEnabled);
-  b.setAttribute('aria-pressed',soundEnabled?'true':'false');
-}
-function toggleSound(){
-  soundEnabled=!soundEnabled;
-  localStorage.setItem('aurion_sound_enabled',soundEnabled?'1':'0');
-  updateSoundButton();
-  if(!soundEnabled){window.speechSynthesis.cancel();setLastAction('TON AUS');return;}
-  setLastAction('TON AN');
-  speak('Ton an');
-}
-function announceGame(id){
-  if(!systemStarted)return;
-  const name=GAME_NAMES[id]||id;
-  setLastAction('SPIEL: '+name);
-  setTimeout(()=>speak('Spiel '+name),120);
-}
-function speak(text){
-  if(!soundEnabled||!text)return;
-  window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(String(text));
-  u.lang='de-DE';
-  window.speechSynthesis.speak(u);
-}
-updateSoundButton();
-
-// Sofortiger Start-Listener als Backup zum inline-onclick.
-const __aurionStartButton=document.getElementById('start-btn');
-if(__aurionStartButton){
-  __aurionStartButton.addEventListener('click',(ev)=>{ev.preventDefault();initSystem();});
-}
-
-// Extra robuster Start: funktioniert auch dann, wenn Android/Browser das inline-onclick verschluckt.
-document.addEventListener('DOMContentLoaded',()=>{
-  const startBtn=document.getElementById('start-btn');
-  if(startBtn){
-    startBtn.addEventListener('click',(ev)=>{
-      ev.preventDefault();
-      initSystem();
-    });
-  }
-});
+function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
 
 render();
 </script>
