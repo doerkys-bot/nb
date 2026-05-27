@@ -183,176 +183,14 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 .start-btn:hover{background:rgba(0,242,255,0.08);box-shadow:0 0 20px rgba(0,242,255,0.3);}
 #win-flash{position:fixed;inset:0;z-index:5000;background:rgba(16,185,129,0);pointer-events:none;transition:background 0.3s;}
 #win-flash.on{background:rgba(16,185,129,0.18);}
-
-/* ── DATENSCHUTZ-EINWILLIGUNG ── */
-#consent-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3000000;padding:20px;}
-#consent-box{width:min(480px,94vw);background:rgba(8,14,30,0.98);border:1.5px solid rgba(0,242,255,0.3);border-radius:16px;padding:28px 26px;}
-#consent-box h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:4px;}
-.consent-sub{font-size:0.6rem;color:rgba(0,242,255,0.35);letter-spacing:2px;margin-bottom:20px;}
-.consent-item{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px;padding:11px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.07);}
-.consent-icon{font-size:1.5rem;flex-shrink:0;}
-.consent-item-title{font-size:0.67rem;color:white;letter-spacing:1px;margin-bottom:3px;}
-.consent-item-desc{font-size:0.57rem;color:rgba(255,255,255,0.45);line-height:1.7;}
-.badge-req{display:inline-block;font-size:0.5rem;padding:2px 6px;border-radius:5px;letter-spacing:1px;margin-left:6px;background:rgba(239,68,68,0.2);color:rgba(239,68,68,0.9);border:1px solid rgba(239,68,68,0.3);}
-.badge-opt{display:inline-block;font-size:0.5rem;padding:2px 6px;border-radius:5px;letter-spacing:1px;margin-left:6px;background:rgba(0,242,255,0.1);color:rgba(0,242,255,0.7);border:1px solid rgba(0,242,255,0.2);}
-.consent-notice{font-size:0.57rem;color:rgba(0,242,255,0.45);line-height:1.8;margin:16px 0;padding:11px;background:rgba(0,242,255,0.04);border-radius:8px;border-left:2px solid rgba(0,242,255,0.3);}
-.consent-btns{display:flex;flex-direction:column;gap:8px;margin-top:16px;}
-.consent-btn{width:100%;padding:12px;border-radius:10px;font-family:'Courier New',monospace;font-size:0.67rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
-.cbtn-full{background:rgba(0,242,255,0.12);border:1.5px solid rgba(0,242,255,0.6);color:var(--neon);}
-.cbtn-full:hover{background:rgba(0,242,255,0.2);}
-.cbtn-cam{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);}
-.cbtn-cam:hover{background:rgba(255,255,255,0.1);}
-.cbtn-deny{background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);font-size:0.58rem;}
-.consent-foot{font-size:0.54rem;color:rgba(255,255,255,0.2);text-align:center;margin-top:12px;cursor:pointer;letter-spacing:1px;}
-.consent-foot:hover{color:rgba(255,255,255,0.5);}
-
-/* ── MIC-BUTTON ── */
-#mic-btn{
-  position:fixed;
-  top:8px;
-  right:8px;
-  z-index:900;
-  background:rgba(14,30,60,0.95);
-  border:1.5px solid rgba(0,242,255,0.4);
-  border-radius:10px;padding:8px 14px;
-  font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(0,242,255,0.7);cursor:pointer;user-select:none;
-  transition:background 0.15s,border-color 0.15s,box-shadow 0.15s,color 0.15s;
-  display:flex;align-items:center;gap:6px;
-}
-#mic-btn.focused{border-color:var(--neon);background:rgba(0,242,255,0.1);box-shadow:0 0 14px rgba(0,242,255,0.2);color:white;}
-#mic-btn.mic-on {border-color:var(--blink2);color:var(--blink2);}
-#mic-btn.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
-/* ── STATISTIK-PANEL ── */
-#stats-panel{
-  position:fixed;top:0;left:0;right:0;
-  transform:translateY(-100%);
-  width:100%;max-width:560px;
-  margin:0 auto;
-  z-index:7500;
-  background:rgba(6,12,28,0.99);backdrop-filter:blur(14px);
-  border:2px solid rgba(0,242,255,0.5);border-top:none;
-  border-radius:0 0 20px 20px;
-  padding:22px 24px 20px;
-  max-height:82vh;overflow-y:auto;scrollbar-width:none;
-  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
-}
-#stats-panel h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:4px;text-align:center;}
-.stats-meta{font-size:0.6rem;color:rgba(0,242,255,0.3);letter-spacing:2px;text-align:center;margin-bottom:18px;}
-.stats-row{display:grid;grid-template-columns:1.6rem 1fr auto auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(0,242,255,0.07);}
-.stats-row:last-of-type{border-bottom:none;}
-.stats-icon{font-size:1.1rem;text-align:center;}
-.stats-name{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);}
-.stats-bar-wrap{position:relative;height:5px;background:rgba(0,242,255,0.08);border-radius:3px;overflow:hidden;margin-top:3px;}
-.stats-bar-fill{height:100%;border-radius:3px;background:var(--neon);transition:width 0.8s ease;}
-.stats-rounds{font-size:0.6rem;color:rgba(0,242,255,0.4);letter-spacing:1px;white-space:nowrap;}
-.stats-pct{font-size:0.7rem;font-weight:bold;color:var(--gold);min-width:34px;text-align:right;}
-.stats-total{margin-top:16px;padding-top:14px;border-top:1px solid rgba(0,242,255,0.1);display:flex;justify-content:space-between;align-items:center;font-size:0.6rem;color:rgba(0,242,255,0.35);letter-spacing:2px;}
-.stats-anon{font-size:0.58rem;color:rgba(0,242,255,0.25);letter-spacing:1px;text-align:center;margin-top:10px;line-height:1.7;}
-.stats-btns{display:flex;gap:10px;margin-top:16px;}
-.stats-btn{flex:1;padding:10px;border-radius:10px;font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
-#stats-clear{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);color:rgba(220,38,38,0.7);}
-#stats-close{background:rgba(0,242,255,0.06);border:1px solid rgba(0,242,255,0.2);color:rgba(0,242,255,0.6);}
-#stats-clear:hover{background:rgba(220,38,38,0.2);}
-#stats-close:hover{background:rgba(0,242,255,0.12);}
-/* ── EINSTELLUNGS-PANEL ── */
-#panel-backdrop{
-  position:fixed;inset:0;z-index:7490;
-  background:rgba(0,0,0,0.75);
-  display:none;
-  cursor:pointer;
-}
-#settings-panel{
-  position:fixed;bottom:0;left:0;right:0;
-  transform:translateY(100%);
-  width:100%;max-width:560px;
-  margin:0 auto;
-  z-index:7500;
-  background:rgba(6,12,28,0.99);backdrop-filter:blur(16px);
-  border:2px solid rgba(0,242,255,0.5);border-bottom:none;
-  border-radius:20px 20px 0 0;
-  box-shadow:0 -8px 40px rgba(0,242,255,0.15);
-  padding:22px 24px 28px;
-  max-height:80vh;overflow-y:auto;scrollbar-width:none;
-  transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
-}
-#settings-panel h2{color:var(--neon);font-size:0.9rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:18px;text-align:center;}
-.ts-section{margin-bottom:18px;}
-.ts-section-title{font-size:0.62rem;color:rgba(0,242,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(0,242,255,0.25);}
-.ts-row{margin-bottom:14px;}
-.ts-label{font-size:0.68rem;color:rgba(255,255,255,0.9);letter-spacing:1px;margin-bottom:4px;}
-.ts-hint{font-size:0.6rem;color:rgba(0,242,255,0.55);letter-spacing:0.5px;line-height:1.7;margin-top:3px;}
-.ts-opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
-.ts-opt{padding:7px 13px;border-radius:8px;font-size:0.65rem;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.75);transition:background 0.15s,border-color 0.15s,color 0.15s;}
-.ts-opt.active{background:rgba(0,242,255,0.18);border-color:var(--neon);color:var(--neon);font-weight:bold;}
-.ts-opt:hover{background:rgba(255,255,255,0.12);color:white;}
-.ts-close{width:100%;margin-top:18px;padding:12px;background:rgba(0,242,255,0.1);border:1.5px solid rgba(0,242,255,0.5);border-radius:10px;color:rgba(0,242,255,0.9);font-family:'Courier New',monospace;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;}
-.ts-close:hover{background:rgba(0,242,255,0.2);}
-.ts-slider{
-  -webkit-appearance:none;appearance:none;
-  flex:1;height:22px;
-  background:transparent;
-  outline:none;cursor:pointer;
-}
-.ts-slider::-webkit-slider-runnable-track{
-  height:5px;background:rgba(0,242,255,0.35);border-radius:3px;
-}
-.ts-slider::-moz-range-track{
-  height:5px;background:rgba(0,242,255,0.35);border-radius:3px;
-}
-.ts-slider::-webkit-slider-thumb{
-  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
-  background:var(--neon);box-shadow:0 0 10px rgba(0,242,255,0.7);cursor:pointer;
-  margin-top:-8px;
-}
-.ts-slider::-moz-range-thumb{
-  width:20px;height:20px;border-radius:50%;border:none;
-  background:var(--neon);box-shadow:0 0 10px rgba(0,242,255,0.7);cursor:pointer;
-}
-.ts-slider-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
-.ts-slider-lbl{font-size:0.62rem;color:rgba(0,242,255,0.7);letter-spacing:1px;white-space:nowrap;text-transform:uppercase;}
-.ts-slider-val{font-size:0.72rem;color:var(--gold);min-width:42px;text-align:right;font-weight:bold;}
 </style>
 </head>
 <body>
 
-<!-- DSGVO-EINWILLIGUNG -->
-<div id="consent-overlay">
-  <div id="consent-box">
-    <h2>🔒 Datenschutz</h2>
-    <div class="consent-sub">AURION · EINWILLIGUNG NACH DSGVO ART. 6 ABS. 1 LIT. A</div>
-    <div class="consent-item">
-      <div class="consent-icon">📷</div>
-      <div>
-        <div class="consent-item-title">Kamera <span class="badge-req">Erforderlich</span></div>
-        <div class="consent-item-desc">Wird ausschließlich für das Iris-Tracking zur Blicksteuerung verwendet. Kein Bild wird gespeichert, übertragen oder aufgezeichnet. Verarbeitung erfolgt lokal im Browser.</div>
-      </div>
-    </div>
-    <div class="consent-item">
-      <div class="consent-icon">🎤</div>
-      <div>
-        <div class="consent-item-title">Mikrofon <span class="badge-opt">Optional</span></div>
-        <div class="consent-item-desc">Wird für Sprachbefehle verwendet. Kein Audio wird gespeichert oder übertragen. Verarbeitung erfolgt lokal über die Web Speech API des Browsers.</div>
-      </div>
-    </div>
-    <div class="consent-notice">
-      🔒 Alle Daten bleiben ausschließlich auf diesem Gerät.<br>
-      Kein Server · Keine Übertragung · Keine Cookies · Kein Tracking.<br>
-      Einwilligung kann jederzeit widerrufen werden.
-    </div>
-    <div class="consent-btns">
-      <button class="consent-btn cbtn-full" onclick="giveConsent('full')">📷 Kamera + 🎤 Mikrofon — Zustimmen</button>
-      <button class="consent-btn cbtn-cam" onclick="giveConsent('cam')">📷 Nur Kamera — Ohne Mikrofon fortfahren</button>
-      <button class="consent-btn cbtn-deny" onclick="giveConsent('deny')">Ablehnen — Ohne Kamera (nur Maus)</button>
-    </div>
-    <div class="consent-foot" id="consent-foot"></div>
-  </div>
-</div>
-
 <div id="overlay">
   <h1>Aurion · Gedächtnis</h1>
   <p>Sieben Spiele · Blick · Blink · Stimme</p>
-  <button class="start-btn" onclick="startFromOverlay()">START</button>
+  <button class="start-btn" onclick="initSystem()">START</button>
 </div>
 
 <div class="buffer-zone" id="buf-top"></div>
@@ -513,10 +351,6 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="win-flash"></div>
 <canvas id="trail-canvas"></canvas>
 <div id="gaze-dot"></div>
-<div id="mic-btn" class="mic-off"><span id="mic-btn-icon">🎙</span><span id="mic-btn-label">MIC AUS</span></div>
-
-<!-- Statistik & Einstellungen werden per JS bei Bedarf ins DOM eingefügt -->
-<div id="panel-backdrop" onclick="closeAllPanels()"></div>
 
 <div id="status-bar">
   <div class="sb-item"><div id="sb-dot-state" class="s-idle"></div><span class="sb-label">DOT</span><span class="sb-value" id="sb-dot-text">IDLE</span></div>
@@ -529,7 +363,6 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <div class="sb-divider"></div>
   <div class="sb-item"><span class="sb-label">LETZTES</span><span class="sb-value" id="sb-last-text">–</span></div>
 </div>
-
 
 <video id="v" style="display:none" autoplay playsinline muted></video>
 
@@ -677,21 +510,6 @@ const SCALE_X=12,SCALE_Y=15,BUFFER_SZ=5,CENTER_R=80,CENTER_F=0.2,BORDER=15,SMOOT
 const BUF_PCT=0.16;
 const BROW_THRESH=0.072,MOUTH_VERT=0.045,MOUTH_RATIO=0.55,GESTURE_HOLD_MS=1000;
 
-// Laufzeit-Tracking-Einstellungen (überschreiben die Konstanten oben)
-const trackSettings={
-  earThresh:  0.175,   // EAR-Schwelle: Empfindlichkeit der Blink-Erkennung
-  blinkMin:   80,      // ms: minimale Blink-Dauer (filtert Flattern)
-  blinkWin:   600,     // ms: Zeitfenster für Doppelblink
-  cooldown:   1800,    // ms: Sperrzeit nach einer Aktion
-  scaleX:     12,      // Blick-Verstärkung horizontal
-  scaleY:     15,      // Blick-Verstärkung vertikal
-  smooth:     0.12,    // Glättungsfaktor (0.06 träge … 0.25 direkt)
-  centerR:    80,      // px: Radius der Zentrum-Dämpfungszone
-  centerF:    0.2,     // Dämpfungsfaktor in der Mitte (0=eingefroren, 1=keine Dämpfung)
-  bufPct:     0.16,    // Pufferzone-Breite als Anteil der Bildschirmgröße
-  irisHead:   1.0,     // 0 = reines Kopf-Tracking · 1 = reines Iris-Tracking
-};
-
 // ═══════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════
@@ -718,12 +536,6 @@ let suchTarget='',suchFound=0,suchTotal=0,suchTimerInt=null,suchTimeLeft=0;
 // Blitz
 let blitzHits=0,blitzTotal=10,blitzRemain=0,blitzTimeout=null,blitzSize=90;
 
-// Fokussiertes Element (vom Render-Loop aktuell gehalten)
-let currentFocusEl=null;
-
-// Mikrofon
-let recInstance=null,micActive=false;
-
 // Tracking
 let canvas,ctx,camRunning=false;
 let sX=innerWidth/2,sY=innerHeight/2,tX=sX,tY=sY;
@@ -732,12 +544,6 @@ let blinkStart=null,lastBlinkEnd=0,blinkCooldown=0,waitTimer=null,blinkCount=0;
 let currentZone=null,zoneUnlocked=false;
 let gestureStart=null,adminGateOpen=false;
 let sidebarShown=false,sidebarAnnouncedThisSession=false;
-
-// Gestensteuerung (Augenbrauen hoch / Stirnrunzeln)
-let browUpStart=null,frownStart=null,lastGestureTrigger=0;
-const GESTURE_HOLD=700;    // ms halten bis Auslösung
-const GESTURE_COOLDOWN_MS=2500; // ms Sperrzeit nach Auslösung
-const FROWN_THRESH=0.29;   // normalisierter innerer Brauen-Abstand beim Runzeln
 
 const settings={
   'memory-pairs':'6','memory-flip':'1500','sym-set':'natur',
@@ -771,76 +577,6 @@ function resultScreen(score,total,gameid){
 }
 
 // ═══════════════════════════════════════════════════
-//  STATISTIK  (lokal · anonym · kein Server)
-// ═══════════════════════════════════════════════════
-const STATS_KEY='aurion_stats_v1';
-const GAME_META={
-  memory:    {name:'Memory',     icon:'🃏'},
-  sequence:  {name:'Sequence',   icon:'🔢'},
-  wortbild:  {name:'Wort-Bild',  icon:'🔤'},
-  kategorien:{name:'Kategorien', icon:'📂'},
-  oddone:    {name:'Odd-One-Out',icon:'🔍'},
-  suchfeld:  {name:'Suchfeld',   icon:'🔎'},
-  blitz:     {name:'Blitz-Ziel', icon:'⚡'},
-};
-function loadStats(){
-  try{return JSON.parse(localStorage.getItem(STATS_KEY))||freshStats();}
-  catch{return freshStats();}
-}
-function freshStats(){
-  const games={};
-  Object.keys(GAME_META).forEach(id=>{games[id]={played:0,correct:0,total:0};});
-  return{sessions:0,firstPlayed:null,lastPlayed:null,games};
-}
-function saveStats(s){localStorage.setItem(STATS_KEY,JSON.stringify(s));}
-function recordStat(gameId,correct,total){
-  if(total<=0)return;
-  const s=loadStats();
-  if(!s.games[gameId])s.games[gameId]={played:0,correct:0,total:0};
-  s.games[gameId].played++;
-  s.games[gameId].correct+=correct;
-  s.games[gameId].total+=total;
-  s.sessions++;
-  const today=new Date().toISOString().slice(0,10);
-  if(!s.firstPlayed)s.firstPlayed=today;
-  s.lastPlayed=today;
-  saveStats(s);
-}
-function buildStatsContent(){
-  const s=loadStats();
-  const meta=document.getElementById('stats-meta');
-  if(s.firstPlayed){
-    meta.textContent=`Seit ${s.firstPlayed} · Zuletzt ${s.lastPlayed}`;
-  } else {
-    meta.textContent='Noch keine Daten';
-  }
-  const rows=document.getElementById('stats-rows');
-  rows.innerHTML='';
-  Object.entries(GAME_META).forEach(([id,m])=>{
-    const g=s.games[id]||{played:0,correct:0,total:0};
-    const pct=g.total>0?Math.round(g.correct/g.total*100):null;
-    const barPct=pct!==null?pct:0;
-    const pctStr=pct!==null?pct+'%':'–';
-    rows.innerHTML+=`<div class="stats-row">
-      <div class="stats-icon">${m.icon}</div>
-      <div>
-        <div class="stats-name">${m.name}</div>
-        <div class="stats-bar-wrap"><div class="stats-bar-fill" style="width:${barPct}%"></div></div>
-      </div>
-      <div class="stats-rounds">${g.played} Runden</div>
-      <div class="stats-pct">${pctStr}</div>
-    </div>`;
-  });
-  document.getElementById('stats-total').innerHTML=
-    `<span>✦ ${s.sessions} Sitzungen gesamt</span><span>${s.firstPlayed?Math.ceil((new Date(s.lastPlayed)-new Date(s.firstPlayed))/(86400000)+1)+' Tage aktiv':''}</span>`;
-}
-function clearStats(){
-  if(confirm('Alle Statistikdaten löschen?')){
-    localStorage.removeItem(STATS_KEY);buildStatsContent();speak('Daten gelöscht');
-  }
-}
-
-// ═══════════════════════════════════════════════════
 //  GAME LOADER
 // ═══════════════════════════════════════════════════
 function loadGame(id){
@@ -866,19 +602,6 @@ function stopCurrentGame(){
 }
 
 function buildGame(){loadGame('memory');}
-
-function goHome(){
-  stopCurrentGame();
-  gc().innerHTML='';
-  currentFocusEl=null;
-  document.getElementById('sidebar').classList.remove('visible');
-  document.getElementById('overlay').style.display='flex';
-  speak('Startseite');
-}
-function startFromOverlay(){
-  document.getElementById('overlay').style.display='none';
-  if(camRunning){loadGame('memory');}else{initSystem();}
-}
 
 // ═══════════════════════════════════════════════════
 //  1. MEMORY
@@ -923,9 +646,7 @@ function checkMemPair(){
     memPairsFound++;setScore(`PAARE: ${memPairsFound} / ${memPairs}`);
     speak(memCards[i1].name+'! Gefunden!');setLastAction('✓ PAAR: '+memCards[i1].name);
     if(memPairsFound===1&&!sidebarAnnouncedThisSession){sidebarAnnouncedThisSession=true;setTimeout(showSidebar,800);}
-    if(memPairsFound===memPairs){setTimeout(()=>{
-      recordStat('memory',memPairs,memPairs);
-      flashWin();speak('Glückwunsch! Alle Paare!');setTimeout(()=>buildMemory(),3500);},600);}
+    if(memPairsFound===memPairs){setTimeout(()=>{flashWin();speak('Glückwunsch! Alle Paare!');setTimeout(()=>buildMemory(),3500);},600);}
     memFlipped=[];memLocked=false;
   } else {
     all[i1].classList.add('wrong');all[i2].classList.add('wrong');
@@ -998,7 +719,6 @@ function selectSeqCell(cell){
     setTimeout(()=>cell.classList.remove('correct'),350);
     if(seqInput.length===seqSeq.length){
       seqPhase='idle';seqScore++;
-      recordStat('sequence',1,1);
       if(settings['seq-auto']==='ja')seqLevel++;
       setScore(`RUNDE: ${seqScore+1}`);speak('Richtig! Weiter.');
       setTimeout(()=>startSeqRound(),1200);
@@ -1024,9 +744,7 @@ function buildWortBild(){
 
 function renderWbQ(){
   if(currentGame!=='wortbild')return;
-  if(wbIdx>=wbQuestions.length){
-    recordStat('wortbild',wbScore,wbQuestions.length);
-    resultScreen(wbScore,wbQuestions.length,'wortbild');return;}
+  if(wbIdx>=wbQuestions.length){resultScreen(wbScore,wbQuestions.length,'wortbild');return;}
   const q=wbQuestions[wbIdx];
   const opts=shuffle([q.sym,...q.dist]);
   const wrap=document.createElement('div');wrap.className='game-col';
@@ -1075,9 +793,7 @@ function buildKategorien(){
 
 function renderKatItem(){
   if(currentGame!=='kategorien')return;
-  if(katIdx>=katItems.length){
-    recordStat('kategorien',katScore,katItems.length);
-    resultScreen(katScore,katItems.length,'kategorien');return;}
+  if(katIdx>=katItems.length){resultScreen(katScore,katItems.length,'kategorien');return;}
   const item=katItems[katIdx];
   const container=document.createElement('div');
   container.style.cssText='width:100%;height:100%;position:relative;display:flex;flex-direction:column;';
@@ -1133,7 +849,6 @@ function renderOddPuzzle(){
   if(currentGame!=='oddone')return;
   if(oddTimerInt){clearInterval(oddTimerInt);oddTimerInt=null;}
   if(oddIdx>=oddPuzzles.length){
-    recordStat('oddone',oddScore,oddPuzzles.length);
     gc().innerHTML=`<div class="result-screen">
       <div class="result-icon">🎉</div><div class="result-title">FERTIG!</div>
       <div class="result-score">${oddScore} PUNKTE</div>
@@ -1264,7 +979,6 @@ function selectSuchCell(cell){
     setScore(`GEFUNDEN: ${suchFound} / ${suchTotal}`);setLastAction(`✓ SUCH: ${suchFound}/${suchTotal}`);
     if(suchFound>=suchTotal){
       if(suchTimerInt){clearInterval(suchTimerInt);suchTimerInt=null;}
-      recordStat('suchfeld',suchFound,suchTotal);
       flashWin();speak('Alle gefunden! Super!');setTimeout(()=>buildSuchfeld(),2500);
     }
   } else {
@@ -1317,7 +1031,7 @@ function hitBlitz(el){
   const rem=document.getElementById('blitz-remain');if(rem)rem.textContent=blitzRemain;
   setTimeout(()=>{
     if(el.parentNode)el.remove();
-    if(blitzRemain<=0){recordStat('blitz',blitzHits,blitzTotal);flashWin();speak(`Fertig! ${blitzHits} Treffer!`);setTimeout(()=>buildBlitz(),2500);}
+    if(blitzRemain<=0){flashWin();speak(`Fertig! ${blitzHits} Treffer!`);setTimeout(()=>buildBlitz(),2500);}
     else if(currentGame==='blitz')spawnBlitz();
   },280);
 }
@@ -1326,9 +1040,9 @@ function hitBlitz(el){
 //  SIDEBAR
 // ═══════════════════════════════════════════════════
 function showSidebar(){
-  sidebarShown=true;
+  if(sidebarShown)return;sidebarShown=true;
   document.getElementById('sidebar').classList.add('visible');
-  setTimeout(()=>speak('Weitere Spiele verfügbar.'),400);
+  setTimeout(()=>speak('Weitere Spiele rechts verfügbar.'),400);
 }
 function toggleSidebar(){
   const sb=document.getElementById('sidebar');
@@ -1388,51 +1102,6 @@ function checkAdminGesture(lm){
   }
 }
 
-// ── ZONEN-GESTEN: Augenbrauen hoch oder Stirnrunzeln ──────────
-function checkGestures(lm){
-  if(adminGateOpen)return;
-  const now=Date.now();
-  if(now-lastGestureTrigger<GESTURE_COOLDOWN_MS)return;
-  const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
-  const browAvg=(d(70,159)+d(300,386))/2;
-  const browsUp=browAvg>BROW_THRESH;
-  const eyeW=d(33,263);
-  const frowning=eyeW>0&&(d(55,285)/eyeW)<FROWN_THRESH;
-
-  if(browsUp&&!frowning){
-    if(!browUpStart)browUpStart=now;
-    const pct=Math.min(100,Math.round((now-browUpStart)/GESTURE_HOLD*100));
-    if(pct>20)setLastAction('↑ Brauen: '+pct+'%');
-    if(now-browUpStart>=GESTURE_HOLD){browUpStart=null;triggerGestureZone(now);}
-  } else { browUpStart=null; }
-
-  if(frowning&&!browsUp){
-    if(!frownStart)frownStart=now;
-    const pct=Math.min(100,Math.round((now-frownStart)/GESTURE_HOLD*100));
-    if(pct>20)setLastAction('↓ Runzeln: '+pct+'%');
-    if(now-frownStart>=GESTURE_HOLD){frownStart=null;triggerGestureZone(now);}
-  } else { frownStart=null; }
-}
-
-function triggerGestureZone(now){
-  lastGestureTrigger=now;
-  // Offenes Panel schließen hat Vorrang
-  if(document.getElementById('stats-panel')){closeStats();speak('Statistik geschlossen');return;}
-  if(document.getElementById('settings-panel')){closeSettings();speak('Einstellungen geschlossen');return;}
-  if(document.getElementById('sidebar').classList.contains('visible')){
-    document.getElementById('sidebar').classList.remove('visible');speak('Sidebar geschlossen');return;
-  }
-  const bx=innerWidth*trackSettings.bufPct,by=innerHeight*trackSettings.bufPct;
-  let zone=null;
-  if(sY<by)zone='OBEN';
-  else if(sY>innerHeight-by)zone='UNTEN';
-  else if(sX<bx)zone='LINKS';
-  else if(sX>innerWidth-bx)zone='RECHTS';
-  if(zone){speak('Zone '+zone);activateZone(zone);}
-  else speak('Geste — bitte in eine Randzone schauen');
-  setLastAction('GESTE: '+(zone||'Mitte'));
-}
-
 // ═══════════════════════════════════════════════════
 //  FACE MESH / BLINK
 // ═══════════════════════════════════════════════════
@@ -1440,47 +1109,36 @@ function onResults(r){
   if(!r.multiFaceLandmarks?.[0]){setDotStatus('idle','KEIN GESICHT');return;}
   const lm=r.multiFaceLandmarks[0];
   checkAdminGesture(lm);
-  checkGestures(lm);
   const iris=lm[468];
-  const ts=trackSettings;
-  // Kopf-Referenzpunkt: Mittelpunkt zwischen äußeren Augenwinkeln
-  const headRef={
-    x:(lm[33].x+lm[263].x)/2,
-    y:(lm[33].y+lm[263].y)/2
-  };
-  // Stufenlos zwischen Kopf (0) und Iris (1) blenden
-  const blend=ts.irisHead;
-  const trackX=headRef.x+blend*(iris.x-headRef.x);
-  const trackY=headRef.y+blend*(iris.y-headRef.y);
-  let rawX=(0.5-trackX)*ts.scaleX*innerWidth+innerWidth/2;
-  let rawY=(trackY-0.5)*ts.scaleY*innerHeight+innerHeight/2;
+  let rawX=(0.5-iris.x)*SCALE_X*innerWidth+innerWidth/2;
+  let rawY=(iris.y-0.5)*SCALE_Y*innerHeight+innerHeight/2;
   bufX.push(rawX);bufY.push(rawY);
   if(bufX.length>BUFFER_SZ){bufX.shift();bufY.shift();}
   let avgX=bufX.reduce((a,b)=>a+b,0)/bufX.length,avgY=bufY.reduce((a,b)=>a+b,0)/bufY.length;
   const cX=innerWidth/2,cY=innerHeight/2,dist=Math.hypot(avgX-cX,avgY-cY);
-  tX=dist<ts.centerR?cX+(avgX-cX)*ts.centerF:avgX;
-  tY=dist<ts.centerR?cY+(avgY-cY)*ts.centerF:avgY;
+  tX=dist<CENTER_R?cX+(avgX-cX)*CENTER_F:avgX;
+  tY=dist<CENTER_R?cY+(avgY-cY)*CENTER_F:avgY;
   tX=Math.max(BORDER,Math.min(innerWidth-BORDER,tX));
   tY=Math.max(BORDER,Math.min(innerHeight-BORDER,tY));
   const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
   const ear=(d(159,145)/d(33,133)+d(386,374)/d(362,263))/2;
   const now=Date.now();
-  if(ear<ts.earThresh){if(!blinkStart)blinkStart=now;}
+  if(ear<EAR_THRESH){if(!blinkStart)blinkStart=now;}
   else{
     if(blinkStart){
       const dur=now-blinkStart;blinkStart=null;
-      if(dur>=ts.blinkMin){
+      if(dur>=BLINK_MIN){
         const gap=now-lastBlinkEnd;
-        if(lastBlinkEnd>0&&gap<ts.blinkWin&&gap>BLINK_GAP_MIN)blinkCount++;else blinkCount=1;
+        if(lastBlinkEnd>0&&gap<BLINK_WIN&&gap>BLINK_GAP_MIN)blinkCount++;else blinkCount=1;
         lastBlinkEnd=now;clearTimeout(waitTimer);
         if(blinkCount===1)setDotStatus('waiting','1× BLINK');
         else if(blinkCount===2)setDotStatus('waiting','2× BLINK…');
         waitTimer=setTimeout(()=>{
           const fc=blinkCount;blinkCount=0;lastBlinkEnd=0;
-          if(fc>=3&&(now-blinkCooldown)>ts.cooldown){blinkCooldown=now;triggerTriple();}
-          else if(fc===2&&(now-blinkCooldown)>ts.cooldown){blinkCooldown=now;triggerAction();}
+          if(fc>=3&&(now-blinkCooldown)>COOLDOWN){blinkCooldown=now;triggerTriple();}
+          else if(fc===2&&(now-blinkCooldown)>COOLDOWN){blinkCooldown=now;triggerAction();}
           else setDotStatus('idle','TRACKING');
-        },ts.blinkWin);
+        },BLINK_WIN);
       }
     }
   }
@@ -1493,7 +1151,7 @@ function triggerTriple(){
   setDotStatus('buf','3× TRIPLE');setTimeout(()=>setDotStatus('idle','TRACKING'),900);
   const gd=document.getElementById('gaze-dot');gd.classList.add('buf');setTimeout(()=>gd.classList.remove('buf'),400);
   setLastAction('3× TRIPLE-BLINK');
-  const bx=innerWidth*trackSettings.bufPct,by=innerHeight*trackSettings.bufPct;
+  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
   let zone=null;
   if(sY<by)zone='OBEN';else if(sY>innerHeight-by)zone='UNTEN';
   else if(sX<bx)zone='LINKS';else if(sX>innerWidth-bx)zone='RECHTS';
@@ -1504,225 +1162,28 @@ function triggerTriple(){
 function activateZone(zone){
   if(zone==='LINKS'&&!adminGateOpen)openAdminGate();
   if(zone==='RECHTS')toggleSidebar();
-  if(zone==='OBEN')openStats();
-  if(zone==='UNTEN')openSettings();
   setLastAction('ZONE: '+zone+' aktiviert');
 }
-
-// ── PANELS: erst bei Bedarf ins DOM, beim Schließen wieder raus ──
-
-function openStats(){
-  if(document.getElementById('stats-panel'))return;
-  showBackdrop();
-  const p=document.createElement('div');
-  p.id='stats-panel';
-  p.innerHTML=`
-    <h2>✦ Statistik</h2>
-    <div class="stats-meta" id="stats-meta">–</div>
-    <div id="stats-rows"></div>
-    <div class="stats-total" id="stats-total"></div>
-    <div class="stats-anon">🔒 Alle Daten bleiben lokal im Browser<br>Kein Server · Keine Übertragung · Anonym</div>
-    <div class="stats-btns">
-      <button class="stats-btn" id="stats-clear" onclick="clearStats()">Daten löschen</button>
-      <button class="stats-btn" id="stats-close" onclick="closeStats()">Schließen</button>
-    </div>`;
-  document.body.appendChild(p);
-  buildStatsContent();
-  void p.offsetHeight;
-  p.style.transform='translateY(0)';
-}
-function closeStats(){
-  const p=document.getElementById('stats-panel');if(!p)return;
-  hideBackdrop();
-  p.style.transform='translateY(-100%)';
-  p.addEventListener('transitionend',e=>{if(e.target===p&&e.propertyName==='transform')p.remove();},{once:true});
-}
-function clearStats(){
-  if(confirm('Alle Statistikdaten löschen?')){
-    localStorage.removeItem(STATS_KEY);buildStatsContent();speak('Daten gelöscht');
-  }
-}
-
-function openSettings(){
-  if(document.getElementById('settings-panel'))return;
-  const p=document.createElement('div');
-  p.id='settings-panel';
-  p.innerHTML=`
-  <h2>⚙ Einstellungen</h2>
-  <div class="ts-section">
-    <div class="ts-section-title">Iris ↔ Kopf · Tracking-Quelle</div>
-    <div class="ts-row">
-      <div class="ts-label">Blending: Kopfbewegung ↔ Augenbewegung
-        <div class="ts-hint">Kopf: Dot folgt Kopfbewegung — gut bei eingeschränkter Augenmotorik<br>Iris: Dot folgt der Iris — präzise<br>Mitte: Kombination beider</div>
-      </div>
-      <div class="ts-slider-row">
-        <span class="ts-slider-lbl">Kopf</span>
-        <input type="range" id="iris-head-slider" class="ts-slider" min="0" max="1" step="0.01" value="${trackSettings.irisHead}"
-               oninput="trackSettings.irisHead=parseFloat(this.value);document.getElementById('iris-head-val').textContent=irisHeadLabel(this.value)">
-        <span class="ts-slider-lbl">Iris</span>
-        <span class="ts-slider-val" id="iris-head-val">${irisHeadLabel(trackSettings.irisHead)}</span>
-      </div>
-    </div>
-  </div>
-  <div class="ts-section">
-    <div class="ts-section-title">Iris-Tracking · Blickbewegung</div>
-    ${tsRow('Empfindlichkeit horizontal','Niedrig: Blick muss weit wandern · Hoch: kleine Bewegungen genügen','scaleX',[[8,'Niedrig'],[12,'Normal'],[16,'Hoch'],[20,'Sehr hoch']])}
-    ${tsRow('Empfindlichkeit vertikal','Unabhängig von horizontal einstellbar','scaleY',[[10,'Niedrig'],[15,'Normal'],[20,'Hoch'],[26,'Sehr hoch']])}
-    ${tsRow('Glättung (Dot-Stabilität)','Sehr träge: ruhig aber verzögert · Sehr direkt: sofort aber kann zittern','smooth',[[0.06,'Sehr träge'],[0.09,'Träge'],[0.12,'Normal'],[0.18,'Direkt'],[0.25,'Sehr direkt']])}
-    ${tsRow('Zentrum-Dämpfung','Stabilisiert Mitte · Stark = Mitte wirkt wie Magnet','centerF',[[0.5,'Aus'],[0.3,'Schwach'],[0.2,'Normal'],[0.1,'Stark']])}
-  </div>
-  <div class="ts-section">
-    <div class="ts-section-title">EAR · Blink-Erkennung</div>
-    ${tsRow('EAR-Schwelle','Leicht: halbbewusstes Blinzeln reicht · Fest: muss klar blinzeln<br>Beispiel: zu viele Blinks → Fest wählen','earThresh',[[0.13,'Sehr leicht'],[0.155,'Leicht'],[0.175,'Normal'],[0.20,'Fest'],[0.22,'Sehr fest']])}
-    ${tsRow('Minimale Blink-Dauer','Kurz: schnelles Flattern reicht · Lang: nur bewusste Blinks<br>Beispiel: versehentliche Blinks → Lang wählen','blinkMin',[[50,'Kurz 50ms'],[80,'Normal 80ms'],[110,'Lang 110ms'],[150,'Sehr lang 150ms']])}
-  </div>
-  <div class="ts-section">
-    <div class="ts-section-title">Doppelblink · Timing</div>
-    ${tsRow('Doppelblink-Fenster','Weit: mehr Zeit erlaubt · Eng: Blinks müssen schnell kommen<br>Beispiel: Doppelblink klappt selten → Weit wählen','blinkWin',[[400,'Eng 400ms'],[600,'Normal 600ms'],[800,'Weit 800ms'],[1000,'Sehr weit 1s']])}
-    ${tsRow('Sperrzeit nach Aktion','Verhindert versehentliche Doppelaktionen<br>Beispiel: gleich wieder ausgelöst → Länger stellen','cooldown',[[1000,'Kurz 1s'],[1800,'Normal 1.8s'],[2500,'Lang 2.5s'],[3500,'Sehr lang 3.5s']])}
-  </div>
-  <div class="ts-section">
-    <div class="ts-section-title">Pufferzonen · Randbereiche</div>
-    ${tsRow('Zonenbreite','Links=Admin · Rechts=Sidebar · Oben=Statistik · Unten=Einstellungen<br>Breit = leichter zu erreichen','bufPct',[[0.10,'Schmal 10%'],[0.13,'Klein 13%'],[0.16,'Normal 16%'],[0.20,'Breit 20%'],[0.25,'Sehr breit 25%']])}
-  </div>
-  <div style="display:flex;gap:10px;margin-top:18px;">
-    <button onclick="saveProfile()" style="flex:1;padding:11px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.4);border-radius:10px;color:rgba(16,185,129,0.9);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;" id="profile-save-btn">Profil speichern</button>
-    <button onclick="closeSettings()" style="flex:1;padding:11px;background:rgba(0,242,255,0.07);border:1px solid rgba(0,242,255,0.4);border-radius:10px;color:rgba(0,242,255,0.9);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">✕ Schließen</button>
-  </div>`;
-  document.body.appendChild(p);
-  showBackdrop();
-  void p.offsetHeight;
-  p.style.transform='translateY(0)';
-}
-function closeSettings(){
-  const p=document.getElementById('settings-panel');if(!p)return;
-  hideBackdrop();
-  p.style.transform='translateY(100%)';
-  p.addEventListener('transitionend',e=>{if(e.target===p&&e.propertyName==='transform')p.remove();},{once:true});
-}
-
-// Helper: erzeugt eine Einstellungszeile mit Optionsbuttons
-function tsRow(label,hint,key,opts){
-  const btns=opts.map(([val,txt])=>{
-    const active=Math.abs(trackSettings[key]-val)<0.0001?'active':'';
-    return `<div class="ts-opt ${active}" data-ts="${key}" data-val="${val}">${txt}</div>`;
-  }).join('');
-  return `<div class="ts-row">
-    <div class="ts-label">${label}<div class="ts-hint">${hint}</div></div>
-    <div class="ts-opts">${btns}</div>
-  </div>`;
-}
-const PROFILE_KEY='aurion_profile_v1';
-
-function saveProfile(){
-  localStorage.setItem(PROFILE_KEY,JSON.stringify(trackSettings));
-  speak('Profil gespeichert');
-  const btn=document.getElementById('profile-save-btn');
-  if(btn){
-    const orig=btn.textContent;
-    btn.textContent='✓ Gespeichert';btn.style.borderColor='var(--blink2)';btn.style.color='var(--blink2)';
-    setTimeout(()=>{btn.textContent=orig;btn.style.borderColor='';btn.style.color='';},2000);
-  }
-}
-
-function loadProfile(){
-  try{
-    const saved=JSON.parse(localStorage.getItem(PROFILE_KEY));
-    if(!saved)return;
-    Object.keys(trackSettings).forEach(k=>{if(saved[k]!==undefined)trackSettings[k]=saved[k];});
-    document.documentElement.style.setProperty('--buf',trackSettings.bufPct*100+'%');
-  }catch{}
-}
-
-function showBackdrop(){document.getElementById('panel-backdrop').style.display='block';}
-function hideBackdrop(){document.getElementById('panel-backdrop').style.display='none';}
-function closeAllPanels(){closeStats();closeSettings();}
-  const n=parseFloat(v);
-  if(n<=0.05)return'Kopf';
-  if(n<=0.25)return'Kopf+';
-  if(n<=0.45)return'Mix–';
-  if(n<=0.55)return'Mix';
-  if(n<=0.75)return'Mix+';
-  if(n<=0.95)return'Iris–';
-  return'Iris';
-}
-
-// Aktive Buttons im Einstellungs-Panel mit gespeicherten Werten synchronisieren
-function syncSettingsUI(){
-  document.querySelectorAll('.ts-opt').forEach(opt=>{
-    const key=opt.dataset.ts,val=parseFloat(opt.dataset.val);
-    if(!key)return;
-    opt.classList.toggle('active',Math.abs(trackSettings[key]-val)<0.0001);
-  });
-  // Slider synchronisieren
-  const sl=document.getElementById('iris-head-slider');
-  const lbl=document.getElementById('iris-head-val');
-  if(sl){sl.value=trackSettings.irisHead;}
-  if(lbl){lbl.textContent=irisHeadLabel(trackSettings.irisHead);}
-}
-
-// Einstellungs-Option angeklickt → trackSettings sofort aktualisieren
-document.addEventListener('click',e=>{
-  const opt=e.target.closest('.ts-opt');
-  if(!opt)return;
-  const key=opt.dataset.ts,val=parseFloat(opt.dataset.val);
-  if(!key||isNaN(val))return;
-  document.querySelectorAll(`[data-ts="${key}"]`).forEach(o=>o.classList.remove('active'));
-  opt.classList.add('active');
-  trackSettings[key]=val;
-  // Pufferzone-CSS-Variable live aktualisieren
-  if(key==='bufPct') document.documentElement.style.setProperty('--buf',val*100+'%');
-});
 
 function triggerAction(){
   setDotStatus('fired','2× DOPPEL');setTimeout(()=>setDotStatus('idle','TRACKING'),700);
   const gd=document.getElementById('gaze-dot');gd.classList.add('fired');setTimeout(()=>gd.classList.remove('fired'),300);
-  doAction();
+  const el=document.elementFromPoint(sX,sY);if(!el)return;
+  const adminBtn=el.closest('.admin-game-btn');if(adminBtn){adminBtn.click();return;}
+  const tab=el.closest('.game-tab');if(tab){handleTabSelect(tab);return;}
+  dispatchAction(el);
 }
 
 function triggerVoice(){
   setDotStatus('voice','AUSWAHL');setTimeout(()=>setDotStatus('idle','TRACKING'),700);
   const gd=document.getElementById('gaze-dot');gd.classList.add('voice');setTimeout(()=>gd.classList.remove('voice'),300);
-  doAction();
-}
-
-function doAction(){
-  const statsOpen=!!document.getElementById('stats-panel');
-  const settingsOpen=!!document.getElementById('settings-panel');
-  const sidebarOpen=document.getElementById('sidebar').classList.contains('visible');
-
-  // Wenn Panel offen: fokussiertes Element darin aktivieren — sonst Panel schließen
-  if(settingsOpen){
-    if(currentFocusEl?.classList.contains('ts-opt')){currentFocusEl.click();return;}
-    if(currentFocusEl?.classList.contains('stats-btn')){currentFocusEl.click();return;}
-    closeSettings();return;
-  }
-  if(statsOpen){
-    if(currentFocusEl?.classList.contains('stats-btn')){currentFocusEl.click();return;}
-    closeStats();return;
-  }
-  if(sidebarOpen){
-    // Tab in Sidebar aktivieren oder Sidebar schließen
-    const pt=document.elementFromPoint(sX,sY);
-    const tab=pt?.closest('.game-tab');
-    if(tab){handleTabSelect(tab);return;}
-    document.getElementById('sidebar').classList.remove('visible');return;
-  }
-
-  // Normal: UI-Elemente dann Spiel
-  const pt=document.elementFromPoint(sX,sY);
-  if(pt){
-    const adminBtn=pt.closest('.admin-game-btn');
-    if(adminBtn){adminBtn.click();return;}
-    const tab=pt.closest('.game-tab');
-    if(tab){handleTabSelect(tab);return;}
-  }
-  if(currentFocusEl){dispatchAction(currentFocusEl);return;}
-  if(pt)dispatchAction(pt);
+  const el=document.elementFromPoint(sX,sY);if(!el)return;
+  const adminBtn=el.closest('.admin-game-btn');if(adminBtn){adminBtn.click();return;}
+  const tab=el.closest('.game-tab');if(tab){handleTabSelect(tab);return;}
+  dispatchAction(el);
 }
 
 function dispatchAction(el){
-  if(el.closest('#mic-btn')){toggleMic();return;}
   if(currentGame==='memory'){const c=el.closest('.mem-card');if(c)selectCard(c);}
   else if(currentGame==='sequence'){const c=el.closest('.seq-cell');if(c)selectSeqCell(c);}
   else if(currentGame==='wortbild'){const c=el.closest('.wb-opt');if(c)selectWbOpt(c);}
@@ -1743,7 +1204,7 @@ function handleTabSelect(tab){
 //  PUFFERZONE
 // ═══════════════════════════════════════════════════
 function checkBufferZone(x,y){
-  const bx=innerWidth*trackSettings.bufPct,by=innerHeight*trackSettings.bufPct;
+  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
   let zone=null;
   if(y<by)zone='OBEN';else if(y>innerHeight-by)zone='UNTEN';
   else if(x<bx)zone='LINKS';else if(x>innerWidth-bx)zone='RECHTS';
@@ -1762,108 +1223,34 @@ function checkBufferZone(x,y){
 // ═══════════════════════════════════════════════════
 function initSpeech(){
   const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!Speech){setMicStatus('','N/A');updateMicBtn();return;}
-  recInstance=new Speech();
-  recInstance.lang='de-DE';recInstance.continuous=true;recInstance.interimResults=false;
-  recInstance.onstart=()=>{micActive=true;setMicStatus('on','AKTIV');updateMicBtn();};
-  recInstance.onresult=(e)=>{
+  if(!Speech){setMicStatus('','N/A');return;}
+  const rec=new Speech();rec.lang='de-DE';rec.continuous=true;rec.interimResults=false;
+  rec.onstart=()=>setMicStatus('on','AKTIV');
+  rec.onresult=(e)=>{
     const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
     setMicStatus('listening','HÖRT…');setTimeout(()=>setMicStatus('on','AKTIV'),800);
-
-    // Auswahl / Neustart / Admin
     if(t.includes('auswahl'))triggerVoice();
-    if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
-    if(t==='zurück'||t.includes('zurück zur')){ goHome(); return; }
+    if(t.includes('neu')||t.includes('neustart')){loadGame(currentGame);speak('Neues Spiel!');}
     if(t.includes('admin'))openAdminGate();
-
-    // Mikrofon
-    if(t.includes('mikrofon aus')||t.includes('mic aus')){stopMic();return;}
-    if(t.includes('mikrofon an')||t.includes('mic an')){startMic();return;}
-
-    // Schließen: jedes offene Panel zuerst
-    const closeWord=t.includes('weg')||t.includes('schließen')||t.includes('close');
-    if(closeWord||t.includes('zu')){
-      if(document.getElementById('stats-panel')){closeStats();speak('Statistik geschlossen');return;}
-      if(document.getElementById('settings-panel')){closeSettings();speak('Einstellungen geschlossen');return;}
-      if(document.getElementById('sidebar').classList.contains('visible')){
-        document.getElementById('sidebar').classList.remove('visible');speak('Sidebar geschlossen');return;
-      }
-    }
-
-    // Dashboard-Befehle
-    if(t.includes('dashboard')){
-      if(t.includes('unten'))  {openSettings();return;}
-      if(t.includes('links'))  {openAdminGate();return;}
-      if(t.includes('oben'))   {openStats();return;}
-      if(t.includes('rechts')) {document.getElementById('sidebar').classList.add('visible');sidebarShown=true;speak('Spielauswahl');return;}
-    }
-    if(t.includes('sidebar')){
-      const close=t.includes('weg')||t.includes('zu')||t.includes('schließen');
-      if(close){document.getElementById('sidebar').classList.remove('visible');}
-      else{document.getElementById('sidebar').classList.add('visible');sidebarShown=true;speak('Sidebar geöffnet');}
-      return;
-    }
-
-    // Spiele per Stimme aktivieren
-    const GAME_VOICE=[
-      ['memory','memory'],
-      ['sequence','sequence'],
-      ['wortbild','wortbild'],['wort bild','wortbild'],
-      ['kategorien','kategorien'],['kategorie','kategorien'],
-      ['odd one out','oddone'],['odd','oddone'],
-      ['suchfeld','suchfeld'],['suchen','suchfeld'],
-      ['blitz ziel','blitz'],['blitz','blitz'],
-    ];
-    for(const [kw,id] of GAME_VOICE){
-      if(t.includes(kw)){
-        document.getElementById('sidebar').classList.remove('visible');
-        loadGame(id);speak(kw+' gestartet');
-        break;
-      }
-    }
+    if(t.includes('spiele')||t.includes('sidebar'))toggleSidebar();
   };
-  recInstance.onend=()=>{if(camRunning&&micActive)recInstance.start();};
-  recInstance.onerror=()=>{setTimeout(()=>{if(camRunning&&micActive)recInstance.start();},1000);};
-  recInstance.start();
-}
-
-function startMic(){
-  if(!recInstance||micActive)return;
-  micActive=true;
-  try{recInstance.start();}catch(e){}
-  setMicStatus('on','AKTIV');updateMicBtn();speak('Mikrofon an');
-}
-function stopMic(){
-  if(!recInstance||!micActive)return;
-  micActive=false;
-  try{recInstance.stop();}catch(e){}
-  setMicStatus('','AUS');updateMicBtn();
-}
-function toggleMic(){
-  if(micActive)stopMic();else startMic();
-}
-function updateMicBtn(){
-  const btn=document.getElementById('mic-btn');if(!btn)return;
-  const icon=document.getElementById('mic-btn-icon');
-  const lbl=document.getElementById('mic-btn-label');
-  btn.className=micActive?'mic-on':'mic-off';
-  if(icon)icon.textContent=micActive?'🎤':'🎙';
-  if(lbl)lbl.textContent=micActive?'MIC AN':'MIC AUS';
+  rec.onend=()=>{if(camRunning)rec.start();};
+  rec.onerror=()=>{setTimeout(()=>{if(camRunning)rec.start();},1000);};
+  rec.start();
 }
 
 // ═══════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════
-const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn,.ts-opt,.stats-btn';
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target';
 
 function render(){
-  sX+=(tX-sX)*trackSettings.smooth;sY+=(tY-sY)*trackSettings.smooth;
+  sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
   document.getElementById('gaze-dot').style.left=sX+'px';
   document.getElementById('gaze-dot').style.top=sY+'px';
 
   const focEl=document.elementFromPoint(sX,sY)?.closest(FOCUS_SEL);
   document.querySelectorAll(FOCUS_SEL).forEach(el=>el.classList.toggle('focused',el===focEl));
-  currentFocusEl=focEl||null;  // global merken → für Blink-Dispatch
   const focTab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
   document.querySelectorAll('.game-tab').forEach(t=>t.classList.toggle('focused',t===focTab));
   const focAdmin=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
@@ -1887,16 +1274,6 @@ function render(){
 }
 
 document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clientY;}});
-document.addEventListener('touchmove',e=>{
-  if(!camRunning&&e.touches[0]){
-    tX=e.touches[0].clientX;tY=e.touches[0].clientY;
-  }
-},{passive:true});
-document.addEventListener('touchstart',e=>{
-  if(!camRunning&&e.touches[0]){
-    tX=e.touches[0].clientX;tY=e.touches[0].clientY;
-  }
-},{passive:true});
 
 // ═══════════════════════════════════════════════════
 //  SYSTEM START
@@ -1904,53 +1281,34 @@ document.addEventListener('touchstart',e=>{
 async function initSystem(){
   document.getElementById('overlay').style.display='none';
   loadGame('memory');
-
-  // Schritt 1: Kamera/Mikrofon-Zugriff
-  const micAllowed=!window._consentNoMic;
-  let stream;
   try{
-    stream=await navigator.mediaDevices.getUserMedia(
-      micAllowed?{video:true,audio:true}:{video:true}
-    );
-  }catch(e){
-    camRunning=false;
-    setDotStatus('idle','CAM FEHLER');
-    showCamError(e,'getUserMedia: '+(e.name||e.message||e));
-    return;
-  }
-
-  // Schritt 2: MediaPipe initialisieren
-  camRunning=true;
-  try{
+    await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    camRunning=true;
     canvas=document.getElementById('trail-canvas');
     canvas.width=innerWidth;canvas.height=innerHeight;
     ctx=canvas.getContext('2d');
-    const v=document.getElementById('v');
-    // Stream direkt zuweisen statt neu anzufragen
-    v.srcObject=stream;
     const fm=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
     fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
     fm.onResults(onResults);
-    new Camera(v,{
-      onFrame:async()=>{if(camRunning)await fm.send({image:v});},
+    new Camera(document.getElementById('v'),{
+      onFrame:async()=>{if(camRunning)await fm.send({image:document.getElementById('v')});},
       width:640,height:480
     }).start();
-    if(micAllowed)initSpeech();
-    setDotStatus('idle','TRACKING');updateMicBtn();
-  }catch(e){
-    camRunning=false;
-    setDotStatus('idle','MEDIAPIPE FEHLER');
-    showCamError(e,'MediaPipe: '+(e.name||e.message||e));
-  }
+    initSpeech();setDotStatus('idle','TRACKING');
+  }catch(e){setDotStatus('idle','FEHLER');}
 }
 
-function showCamError(e,detail){
-  document.getElementById('cam-error-banner')?.remove();
-  let msg='Kamera konnte nicht gestartet werden';
-  if(e?.name==='NotAllowedError')msg='Kamerazugriff verweigert — im Browser erlauben';
-  else if(e?.name==='NotFoundError')msg='Keine Kamera gefunden';
-  else if(e?.name==='NotReadableError')msg='Kamera wird von einer anderen App verwendet';
-  else if(e?.name==='OverconstrainedError')msg='Kamera unterstützt diese Einstellungen nicht';
-  const banner=document.createElement('div');
-  banner.id='cam-error-banner';
-  banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:4000000;backgrou
+// ═══════════════════════════════════════════════════
+//  STATUS HELPERS
+// ═══════════════════════════════════════════════════
+function setDotStatus(s,t){document.getElementById('sb-dot-state').className='s-'+s;document.getElementById('sb-dot-text').textContent=t;}
+function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=n||'–';}
+function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
+function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
+function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
+function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
+
+render();
+</script>
+</body>
+</html>
