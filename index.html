@@ -193,6 +193,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 .sb-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;border:none;
   background:var(--neon);box-shadow:0 0 8px rgba(0,242,255,0.5);}
 .sb-slider-side{font-size:0.55rem;color:rgba(0,242,255,0.45);letter-spacing:1px;white-space:nowrap;}
+.sb-hint{font-size:0.57rem;color:rgba(255,255,255,0.35);line-height:1.65;margin-top:3px;letter-spacing:0.3px;}
 .sb-slider-val{font-size:0.65rem;color:var(--gold);min-width:36px;text-align:right;font-weight:bold;}
 .sb-section{font-size:0.58rem;color:rgba(0,242,255,0.4);letter-spacing:3px;text-transform:uppercase;
   margin-top:12px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(0,242,255,0.1);}
@@ -284,6 +285,9 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="overlay">
   <h1>Aurion · Gedächtnis</h1>
   <p>Sieben Spiele · Blick · Blink · Stimme</p>
+  <p style="font-size:0.65rem;color:rgba(0,242,255,0.35);letter-spacing:1px;text-align:center;line-height:1.8;">
+    Nach START: Browser fragt nach<br>📷 Kamera &amp; 🎤 Mikrofon → bitte erlauben
+  </p>
   <button class="start-btn" onclick="initSystem()">START</button>
 </div>
 
@@ -462,11 +466,10 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
     <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;">
 
       <!-- Iris / Kopf -->
-      <div class="sb-section">Iris ↔ Kopf · Tracking</div>
+      <div class="sb-section">Iris ↔ Kopf · Tracking-Quelle</div>
       <div class="sb-setting">
-        <div class="sb-row-label">Blending
-          <span style="font-size:0.52rem;color:rgba(0,242,255,0.3)"> · Kopf=stabil · Iris=präzise</span>
-        </div>
+        <div class="sb-row-label">Blending</div>
+        <div class="sb-hint">Ganz links (Kopf): Der Dot folgt nur der Kopfbewegung — ruhiger, gut bei eingeschränkter Augenmotorik.<br>Ganz rechts (Iris): Der Dot folgt dem Auge direkt — präziser, aber empfindlicher.<br>Mitte: Kombination beider Signale.</div>
         <div class="sb-slider-wrap">
           <span class="sb-slider-side">Kopf</span>
           <input type="range" class="sb-slider" min="0" max="1" step="0.05" value="1"
@@ -479,7 +482,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       <!-- Blick-Tracking -->
       <div class="sb-section">Blick-Tracking</div>
       <div class="sb-setting">
-        <div class="sb-row-label">Glättung</div>
+        <div class="sb-row-label">Glättung des Dot</div>
+        <div class="sb-hint">Sehr träge: Dot bewegt sich langsam und ruhig — weniger Zittern, aber verzögerte Reaktion.<br>Direkt: Dot folgt sofort dem Blick — schnell, kann aber zittern.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="smooth" data-val="0.06">Sehr träge</div>
           <div class="sb-opt" data-ts="smooth" data-val="0.09">Träge</div>
@@ -488,7 +492,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
         </div>
       </div>
       <div class="sb-setting">
-        <div class="sb-row-label">Empfindlichkeit X</div>
+        <div class="sb-row-label">Empfindlichkeit Horizontal</div>
+        <div class="sb-hint">Wie weit der Dot nach links/rechts springt bei gleicher Augenbewegung. Niedrig = kleine Bewegung nötig, Hoch = Blick muss weit wandern.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="scaleX" data-val="8">Niedrig</div>
           <div class="sb-opt active" data-ts="scaleX" data-val="12">Normal</div>
@@ -497,7 +502,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
         </div>
       </div>
       <div class="sb-setting">
-        <div class="sb-row-label">Empfindlichkeit Y</div>
+        <div class="sb-row-label">Empfindlichkeit Vertikal</div>
+        <div class="sb-hint">Wie weit der Dot nach oben/unten springt. Unabhängig von horizontal einstellbar.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="scaleY" data-val="10">Niedrig</div>
           <div class="sb-opt active" data-ts="scaleY" data-val="15">Normal</div>
@@ -507,6 +513,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Zentrum-Dämpfung</div>
+        <div class="sb-hint">Stabilisiert den Dot beim Geradeausschauen. Stark = Mitte wirkt wie ein Magnet, Dot bleibt ruhiger in der Bildschirmmitte. Aus = keine Dämpfung.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="centerF" data-val="0.5">Aus</div>
           <div class="sb-opt" data-ts="centerF" data-val="0.3">Schwach</div>
@@ -518,7 +525,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       <!-- Blink -->
       <div class="sb-section">Blink-Erkennung</div>
       <div class="sb-setting">
-        <div class="sb-row-label">EAR-Schwelle <span style="font-size:0.52rem;color:rgba(0,242,255,0.3)">· Leicht=sensibler</span></div>
+        <div class="sb-row-label">EAR-Schwelle (Blink-Empfindlichkeit)</div>
+        <div class="sb-hint">Wie weit die Augen geschlossen sein müssen damit ein Blink erkannt wird.<br>Sehr leicht: minimales Blinzeln reicht aus — wird aber oft versehentlich ausgelöst.<br>Sehr fest: bewusstes vollständiges Augenschließen nötig — zuverlässiger, braucht mehr Kraft.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="earThresh" data-val="0.155">Sehr leicht</div>
           <div class="sb-opt active" data-ts="earThresh" data-val="0.175">Normal</div>
@@ -529,19 +537,21 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       <div class="sb-section">Doppelblink · Timing</div>
       <div class="sb-setting">
         <div class="sb-row-label">Doppelblink-Fenster</div>
+        <div class="sb-hint">Maximale Zeit zwischen zwei Blinks damit sie als Doppelblink gelten.<br>Weit: mehr Zeit erlaubt — gut wenn Blinks langsamer kommen.<br>Eng: Blinks müssen schnell hintereinander folgen — weniger Verwechslungen.</div>
         <div class="sb-opts">
-          <div class="sb-opt" data-ts="blinkWin" data-val="400">Eng</div>
-          <div class="sb-opt active" data-ts="blinkWin" data-val="600">Normal</div>
-          <div class="sb-opt" data-ts="blinkWin" data-val="800">Weit</div>
-          <div class="sb-opt" data-ts="blinkWin" data-val="1000">Sehr weit</div>
+          <div class="sb-opt" data-ts="blinkWin" data-val="400">Eng (0.4s)</div>
+          <div class="sb-opt active" data-ts="blinkWin" data-val="600">Normal (0.6s)</div>
+          <div class="sb-opt" data-ts="blinkWin" data-val="800">Weit (0.8s)</div>
+          <div class="sb-opt" data-ts="blinkWin" data-val="1000">Sehr weit (1s)</div>
         </div>
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Sperrzeit nach Aktion</div>
+        <div class="sb-hint">Nach einer Auswahl per Doppelblink wird für diese Zeit kein weiterer Blink erkannt. Verhindert versehentliche Doppelaktionen direkt hintereinander.<br>Kurz = schnell weiter möglich, Lang = mehr Pause zwischen Aktionen.</div>
         <div class="sb-opts">
-          <div class="sb-opt" data-ts="cooldown" data-val="1000">Kurz</div>
-          <div class="sb-opt active" data-ts="cooldown" data-val="1800">Normal</div>
-          <div class="sb-opt" data-ts="cooldown" data-val="2500">Lang</div>
+          <div class="sb-opt" data-ts="cooldown" data-val="1000">Kurz (1s)</div>
+          <div class="sb-opt active" data-ts="cooldown" data-val="1800">Normal (1.8s)</div>
+          <div class="sb-opt" data-ts="cooldown" data-val="2500">Lang (2.5s)</div>
         </div>
       </div>
 
@@ -549,6 +559,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       <div class="sb-section">Spiele</div>
       <div class="sb-setting">
         <div class="sb-row-label">Symbolset</div>
+        <div class="sb-hint">Welche Symbole in allen Spielen verwendet werden. Natur: Tiere und Pflanzen. Alltag: Gegenstände. Zahlen: Ziffern.</div>
         <div class="sb-opts">
           <div class="sb-opt active" data-key="sym-set" data-val="natur">Natur</div>
           <div class="sb-opt" data-key="sym-set" data-val="alltag">Alltag</div>
@@ -557,14 +568,16 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Memory · Paare</div>
+        <div class="sb-hint">Anzahl der Kartenpaare im Memory-Spiel. 4 Paare = 8 Karten (einfach), 8 Paare = 16 Karten (anspruchsvoll).</div>
         <div class="sb-opts">
-          <div class="sb-opt" data-key="memory-pairs" data-val="4">4</div>
-          <div class="sb-opt active" data-key="memory-pairs" data-val="6">6</div>
-          <div class="sb-opt" data-key="memory-pairs" data-val="8">8</div>
+          <div class="sb-opt" data-key="memory-pairs" data-val="4">4 Paare</div>
+          <div class="sb-opt active" data-key="memory-pairs" data-val="6">6 Paare</div>
+          <div class="sb-opt" data-key="memory-pairs" data-val="8">8 Paare</div>
         </div>
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Memory · Umdeckzeit</div>
+        <div class="sb-hint">Wie lange falsche Karten sichtbar bleiben bevor sie wieder umgedreht werden. Länger = mehr Zeit zum Einprägen.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-key="memory-flip" data-val="800">0.8s</div>
           <div class="sb-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
@@ -1383,7 +1396,7 @@ function checkZoneGesture(lm){
   if(ok){
     if(!zoneGestStart)zoneGestStart=now;
     const pct=Math.min(100,Math.round((now-zoneGestStart)/ZONE_GEST_HOLD*100));
-    if(pct>15)setLastAction('😮↑ '+pct+'%');
+    if(pct>15)setZoneStatus('😮↑ '+pct+'%'); // Zone-Status statt Last-Action
     if(now-zoneGestStart>=ZONE_GEST_HOLD){
       zoneGestStart=null;lastZoneGest=now;
       const bx=innerWidth*TS.bufPct,by=innerHeight*TS.bufPct;
@@ -1688,22 +1701,23 @@ function initSpeech(){
   recInstance.lang='de-DE';recInstance.continuous=true;recInstance.interimResults=false;
   recInstance.onstart=()=>{micActive=true;setMicStatus('on','AKTIV');updateMicBtn();};
   recInstance.onresult=(e)=>{
-    if(micMuted)return; // stummgeschaltet → ignorieren
     const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
-    setMicStatus('listening','HÖRT…');setTimeout(()=>setMicStatus(micMuted?'':'on',micMuted?'AUS':'AKTIV'),800);
+    setLastAction('🎤 '+t); // immer zeigen — auch wenn stumm
+    if(micMuted)return;
     if(t.includes('auswahl'))triggerVoice();
     if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
     if(t.includes('admin'))openAdminGate();
     if(t.includes('mikrofon aus'))stopMic();
     else if(t.includes('mikrofon an'))startMic();
-    // Sidebar per Stimme: "sidebar" oder "seite" + Richtung
-    const sbWord=t.includes('sidebar')||t.includes('seite');
-    if(sbWord){
-      if(t.includes('schließen')||t.includes('zu')||t.includes('weg'))closeSidebar();
-      else if(t.includes('oben')) openSidebar('oben');
+    // Sidebar: "sidebar/side bar/seite/öffne" + Richtung
+    const tc=t.replace(/\s+/g,'');
+    const sbWord=tc.includes('sidebar')||t.includes('seitenleiste')||t.includes('seite')||t.includes('öffne')||t.includes('zeige');
+    if(sbWord||t.includes('oben')||t.includes('rechts')||t.includes('unten')||t.includes('links')){
+      if(t.includes('schließen')||t.includes('weg')||t.includes('zu')){closeSidebar();speak('Sidebar zu');}
+      else if(t.includes('oben'))  openSidebar('oben');
       else if(t.includes('rechts'))openSidebar('rechts');
-      else if(t.includes('unten'))openSidebar('unten');
-      else if(t.includes('links'))openSidebar('links');
+      else if(t.includes('unten')) openSidebar('unten');
+      else if(t.includes('links')) openSidebar('links');
     }
     if(currentSidebar==='links'&&!adminUnlocked&&t.trim()==='o')tryAdminPw('o');
   };
@@ -1753,23 +1767,22 @@ document.addEventListener('touchstart',e=>{if(!camRunning&&e.touches[0]){tX=e.to
 // ═══════════════════════════════════════════════════
 //  SYSTEM START
 // ═══════════════════════════════════════════════════
-let permStream=null;
-
-// Berechtigung beim Laden anfragen → Browser-Dialog erscheint sofort
-(async()=>{
-  try{
-    permStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-  }catch(e){
-    try{ permStream=await navigator.mediaDevices.getUserMedia({video:true}); window._noAudio=true; }
-    catch(e2){ /* verweigert – Fehler beim START zeigen */ }
-  }
-})();
-
 async function initSystem(){
   document.getElementById('overlay').style.display='none';
   loadGame('memory');
-  const stream=permStream;
-  if(!stream){ showStartError('verweigert'); return; }
+  // Kamera & Mikrofon erst hier anfragen — nach bewusstem START-Klick
+  let stream;
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+  }catch(e){
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:true});
+      window._noAudio=true;
+    }catch(e2){
+      showStartError('verweigert');
+      return;
+    }
+  }
   camRunning=true;
   try{
     canvas=document.getElementById('trail-canvas');
@@ -1781,8 +1794,8 @@ async function initSystem(){
     fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
     fm.onResults(onResults);
     new Camera(v,{onFrame:async()=>{if(camRunning)await fm.send({image:v});},width:640,height:480}).start();
-    if(!window._noAudio)initSpeech();
-    else setMicStatus('','MIC FEHLT');
+    if(!window._noAudio){ initSpeech();micActive=true;micMuted=false;updateMicBtn(); }
+    else{ micActive=false;micMuted=true;updateMicBtn(); }
     setDotStatus('idle','TRACKING');
   }catch(e){ camRunning=false; showStartError('MediaPipe: '+e.message); }
 }
