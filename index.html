@@ -235,7 +235,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 }
 #sidebar-oben.visible{opacity:1;pointer-events:all;transform:translateY(0);}
 #sidebar-unten{
-  bottom:0;height:min(48vh,320px);
+  bottom:0;height:min(75vh,520px);
   border-top:2px solid rgba(0,242,255,0.2);
   transform:translateY(110%);
 }
@@ -469,31 +469,32 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       <div class="sb-section">Iris ↔ Kopf · Tracking-Quelle</div>
       <div class="sb-setting">
         <div class="sb-row-label">Blending</div>
-        <div class="sb-hint">Ganz links (Kopf): Der Dot folgt nur der Kopfbewegung — ruhiger, gut bei eingeschränkter Augenmotorik.<br>Ganz rechts (Iris): Der Dot folgt dem Auge direkt — präziser, aber empfindlicher.<br>Mitte: Kombination beider Signale.</div>
+        <div class="sb-hint"><b>Kopf (links):</b> Der Dot folgt nur der Kopfbewegung — stabiler, gut bei eingeschränkter Augenmotorik oder Zittern.<br><b>Iris (rechts):</b> Der Dot folgt direkt dem Auge — präziser, aber empfindlicher.<br><b>Mitte:</b> Kombination beider Signale.</div>
         <div class="sb-slider-wrap">
           <span class="sb-slider-side">Kopf</span>
           <input type="range" class="sb-slider" min="0" max="1" step="0.05" value="1"
-            oninput="TS.irisHead=parseFloat(this.value);document.getElementById('ih-val').textContent=ihLabel(this.value)">
+            oninput="TS.irisHead=parseFloat(this.value);document.getElementById('ih-val').textContent=ihLabel(this.value);saveSettings()">
           <span class="sb-slider-side">Iris</span>
           <span class="sb-slider-val" id="ih-val">Iris</span>
         </div>
       </div>
 
-      <!-- Blick-Tracking -->
+      <!-- Blick -->
       <div class="sb-section">Blick-Tracking</div>
       <div class="sb-setting">
         <div class="sb-row-label">Glättung des Dot</div>
-        <div class="sb-hint">Sehr träge: Dot bewegt sich langsam und ruhig — weniger Zittern, aber verzögerte Reaktion.<br>Direkt: Dot folgt sofort dem Blick — schnell, kann aber zittern.</div>
+        <div class="sb-hint"><b>Sehr träge:</b> Dot bewegt sich langsam und ruhig — weniger Zittern, aber verzögerte Reaktion. Gut bei unruhigem Blick.<br><b>Direkt:</b> Dot reagiert sofort — schnell, kann aber zittern.<br>Empfehlung: Zittern vorhanden → träger einstellen.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="smooth" data-val="0.06">Sehr träge</div>
           <div class="sb-opt" data-ts="smooth" data-val="0.09">Träge</div>
           <div class="sb-opt active" data-ts="smooth" data-val="0.12">Normal</div>
           <div class="sb-opt" data-ts="smooth" data-val="0.18">Direkt</div>
+          <div class="sb-opt" data-ts="smooth" data-val="0.25">Sehr direkt</div>
         </div>
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Empfindlichkeit Horizontal</div>
-        <div class="sb-hint">Wie weit der Dot nach links/rechts springt bei gleicher Augenbewegung. Niedrig = kleine Bewegung nötig, Hoch = Blick muss weit wandern.</div>
+        <div class="sb-hint">Wie weit der Dot nach links/rechts springt bei gleicher Augenbewegung.<br><b>Niedrig:</b> Kleine Augenbewegung reicht — gut bei eingeschränktem Blickfeld.<br><b>Hoch:</b> Auge muss weiter wandern — weniger versehentliche Aktivierung.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="scaleX" data-val="8">Niedrig</div>
           <div class="sb-opt active" data-ts="scaleX" data-val="12">Normal</div>
@@ -503,7 +504,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Empfindlichkeit Vertikal</div>
-        <div class="sb-hint">Wie weit der Dot nach oben/unten springt. Unabhängig von horizontal einstellbar.</div>
+        <div class="sb-hint">Wie weit der Dot nach oben/unten springt. Unabhängig von horizontal einstellbar — z.B. wenn Blick leichter horizontal als vertikal wandert.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="scaleY" data-val="10">Niedrig</div>
           <div class="sb-opt active" data-ts="scaleY" data-val="15">Normal</div>
@@ -513,7 +514,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Zentrum-Dämpfung</div>
-        <div class="sb-hint">Stabilisiert den Dot beim Geradeausschauen. Stark = Mitte wirkt wie ein Magnet, Dot bleibt ruhiger in der Bildschirmmitte. Aus = keine Dämpfung.</div>
+        <div class="sb-hint">Stabilisiert den Dot wenn geradeaus geschaut wird. Der Bildschirmmittelpunkt wirkt wie ein leichter Magnet.<br><b>Stark:</b> Dot bleibt gut zentriert, kleine Abweichungen werden gedämpft — weniger Drift.<br><b>Aus:</b> Keine Dämpfung, volle Freiheit in der Mitte.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="centerF" data-val="0.5">Aus</div>
           <div class="sb-opt" data-ts="centerF" data-val="0.3">Schwach</div>
@@ -526,18 +527,31 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       <div class="sb-section">Blink-Erkennung</div>
       <div class="sb-setting">
         <div class="sb-row-label">EAR-Schwelle (Blink-Empfindlichkeit)</div>
-        <div class="sb-hint">Wie weit die Augen geschlossen sein müssen damit ein Blink erkannt wird.<br>Sehr leicht: minimales Blinzeln reicht aus — wird aber oft versehentlich ausgelöst.<br>Sehr fest: bewusstes vollständiges Augenschließen nötig — zuverlässiger, braucht mehr Kraft.</div>
+        <div class="sb-hint">EAR = Eye Aspect Ratio — misst wie weit die Augen geschlossen sind.<br><b>Sehr leicht (0.155):</b> Minimales Blinzeln genügt — reagiert schnell, aber auch auf ungewolltes Flattern.<br><b>Normal (0.175):</b> Standardwert für die meisten Nutzer.<br><b>Sehr fest (0.220):</b> Augen müssen vollständig geschlossen werden — bewusster Blink nötig, keine Verwechslungen.</div>
         <div class="sb-opts">
-          <div class="sb-opt" data-ts="earThresh" data-val="0.155">Sehr leicht</div>
+          <div class="sb-opt" data-ts="earThresh" data-val="0.145">Sehr leicht</div>
+          <div class="sb-opt" data-ts="earThresh" data-val="0.160">Leicht</div>
           <div class="sb-opt active" data-ts="earThresh" data-val="0.175">Normal</div>
-          <div class="sb-opt" data-ts="earThresh" data-val="0.200">Fest</div>
+          <div class="sb-opt" data-ts="earThresh" data-val="0.195">Fest</div>
           <div class="sb-opt" data-ts="earThresh" data-val="0.220">Sehr fest</div>
         </div>
       </div>
+      <div class="sb-setting">
+        <div class="sb-row-label">Minimale Blink-Dauer</div>
+        <div class="sb-hint">Wie lange die Augen geschlossen sein müssen damit ein Blink zählt.<br><b>Kurz (50ms):</b> Sehr schnelle Blinks werden erkannt — für Nutzer die schnell blinken.<br><b>Lang (150ms):</b> Nur bewusste, lange Blinks zählen — filtert versehentliches Flattern heraus.</div>
+        <div class="sb-opts">
+          <div class="sb-opt" data-ts="blinkMin" data-val="50">Kurz (50ms)</div>
+          <div class="sb-opt active" data-ts="blinkMin" data-val="80">Normal (80ms)</div>
+          <div class="sb-opt" data-ts="blinkMin" data-val="110">Lang (110ms)</div>
+          <div class="sb-opt" data-ts="blinkMin" data-val="150">Sehr lang (150ms)</div>
+        </div>
+      </div>
+
+      <!-- Doppelblink -->
       <div class="sb-section">Doppelblink · Timing</div>
       <div class="sb-setting">
         <div class="sb-row-label">Doppelblink-Fenster</div>
-        <div class="sb-hint">Maximale Zeit zwischen zwei Blinks damit sie als Doppelblink gelten.<br>Weit: mehr Zeit erlaubt — gut wenn Blinks langsamer kommen.<br>Eng: Blinks müssen schnell hintereinander folgen — weniger Verwechslungen.</div>
+        <div class="sb-hint">Maximale Zeit zwischen zwei Blinks damit sie als Doppelblink gelten.<br><b>Weit (1s):</b> Mehr Zeit erlaubt — gut wenn Blinks langsamer kommen oder Augen sich erholen müssen.<br><b>Eng (0.4s):</b> Blinks müssen schnell folgen — weniger Verwechslungen mit zwei separaten Blinks.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="blinkWin" data-val="400">Eng (0.4s)</div>
           <div class="sb-opt active" data-ts="blinkWin" data-val="600">Normal (0.6s)</div>
@@ -547,19 +561,52 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Sperrzeit nach Aktion</div>
-        <div class="sb-hint">Nach einer Auswahl per Doppelblink wird für diese Zeit kein weiterer Blink erkannt. Verhindert versehentliche Doppelaktionen direkt hintereinander.<br>Kurz = schnell weiter möglich, Lang = mehr Pause zwischen Aktionen.</div>
+        <div class="sb-hint">Nach einer Auswahl per Doppelblink wird für diese Zeit kein weiterer Blink erkannt. Verhindert versehentliche Doppelaktionen.<br><b>Kurz (1s):</b> Schnelles Weitertippen möglich.<br><b>Sehr lang (3.5s):</b> Lange Pause — gut wenn Augen sich erholen müssen nach einer Aktion.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-ts="cooldown" data-val="1000">Kurz (1s)</div>
           <div class="sb-opt active" data-ts="cooldown" data-val="1800">Normal (1.8s)</div>
           <div class="sb-opt" data-ts="cooldown" data-val="2500">Lang (2.5s)</div>
+          <div class="sb-opt" data-ts="cooldown" data-val="3500">Sehr lang (3.5s)</div>
         </div>
       </div>
 
-      <!-- Spiele -->
-      <div class="sb-section">Spiele</div>
+      <!-- Zonen -->
+      <div class="sb-section">Zonen &amp; Gesten</div>
+      <div class="sb-setting">
+        <div class="sb-row-label">Pufferzone-Breite</div>
+        <div class="sb-hint">Wie breit die Randbereiche sind in denen Triple-Blink und die Mund+Brauen-Geste die Sidebars öffnen.<br><b>Schmal (10%):</b> Nur ganz am Rand erkannt — mehr Spielfläche in der Mitte.<br><b>Sehr breit (25%):</b> Großer Randbereich — leichter zu treffen, aber weniger Spielfläche.</div>
+        <div class="sb-opts">
+          <div class="sb-opt" data-ts="bufPct" data-val="0.10">Schmal (10%)</div>
+          <div class="sb-opt" data-ts="bufPct" data-val="0.13">Klein (13%)</div>
+          <div class="sb-opt active" data-ts="bufPct" data-val="0.16">Normal (16%)</div>
+          <div class="sb-opt" data-ts="bufPct" data-val="0.20">Breit (20%)</div>
+          <div class="sb-opt" data-ts="bufPct" data-val="0.25">Sehr breit (25%)</div>
+        </div>
+      </div>
+    </div>
+    <button id="settings-save-btn" onclick="saveSettingsExplicit()"
+      style="margin-top:12px;flex-shrink:0;width:100%;padding:12px;
+      background:rgba(16,185,129,0.1);border:1.5px solid rgba(16,185,129,0.5);
+      border-radius:10px;color:rgba(16,185,129,0.9);font-family:'Courier New',monospace;
+      font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;
+      transition:background 0.2s,border-color 0.2s;">
+      💾 Einstellungen speichern
+    </button>
+  </div>
+</div>
+<div id="sidebar-links">
+  <div id="admin-pw-screen" class="pw-screen">
+    <div class="pw-title">⚙ Admin</div>
+    <div class="pw-btn" id="pw-o-btn" onclick="tryAdminPw('o')" data-pw="o">O</div>
+    <div class="pw-hint">Doppelblink auf O<br>oder sag das Passwort</div>
+  </div>
+  <div id="admin-content" style="display:none;">
+    <div class="admin-inner" style="overflow-y:auto;height:100%;">
+      <h2>⚙ Adminbereich</h2>
+      <div class="sb-section" style="margin-top:4px">Spieleinstellungen</div>
       <div class="sb-setting">
         <div class="sb-row-label">Symbolset</div>
-        <div class="sb-hint">Welche Symbole in allen Spielen verwendet werden. Natur: Tiere und Pflanzen. Alltag: Gegenstände. Zahlen: Ziffern.</div>
+        <div class="sb-hint">Welche Symbole in allen Spielen verwendet werden.</div>
         <div class="sb-opts">
           <div class="sb-opt active" data-key="sym-set" data-val="natur">Natur</div>
           <div class="sb-opt" data-key="sym-set" data-val="alltag">Alltag</div>
@@ -568,7 +615,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Memory · Paare</div>
-        <div class="sb-hint">Anzahl der Kartenpaare im Memory-Spiel. 4 Paare = 8 Karten (einfach), 8 Paare = 16 Karten (anspruchsvoll).</div>
+        <div class="sb-hint">4 = einfach (8 Karten) · 8 = anspruchsvoll (16 Karten)</div>
         <div class="sb-opts">
           <div class="sb-opt" data-key="memory-pairs" data-val="4">4 Paare</div>
           <div class="sb-opt active" data-key="memory-pairs" data-val="6">6 Paare</div>
@@ -577,32 +624,14 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
       </div>
       <div class="sb-setting">
         <div class="sb-row-label">Memory · Umdeckzeit</div>
-        <div class="sb-hint">Wie lange falsche Karten sichtbar bleiben bevor sie wieder umgedreht werden. Länger = mehr Zeit zum Einprägen.</div>
+        <div class="sb-hint">Wie lange falsche Karten sichtbar bleiben.</div>
         <div class="sb-opts">
           <div class="sb-opt" data-key="memory-flip" data-val="800">0.8s</div>
           <div class="sb-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
           <div class="sb-opt" data-key="memory-flip" data-val="2500">2.5s</div>
         </div>
       </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- SIDEBAR LINKS: Admin mit Passwort -->
-<div id="sidebar-links">
-  <div id="admin-pw-screen" class="pw-screen">
-    <div class="pw-title">⚙ Admin</div>
-    <div class="pw-btn" id="pw-o-btn" onclick="tryAdminPw('o')" data-pw="o">O</div>
-    <div class="pw-hint">Doppelblink auf O<br>oder sag das Passwort</div>
-  </div>
-  <div id="admin-content" style="display:none;">
-    <div class="admin-inner">
-      <h2>⚙ Adminbereich</h2>
-      <div style="font-size:0.6rem;color:rgba(0,242,255,0.4);letter-spacing:1px;line-height:1.8;">
-        Weitere Admin-Einstellungen folgen schrittweise.
-      </div>
-      <button class="sb-clear" style="margin-top:8px" onclick="lockAdmin()">Sperren</button>
+      <button class="sb-clear" style="margin-top:16px" onclick="lockAdmin()">🔒 Sperren</button>
     </div>
   </div>
 </div>
@@ -1514,6 +1543,57 @@ function dispatchAction(el){
 
 
 
+
+// ═══════════════════════════════════════════════════
+//  EINSTELLUNGEN: localStorage
+// ═══════════════════════════════════════════════════
+const SETTINGS_STORE='aurion_settings_v1';
+
+function saveSettingsExplicit(){
+  saveSettings();
+  const btn=document.getElementById('settings-save-btn');
+  if(!btn)return;
+  const orig=btn.innerHTML;
+  btn.innerHTML='✓ Gespeichert!';
+  btn.style.background='rgba(16,185,129,0.25)';
+  btn.style.borderColor='var(--blink2)';
+  setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';btn.style.borderColor='';},2000);
+  speak('Einstellungen gespeichert');
+}
+
+function saveSettings(){
+  localStorage.setItem(SETTINGS_STORE,JSON.stringify({ts:TS,game:settings}));
+}
+
+function loadSavedSettings(){
+  try{
+    const d=JSON.parse(localStorage.getItem(SETTINGS_STORE));
+    if(!d)return;
+    if(d.ts)Object.keys(d.ts).forEach(k=>{if(k in TS)TS[k]=d.ts[k];});
+    if(d.game)Object.keys(d.game).forEach(k=>{settings[k]=d.game[k];});
+  }catch(e){}
+}
+
+function syncSettingButtons(){
+  // TS-Buttons (data-ts)
+  Object.keys(TS).forEach(key=>{
+    document.querySelectorAll(`[data-ts="${key}"]`).forEach(o=>{
+      o.classList.toggle('active',Math.abs(parseFloat(o.dataset.val)-TS[key])<0.0001);
+    });
+  });
+  // settings-Buttons (data-key)
+  Object.keys(settings).forEach(key=>{
+    document.querySelectorAll(`[data-key="${key}"]`).forEach(o=>{
+      o.classList.toggle('active',o.dataset.val===settings[key]);
+    });
+  });
+  // Slider
+  const sl=document.getElementById('ih-val');
+  const sli=document.querySelector('.sb-slider');
+  if(sl)sl.textContent=ihLabel(TS.irisHead);
+  if(sli)sli.value=TS.irisHead;
+}
+
 // ═══════════════════════════════════════════════════
 //  STATISTIK (lokal, anonym)
 // ═══════════════════════════════════════════════════
@@ -1596,6 +1676,7 @@ document.addEventListener('click',e=>{
     document.querySelectorAll(`[data-ts="${key}"]`).forEach(o=>o.classList.remove('active'));
     tsOpt.classList.add('active');
     TS[key]=val;
+    saveSettings();
     return;
   }
   // data-key → settings-Objekt (Spieleinstellungen)
@@ -1606,6 +1687,11 @@ document.addEventListener('click',e=>{
   document.querySelectorAll(`[data-key="${key}"]`).forEach(o=>o.classList.remove('active'));
   opt.classList.add('active');
   settings[key]=val;
+  saveSettings();
+  // Spieleinstellungen sofort übernehmen → aktuelles Spiel neu starten
+  if(['sym-set','memory-pairs','memory-flip'].includes(key)){
+    if(typeof currentGame!=='undefined') setTimeout(()=>loadGame(currentGame),300);
+  }
 });
 
 // ═══════════════════════════════════════════════════
@@ -1620,6 +1706,7 @@ function openSidebar(dir){
   if(el){
     el.classList.add('visible');
     speak('Sidebar '+dir);
+    syncSettingButtons();
     if(dir==='oben')renderStats();
     // Admin: bei erneutem Öffnen Passwort-Screen zeigen falls nicht entsperrt
     if(dir==='links'&&!adminUnlocked){
@@ -1704,6 +1791,7 @@ function initSpeech(){
     const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
     setLastAction('🎤 '+t); // immer zeigen — auch wenn stumm
     if(micMuted)return;
+    if(t.includes('zurück')){closeSidebar();loadGame(currentGame||'memory');speak('Zurück');return;}
     if(t.includes('auswahl'))triggerVoice();
     if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
     if(t.includes('admin'))openAdminGate();
