@@ -1420,9 +1420,7 @@ function checkZoneGesture(lm){
   if(now-lastZoneGest<ZONE_GEST_CD)return;
   const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
   const browAvg=(d(70,159)+d(300,386))/2;
-  const mouthV=d(13,14),mouthH=d(61,291);
-  const mouthRatio=mouthH>0?mouthV/mouthH:0;
-  const ok=browAvg>BROW_THRESH&&mouthV>MOUTH_VERT&&mouthRatio>MOUTH_RATIO;
+  const ok=browAvg>BROW_THRESH; // nur Augenbrauen hochziehen
   if(ok){
     if(!zoneGestStart)zoneGestStart=now;
     const pct=Math.min(100,Math.round((now-zoneGestStart)/ZONE_GEST_HOLD*100));
@@ -1921,6 +1919,7 @@ function setLastAction(t){document.getElementById('sb-last-text').textContent=t;
 function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
 function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
 
+loadSavedSettings(); // Einstellungen aus localStorage laden
 render();
 </script>
 </body>
