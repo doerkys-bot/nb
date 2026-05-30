@@ -121,33 +121,22 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 .game-tab.focused{background:rgba(0,242,255,0.12);border-color:var(--neon);color:white;box-shadow:0 0 16px rgba(0,242,255,0.2);}
 .game-tab.active-game{background:rgba(16,185,129,0.15);border-color:var(--blink2);color:var(--blink2);}
 
-/* ── ADMIN ── */
-#admin-gate{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
-#admin-gate.visible{display:flex;}
-#admin-gate h2{color:#f59e0b;font-size:1.4rem;letter-spacing:6px;text-transform:uppercase;}
-#admin-gate p{color:rgba(255,255,255,0.4);font-size:0.8rem;letter-spacing:2px;text-align:center;line-height:1.8;}
-#gesture-ring{width:90px;height:90px;border-radius:50%;border:3px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:center;font-size:2rem;position:relative;transition:border-color 0.2s,box-shadow 0.2s;}
-#gesture-ring.active{border-color:#f59e0b;box-shadow:0 0 30px rgba(245,158,11,0.4);}
-#gesture-progress{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);font-size:11px;color:#f59e0b;letter-spacing:2px;white-space:nowrap;}
-#admin-close-btn{margin-top:10px;background:transparent;color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.15);padding:8px 24px;border-radius:8px;cursor:pointer;font-size:0.75rem;letter-spacing:2px;}
-#admin-panel{position:fixed;top:0;bottom:0;left:0;width:var(--admin-w);z-index:7000;background:rgba(8,14,30,0.97);backdrop-filter:blur(12px);border-right:2px solid rgba(245,158,11,0.3);transform:translateX(-110%);transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);overflow-y:auto;scrollbar-width:none;padding:30px 24px 60px 24px;}
-#admin-panel.open{transform:translateX(0);}
-#admin-panel h1{color:#f59e0b;font-size:1.1rem;letter-spacing:5px;text-transform:uppercase;margin-bottom:8px;border-bottom:1px solid rgba(245,158,11,0.2);padding-bottom:12px;}
-#admin-panel .admin-subtitle{color:rgba(255,255,255,0.25);font-size:0.7rem;letter-spacing:2px;margin-bottom:24px;}
-.admin-game-btn{width:100%;padding:16px 20px;margin-bottom:10px;background:rgba(255,255,255,0.03);border:1.5px solid rgba(245,158,11,0.2);border-radius:12px;color:rgba(245,158,11,0.7);font-family:'Courier New',monospace;font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;transition:background 0.15s,border-color 0.15s,color 0.15s;}
-.admin-game-btn:hover,.admin-game-btn.focused{background:rgba(245,158,11,0.08);border-color:#f59e0b;color:#f59e0b;}
-.admin-game-btn .arrow{font-size:0.9rem;opacity:0.5;transition:transform 0.2s;}
-.admin-game-btn.open .arrow{transform:rotate(90deg);}
-.settings-drawer{overflow:hidden;max-height:0;transition:max-height 0.4s ease;background:rgba(0,0,0,0.3);border-radius:10px;margin-bottom:10px;}
-.settings-drawer.open{max-height:400px;}
-.settings-inner{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
-.setting-row{display:flex;flex-direction:column;gap:6px;}
-.setting-label{font-size:0.65rem;color:rgba(0,242,255,0.4);letter-spacing:2px;text-transform:uppercase;}
-.setting-options{display:flex;gap:6px;flex-wrap:wrap;}
-.setting-opt{padding:6px 12px;border-radius:8px;font-size:0.65rem;letter-spacing:1px;cursor:pointer;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);transition:background 0.15s,border-color 0.15s,color 0.15s;}
-.setting-opt.active{background:rgba(245,158,11,0.15);border-color:#f59e0b;color:#f59e0b;}
-#admin-close{position:sticky;bottom:0;width:100%;padding:12px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.3);border-radius:10px;color:rgba(220,38,38,0.8);font-family:'Courier New',monospace;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:background 0.15s;margin-top:20px;}
-#admin-close:hover{background:rgba(220,38,38,0.25);}
+
+/* ── ADMIN AKKORDEON ── */
+.ag-btn{width:100%;padding:11px 14px;margin-bottom:6px;
+  background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.3);
+  border-radius:9px;color:rgba(245,158,11,0.85);
+  font-family:'Courier New',monospace;font-size:0.68rem;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background 0.15s,border-color 0.15s;}
+.ag-btn.open{background:rgba(245,158,11,0.14);border-color:rgba(245,158,11,0.6);}
+.ag-arrow{transition:transform 0.25s;font-size:0.7rem;opacity:0.6;}
+.ag-btn.open .ag-arrow{transform:rotate(90deg);}
+.ag-settings{display:none;padding:12px 14px;background:rgba(0,0,0,0.25);
+  border-radius:8px;margin-bottom:8px;flex-direction:column;gap:10px;}
+.ag-settings.open{display:flex;}
+
 
 /* ── GAZE DOT ── */
 #gaze-dot{position:fixed;width:24px;height:24px;background:white;border-radius:50%;border:3px solid var(--neon);transform:translate(-50%,-50%);pointer-events:none;z-index:999999;box-shadow:0 0 18px var(--neon);transition:border-color 0.1s,box-shadow 0.1s,transform 0.1s;}
@@ -226,8 +215,10 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   position:fixed;z-index:600;top:0;bottom:0;left:0;
   width:min(320px,88vw);
   background:rgba(6,10,19,0.97);backdrop-filter:blur(10px);
-  opacity:0;pointer-events:none;
-  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transform:translateX(-110%);
+  border-right:2px solid rgba(0,242,255,0.2);
+  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1),visibility 0s 0.4s;
   overflow-y:auto;
 }
 #sidebar-oben{
@@ -242,8 +233,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   transform:translateY(110%);
 }
 #sidebar-unten.visible{opacity:1;pointer-events:all;transform:translateY(0);}
-#sidebar-links{border-right:2px solid rgba(0,242,255,0.2);transform:translateX(-110%);}
-#sidebar-links.visible{opacity:1;pointer-events:all;transform:translateX(0);}
+
+#sidebar-links.visible{opacity:1;visibility:visible;pointer-events:all;transform:translateX(0);transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1),visibility 0s 0s;}
 
 /* Sidebar Inhalte */
 .sb-panel{padding:18px 20px;width:100%;height:100%;display:flex;flex-direction:column;gap:10px;}
@@ -314,142 +305,9 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <div class="game-tab" data-game="blitz">Blitz-Ziel</div>
 </div>
 
-<div id="admin-gate">
-  <h2>⚙ Admin-Zugang</h2>
-  <div id="gesture-ring">
-    <span id="gesture-icon">😐</span>
-    <div id="gesture-progress">Augenbrauen hoch + Mund-O halten…</div>
-  </div>
-  <p>Augenbrauen hochziehen<br>und Mund zu einem O öffnen<br>für ca. 1 Sekunde halten</p>
-  <button id="admin-close-btn" onclick="closeAdminGate()">ABBRECHEN</button>
-</div>
-
-<div id="admin-panel">
-  <h1>⚙ Adminbereich</h1>
-  <p class="admin-subtitle">AURION · SPIELEINSTELLUNGEN</p>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-memory',this)">Memory Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-memory"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Anzahl Paare</div><div class="setting-options">
-      <div class="setting-opt" data-key="memory-pairs" data-val="4">4 Paare</div>
-      <div class="setting-opt active" data-key="memory-pairs" data-val="6">6 Paare</div>
-      <div class="setting-opt" data-key="memory-pairs" data-val="8">8 Paare</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Umdeckzeit bei Fehler</div><div class="setting-options">
-      <div class="setting-opt" data-key="memory-flip" data-val="800">0.8s</div>
-      <div class="setting-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
-      <div class="setting-opt" data-key="memory-flip" data-val="2500">2.5s</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Symbolset</div><div class="setting-options">
-      <div class="setting-opt active" data-key="sym-set" data-val="natur">Natur</div>
-      <div class="setting-opt" data-key="sym-set" data-val="alltag">Alltag</div>
-      <div class="setting-opt" data-key="sym-set" data-val="zahlen">Zahlen</div>
-    </div></div>
-  </div></div>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-sequence',this)">Sequence Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-sequence"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Startlänge</div><div class="setting-options">
-      <div class="setting-opt" data-key="seq-len" data-val="3">3</div>
-      <div class="setting-opt active" data-key="seq-len" data-val="5">5</div>
-      <div class="setting-opt" data-key="seq-len" data-val="7">7</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Anzeigedauer</div><div class="setting-options">
-      <div class="setting-opt" data-key="seq-dur" data-val="800">0.8s</div>
-      <div class="setting-opt active" data-key="seq-dur" data-val="1200">1.2s</div>
-      <div class="setting-opt" data-key="seq-dur" data-val="2000">2.0s</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Auto-schwerer</div><div class="setting-options">
-      <div class="setting-opt active" data-key="seq-auto" data-val="ja">Ja</div>
-      <div class="setting-opt" data-key="seq-auto" data-val="nein">Nein</div>
-    </div></div>
-  </div></div>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-wortbild',this)">Wort-Bild Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-wortbild"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Sprache</div><div class="setting-options">
-      <div class="setting-opt active" data-key="wb-lang" data-val="de">Deutsch</div>
-      <div class="setting-opt" data-key="wb-lang" data-val="en">Englisch</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Schwierigkeit</div><div class="setting-options">
-      <div class="setting-opt active" data-key="wb-diff" data-val="easy">Einfach</div>
-      <div class="setting-opt" data-key="wb-diff" data-val="mid">Mittel</div>
-      <div class="setting-opt" data-key="wb-diff" data-val="hard">Schwer</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Wort vorlesen</div><div class="setting-options">
-      <div class="setting-opt active" data-key="wb-speak" data-val="ja">Ja</div>
-      <div class="setting-opt" data-key="wb-speak" data-val="nein">Nein</div>
-    </div></div>
-  </div></div>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-kat',this)">Kategorien Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-kat"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Kategorienpool</div><div class="setting-options">
-      <div class="setting-opt active" data-key="kat-pool" data-val="natur">Natur</div>
-      <div class="setting-opt" data-key="kat-pool" data-val="technik">Technik</div>
-      <div class="setting-opt" data-key="kat-pool" data-val="gemischt">Gemischt</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Sprachausgabe</div><div class="setting-options">
-      <div class="setting-opt active" data-key="kat-speak" data-val="ja">Ja</div>
-      <div class="setting-opt" data-key="kat-speak" data-val="nein">Nein</div>
-    </div></div>
-  </div></div>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-odd',this)">Odd-One-Out Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-odd"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Anzahl Felder</div><div class="setting-options">
-      <div class="setting-opt" data-key="odd-size" data-val="3">3</div>
-      <div class="setting-opt active" data-key="odd-size" data-val="4">4</div>
-      <div class="setting-opt" data-key="odd-size" data-val="6">6</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Zeitdruck</div><div class="setting-options">
-      <div class="setting-opt" data-key="odd-time" data-val="ja">Ja</div>
-      <div class="setting-opt active" data-key="odd-time" data-val="nein">Nein</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Hinweis</div><div class="setting-options">
-      <div class="setting-opt active" data-key="odd-hint" data-val="ja">Ja</div>
-      <div class="setting-opt" data-key="odd-hint" data-val="nein">Nein</div>
-    </div></div>
-  </div></div>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-such',this)">Suchfeld Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-such"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Rastergröße</div><div class="setting-options">
-      <div class="setting-opt" data-key="such-grid" data-val="3">3×3</div>
-      <div class="setting-opt active" data-key="such-grid" data-val="4">4×4</div>
-      <div class="setting-opt" data-key="such-grid" data-val="5">5×5</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Zeitlimit</div><div class="setting-options">
-      <div class="setting-opt" data-key="such-time" data-val="15">15s</div>
-      <div class="setting-opt active" data-key="such-time" data-val="30">30s</div>
-      <div class="setting-opt" data-key="such-time" data-val="60">60s</div>
-      <div class="setting-opt" data-key="such-time" data-val="0">Kein</div>
-    </div></div>
-  </div></div>
-
-  <button class="admin-game-btn" onclick="toggleDrawer('drawer-blitz',this)">Blitz-Ziel Adminbereich <span class="arrow">▶</span></button>
-  <div class="settings-drawer" id="drawer-blitz"><div class="settings-inner">
-    <div class="setting-row"><div class="setting-label">Leuchtdauer</div><div class="setting-options">
-      <div class="setting-opt" data-key="blitz-dur" data-val="500">0.5s</div>
-      <div class="setting-opt active" data-key="blitz-dur" data-val="1000">1.0s</div>
-      <div class="setting-opt" data-key="blitz-dur" data-val="2000">2.0s</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Ziele pro Runde</div><div class="setting-options">
-      <div class="setting-opt" data-key="blitz-count" data-val="5">5</div>
-      <div class="setting-opt active" data-key="blitz-count" data-val="10">10</div>
-      <div class="setting-opt" data-key="blitz-count" data-val="20">20</div>
-    </div></div>
-    <div class="setting-row"><div class="setting-label">Auto-schwerer</div><div class="setting-options">
-      <div class="setting-opt active" data-key="blitz-auto" data-val="ja">Ja</div>
-      <div class="setting-opt" data-key="blitz-auto" data-val="nein">Nein</div>
-    </div></div>
-  </div></div>
-
-  <button id="admin-close" onclick="closeAdmin()">✕ Adminbereich schließen</button>
-</div>
 
 
-<div id="mic-btn" class="sprache-aus"><span id="mic-icon">🎙</span><span id="mic-lbl">SPRACHE AUS</span></div>
+<div id="mic-btn" class="sprache-aus" onclick="toggleMic()"><span id="mic-icon">🎙</span><span id="mic-lbl">SPRACHE AUS</span></div>
 <div id="win-flash"></div>
 <!-- SIDEBAR OBEN: Statistik -->
 <div id="sidebar-oben">
@@ -603,37 +461,174 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
     <div class="pw-hint">Doppelblink auf O<br>oder sag das Passwort</div>
   </div>
   <div id="admin-content" style="display:none;">
-    <div class="admin-inner" style="overflow-y:auto;height:100%;">
-      <h2>⚙ Adminbereich</h2>
-      <div class="sb-section" style="margin-top:4px">Spieleinstellungen</div>
+    <div class="admin-inner" style="overflow-y:auto;height:100vh;padding:16px 16px 60px;">
+      <h2 style="color:#f59e0b;font-size:0.95rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(245,158,11,0.2);">⚙ Adminbereich</h2>
+
+      <div class="sb-section" style="margin-top:4px">Global</div>
       <div class="sb-setting">
-        <div class="sb-row-label">Symbolset</div>
-        <div class="sb-hint">Welche Symbole in allen Spielen verwendet werden.</div>
+        <div class="sb-row-label">Symbolset (alle Spiele)</div>
         <div class="sb-opts">
-          <div class="sb-opt active" data-key="sym-set" data-val="natur">Natur</div>
-          <div class="sb-opt" data-key="sym-set" data-val="alltag">Alltag</div>
-          <div class="sb-opt" data-key="sym-set" data-val="zahlen">Zahlen</div>
+          <div class="sb-opt active" data-key="sym-set" data-val="natur">🌿 Natur</div>
+          <div class="sb-opt" data-key="sym-set" data-val="alltag">🏠 Alltag</div>
+          <div class="sb-opt" data-key="sym-set" data-val="zahlen">🔢 Zahlen</div>
         </div>
       </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Memory · Paare</div>
-        <div class="sb-hint">4 = einfach (8 Karten) · 8 = anspruchsvoll (16 Karten)</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-key="memory-pairs" data-val="4">4 Paare</div>
-          <div class="sb-opt active" data-key="memory-pairs" data-val="6">6 Paare</div>
-          <div class="sb-opt" data-key="memory-pairs" data-val="8">8 Paare</div>
+
+      <div class="sb-section">Spiele</div>
+
+      <button class="ag-btn" onclick="toggleAdminGame('memory',this)">🃏 Memory <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-memory">
+        <div class="sb-setting"><div class="sb-row-label">Paare</div>
+          <div class="sb-hint">4 = einfach (8 Karten) · 8 = anspruchsvoll (16 Karten)</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="memory-pairs" data-val="4">4</div>
+            <div class="sb-opt active" data-key="memory-pairs" data-val="6">6</div>
+            <div class="sb-opt" data-key="memory-pairs" data-val="8">8</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Umdeckzeit</div>
+          <div class="sb-hint">Wie lange falsche Karten sichtbar bleiben</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="memory-flip" data-val="800">0.8s</div>
+            <div class="sb-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
+            <div class="sb-opt" data-key="memory-flip" data-val="2500">2.5s</div>
+          </div>
         </div>
       </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Memory · Umdeckzeit</div>
-        <div class="sb-hint">Wie lange falsche Karten sichtbar bleiben.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-key="memory-flip" data-val="800">0.8s</div>
-          <div class="sb-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
-          <div class="sb-opt" data-key="memory-flip" data-val="2500">2.5s</div>
+
+      <button class="ag-btn" onclick="toggleAdminGame('sequence',this)">🔢 Sequence <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-sequence">
+        <div class="sb-setting"><div class="sb-row-label">Startlänge</div>
+          <div class="sb-hint">Anzahl Symbole in der ersten Sequenz</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="seq-len" data-val="3">3</div>
+            <div class="sb-opt active" data-key="seq-len" data-val="5">5</div>
+            <div class="sb-opt" data-key="seq-len" data-val="7">7</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Anzeigedauer</div>
+          <div class="sb-hint">Wie lange jedes Symbol beim Vorzeigen leuchtet</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="seq-dur" data-val="800">0.8s</div>
+            <div class="sb-opt active" data-key="seq-dur" data-val="1200">1.2s</div>
+            <div class="sb-opt" data-key="seq-dur" data-val="2000">2.0s</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Auto-schwerer</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="seq-auto" data-val="ja">Ja</div>
+            <div class="sb-opt" data-key="seq-auto" data-val="nein">Nein</div>
+          </div>
         </div>
       </div>
-      <button class="sb-clear" style="margin-top:16px" onclick="lockAdmin()">🔒 Sperren</button>
+
+      <button class="ag-btn" onclick="toggleAdminGame('wortbild',this)">🔤 Wort-Bild <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-wortbild">
+        <div class="sb-setting"><div class="sb-row-label">Schwierigkeit</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="wb-diff" data-val="easy">Einfach</div>
+            <div class="sb-opt" data-key="wb-diff" data-val="mid">Mittel</div>
+            <div class="sb-opt" data-key="wb-diff" data-val="hard">Schwer</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Sprache</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="wb-lang" data-val="de">Deutsch</div>
+            <div class="sb-opt" data-key="wb-lang" data-val="en">Englisch</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Wort vorlesen</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="wb-speak" data-val="ja">Ja</div>
+            <div class="sb-opt" data-key="wb-speak" data-val="nein">Nein</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="ag-btn" onclick="toggleAdminGame('kategorien',this)">📂 Kategorien <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-kategorien">
+        <div class="sb-setting"><div class="sb-row-label">Kategorienpool</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="kat-pool" data-val="natur">Natur</div>
+            <div class="sb-opt" data-key="kat-pool" data-val="technik">Technik</div>
+            <div class="sb-opt" data-key="kat-pool" data-val="gemischt">Gemischt</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Sprachausgabe</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="kat-speak" data-val="ja">Ja</div>
+            <div class="sb-opt" data-key="kat-speak" data-val="nein">Nein</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="ag-btn" onclick="toggleAdminGame('oddone',this)">🔍 Odd-One-Out <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-oddone">
+        <div class="sb-setting"><div class="sb-row-label">Anzahl Felder</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="odd-size" data-val="3">3</div>
+            <div class="sb-opt active" data-key="odd-size" data-val="4">4</div>
+            <div class="sb-opt" data-key="odd-size" data-val="6">6</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Zeitdruck</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="odd-time" data-val="ja">Ja</div>
+            <div class="sb-opt active" data-key="odd-time" data-val="nein">Nein</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Hinweis</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="odd-hint" data-val="ja">Ja</div>
+            <div class="sb-opt" data-key="odd-hint" data-val="nein">Nein</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="ag-btn" onclick="toggleAdminGame('suchfeld',this)">🔎 Suchfeld <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-suchfeld">
+        <div class="sb-setting"><div class="sb-row-label">Rastergröße</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="such-grid" data-val="3">3×3</div>
+            <div class="sb-opt active" data-key="such-grid" data-val="4">4×4</div>
+            <div class="sb-opt" data-key="such-grid" data-val="5">5×5</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Zeitlimit</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="such-time" data-val="15">15s</div>
+            <div class="sb-opt active" data-key="such-time" data-val="30">30s</div>
+            <div class="sb-opt" data-key="such-time" data-val="60">60s</div>
+            <div class="sb-opt" data-key="such-time" data-val="0">Kein</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="ag-btn" onclick="toggleAdminGame('blitz',this)">⚡ Blitz-Ziel <span class="ag-arrow">▶</span></button>
+      <div class="ag-settings" id="ag-blitz">
+        <div class="sb-setting"><div class="sb-row-label">Ziele pro Runde</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="blitz-count" data-val="5">5</div>
+            <div class="sb-opt active" data-key="blitz-count" data-val="10">10</div>
+            <div class="sb-opt" data-key="blitz-count" data-val="20">20</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Leuchtdauer</div>
+          <div class="sb-opts">
+            <div class="sb-opt" data-key="blitz-dur" data-val="500">0.5s</div>
+            <div class="sb-opt active" data-key="blitz-dur" data-val="1000">1.0s</div>
+            <div class="sb-opt" data-key="blitz-dur" data-val="2000">2.0s</div>
+          </div>
+        </div>
+        <div class="sb-setting"><div class="sb-row-label">Auto-schwerer</div>
+          <div class="sb-opts">
+            <div class="sb-opt active" data-key="blitz-auto" data-val="ja">Ja</div>
+            <div class="sb-opt" data-key="blitz-auto" data-val="nein">Nein</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="sb-clear" style="margin-top:12px;width:100%;padding:10px;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);border-radius:9px;color:rgba(220,38,38,0.8);font-family:'Courier New',monospace;font-size:0.65rem;letter-spacing:2px;cursor:pointer;" onclick="lockAdmin()">🔒 Sperren</button>
     </div>
   </div>
 </div>
@@ -1363,19 +1358,10 @@ function toggleSidebar(){
 // ═══════════════════════════════════════════════════
 //  ADMIN
 // ═══════════════════════════════════════════════════
-function openAdminGate(){
-  adminGateOpen=true;gestureStart=null;
-  document.getElementById('admin-gate').classList.add('visible');
-  document.getElementById('gesture-icon').textContent='😐';
-  document.getElementById('gesture-progress').textContent='Augenbrauen hoch + Mund-O halten…';
-}
-function closeAdminGate(){
-  adminGateOpen=false;gestureStart=null;
-  document.getElementById('admin-gate').classList.remove('visible');
-  document.getElementById('gesture-ring').classList.remove('active');
-}
-function openAdmin(){closeAdminGate();document.getElementById('admin-panel').classList.add('open');speak('Adminbereich geöffnet');}
-function closeAdmin(){document.getElementById('admin-panel').classList.remove('open');}
+
+
+
+
 function toggleDrawer(id,btn){
   const d=document.getElementById(id),open=d.classList.contains('open');
   document.querySelectorAll('.settings-drawer').forEach(x=>x.classList.remove('open'));
@@ -1392,25 +1378,6 @@ document.addEventListener('click',e=>{
 // ═══════════════════════════════════════════════════
 //  GESTEN
 // ═══════════════════════════════════════════════════
-function checkAdminGesture(lm){
-  if(!adminGateOpen)return;
-  const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
-  const browAvg=(d(70,159)+d(300,386))/2;
-  const mouthV=d(13,14),mouthH=d(61,291),mouthRatio=mouthH>0?mouthV/mouthH:0;
-  const ok=browAvg>BROW_THRESH&&mouthV>MOUTH_VERT&&mouthRatio>MOUTH_RATIO;
-  const ring=document.getElementById('gesture-ring'),icon=document.getElementById('gesture-icon'),prog=document.getElementById('gesture-progress');
-  if(ok){
-    ring.classList.add('active');icon.textContent='😮';
-    if(!gestureStart)gestureStart=Date.now();
-    const pct=Math.min(100,Math.round((Date.now()-gestureStart)/GESTURE_HOLD_MS*100));
-    prog.textContent=`Halten… ${pct}%`;
-    if(Date.now()-gestureStart>=GESTURE_HOLD_MS)openAdmin();
-  } else {
-    ring.classList.remove('active');gestureStart=null;
-    icon.textContent=browAvg>BROW_THRESH?'🤨':mouthRatio>MOUTH_RATIO?'😮':'😐';
-    prog.textContent='Augenbrauen hoch + Mund-O halten…';
-  }
-}
 
 // ═══════════════════════════════════════════════════
 //  ZONEN-GESTE: Mund offen + Augenbrauen hoch
@@ -1448,7 +1415,7 @@ function checkZoneGesture(lm){
 function onResults(r){
   if(!r.multiFaceLandmarks?.[0]){setDotStatus('idle','KEIN GESICHT');return;}
   const lm=r.multiFaceLandmarks[0];
-  checkAdminGesture(lm);
+  // Admin-Geste entfernt
   // checkZoneGesture(lm); // deaktiviert → nur Triple-Blink öffnet Sidebars
   const iris=lm[468];
   // Kopf-Referenz (Mittelpunkt äußere Augenwinkel) für Iris↔Kopf-Blend
@@ -1654,6 +1621,17 @@ function tryAdminPw(pw){
     speak('Falsches Passwort');
   }
 }
+
+function toggleAdminGame(id,btn){
+  const all=document.querySelectorAll('.ag-settings');
+  const allBtns=document.querySelectorAll('.ag-btn');
+  const el=document.getElementById('ag-'+id);
+  const isOpen=el&&el.classList.contains('open');
+  all.forEach(e=>e.classList.remove('open'));
+  allBtns.forEach(b=>b.classList.remove('open'));
+  if(!isOpen&&el){el.classList.add('open');if(btn)btn.classList.add('open');}
+}
+
 function lockAdmin(){
   adminUnlocked=false;
   document.getElementById('admin-pw-screen').style.display='flex';
@@ -1752,8 +1730,9 @@ function startMic(){
 function stopMic(){
   if(!recInstance)return;
   micMuted=true;
-  try{recInstance.stop();}catch(e){}  // Wirklich stoppen → kein Click-Sound mehr
+  try{recInstance.stop();}catch(e){}
   setMicStatus('','AUS');updateMicBtn();
+  setLastAction('Sprache AUS — Doppelblink = Auswahl');
 }
 function toggleMic(){if(micMuted)startMic();else stopMic();}
 
@@ -1813,7 +1792,7 @@ function initSpeech(){
     }
     if(t.includes('auswahl'))triggerVoice();
     if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
-    if(t.includes('admin'))openAdminGate();
+    if(t.includes('admin'))openSidebar('links');
     if(t.includes('mikrofon aus'))stopMic();
     else if(t.includes('mikrofon an'))startMic();
     // Sidebar-Befehle: direkt und einfach
