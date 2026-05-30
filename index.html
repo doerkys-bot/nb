@@ -211,6 +211,8 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #mic-btn.focused{border-color:var(--neon);background:rgba(0,242,255,0.1);color:white;box-shadow:0 0 14px rgba(0,242,255,0.2);}
 #mic-btn.mic-on {border-color:var(--blink2);color:var(--blink2);}
 #mic-btn.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
+#mic-btn.sprache-an{border-color:var(--blink2);color:var(--blink2);}
+#mic-btn.sprache-aus{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
 
 /* ── SEITLICHE SIDEBARS (oben / unten / links) ── */
 #sidebar-oben,#sidebar-unten{
@@ -447,7 +449,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 </div>
 
 
-<div id="mic-btn" class="mic-off"><span id="mic-icon">🎙</span><span id="mic-lbl">MIC AUS</span></div>
+<div id="mic-btn" class="sprache-aus"><span id="mic-icon">🎙</span><span id="mic-lbl">SPRACHE AUS</span></div>
 <div id="win-flash"></div>
 <!-- SIDEBAR OBEN: Statistik -->
 <div id="sidebar-oben">
@@ -1447,7 +1449,7 @@ function onResults(r){
   if(!r.multiFaceLandmarks?.[0]){setDotStatus('idle','KEIN GESICHT');return;}
   const lm=r.multiFaceLandmarks[0];
   checkAdminGesture(lm);
-  checkZoneGesture(lm);
+  // checkZoneGesture(lm); // deaktiviert → nur Triple-Blink öffnet Sidebars
   const iris=lm[468];
   // Kopf-Referenz (Mittelpunkt äußere Augenwinkel) für Iris↔Kopf-Blend
   const headRef={x:(lm[33].x+lm[263].x)/2,y:(lm[33].y+lm[263].y)/2};
@@ -1736,18 +1738,21 @@ function updateMicBtn(){
   const icon=document.getElementById('mic-icon');
   const lbl=document.getElementById('mic-lbl');
   if(!btn)return;
-  btn.className=micActive?'mic-on':'mic-off';
-  if(icon)icon.textContent=micActive?'🎤':'🎙';
-  if(lbl)lbl.textContent=micActive?'MIC AN':'MIC AUS';
+  const an=micActive&&!micMuted;
+  btn.className=an?'sprache-an':'sprache-aus';
+  if(icon)icon.textContent=an?'🎤':'🎙';
+  if(lbl)lbl.textContent=an?'SPRACHE AN':'SPRACHE AUS';
 }
 function startMic(){
   if(!recInstance)return;
   micMuted=false;
-  setMicStatus('on','AKTIV');updateMicBtn();speak('Mikrofon an');
+  try{recInstance.start();}catch(e){}
+  setMicStatus('on','AKTIV');updateMicBtn();
 }
 function stopMic(){
   if(!recInstance)return;
   micMuted=true;
+  try{recInstance.stop();}catch(e){}  // Wirklich stoppen → kein Click-Sound mehr
   setMicStatus('','AUS');updateMicBtn();
 }
 function toggleMic(){if(micMuted)startMic();else stopMic();}
@@ -1792,6 +1797,20 @@ function initSpeech(){
     setLastAction('🎤 '+t); // immer zeigen — auch wenn stumm
     if(micMuted)return;
     if(t.includes('zurück')){closeSidebar();loadGame(currentGame||'memory');speak('Zurück');return;}
+
+    // Spiele per Stimme starten
+    const gameMap=[
+      ['memory','memory'],
+      ['sequence','sequence'],
+      ['wortbild','wortbild'],['wort bild','wortbild'],
+      ['kategorien','kategorien'],
+      ['odd one out','oddone'],['odd','oddone'],
+      ['suchfeld','suchfeld'],['suchen','suchfeld'],
+      ['blitz ziel','blitz'],['blitz','blitz'],
+    ];
+    for(const[kw,id]of gameMap){
+      if(t.includes(kw)){closeSidebar();loadGame(id);speak(kw+' gestartet');return;}
+    }
     if(t.includes('auswahl'))triggerVoice();
     if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
     if(t.includes('admin'))openAdminGate();
@@ -1804,27 +1823,9 @@ function initSpeech(){
     if(words.includes('rechts')){openSidebar('rechts'); return;}
     if(words.includes('unten')) {openSidebar('unten');  return;}
     if(words.includes('links')) {openSidebar('links');  return;}
-    // Spiele per Stimme starten (Sidebar optional offen)
-    const gameMap=[
-      ['memory','memory'],
-      ['sequence','sequence'],
-      ['wortbild','wortbild'],['wort bild','wortbild'],
-      ['kategorien','kategorien'],
-      ['odd one out','oddone'],['odd','oddone'],
-      ['suchfeld','suchfeld'],['suchen','suchfeld'],
-      ['blitz ziel','blitz'],['blitz','blitz'],
-    ];
-    for(const[kw,id]of gameMap){
-      if(t.includes(kw)){
-        closeSidebar();
-        loadGame(id);
-        speak(kw+' gestartet');
-        return;
-      }
-    }
     if(currentSidebar==='links'&&!adminUnlocked&&t.trim()==='o')tryAdminPw('o');
   };
-  recInstance.onend=()=>{if(camRunning&&!micMuted)recInstance.start();};
+  recInstance.onend=()=>{if(camRunning&&!micMuted&&micActive)recInstance.start();};
   recInstance.onerror=()=>{setTimeout(()=>{if(camRunning&&!micMuted)recInstance.start();},1000);};
   recInstance.start();
 }
@@ -1935,7 +1936,12 @@ function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=
 function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
 function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
 function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
-function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
+function speak(text){
+  if(micMuted)return; // Stille-Modus: keine Sprachausgabe
+  if(window.speechSynthesis.speaking)window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';
+  window.speechSynthesis.speak(u);
+}
 
 loadSavedSettings(); // Einstellungen aus localStorage laden
 render();
