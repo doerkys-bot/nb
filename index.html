@@ -1804,6 +1804,24 @@ function initSpeech(){
     if(words.includes('rechts')){openSidebar('rechts'); return;}
     if(words.includes('unten')) {openSidebar('unten');  return;}
     if(words.includes('links')) {openSidebar('links');  return;}
+    // Spiele per Stimme starten (Sidebar optional offen)
+    const gameMap=[
+      ['memory','memory'],
+      ['sequence','sequence'],
+      ['wortbild','wortbild'],['wort bild','wortbild'],
+      ['kategorien','kategorien'],
+      ['odd one out','oddone'],['odd','oddone'],
+      ['suchfeld','suchfeld'],['suchen','suchfeld'],
+      ['blitz ziel','blitz'],['blitz','blitz'],
+    ];
+    for(const[kw,id]of gameMap){
+      if(t.includes(kw)){
+        closeSidebar();
+        loadGame(id);
+        speak(kw+' gestartet');
+        return;
+      }
+    }
     if(currentSidebar==='links'&&!adminUnlocked&&t.trim()==='o')tryAdminPw('o');
   };
   recInstance.onend=()=>{if(camRunning&&!micMuted)recInstance.start();};
