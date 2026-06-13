@@ -1940,3 +1940,8 @@ function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;doc
 function speak(text){
   if(micMuted)return; // Stille-Modus: keine Sprachausgabe
   if(window.speechSynthe
+     loadSavedSettings(); // Einstellungen aus localStorage laden
+render();
+</script>
+</body>
+</html>
