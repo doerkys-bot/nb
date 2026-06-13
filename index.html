@@ -122,7 +122,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 .game-tab.active-game{background:rgba(16,185,129,0.15);border-color:var(--blink2);color:var(--blink2);}
 
 /* ── ADMIN ── */
-#admin-gate{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+#admin-gate{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none !important;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
 #admin-gate.visible{display:flex;}
 #admin-gate h2{color:#f59e0b;font-size:1.4rem;letter-spacing:6px;text-transform:uppercase;}
 #admin-gate p{color:rgba(255,255,255,0.4);font-size:0.8rem;letter-spacing:2px;text-align:center;line-height:1.8;}
@@ -1363,7 +1363,7 @@ function toggleSidebar(){
 // ═══════════════════════════════════════════════════
 //  ADMIN
 // ═══════════════════════════════════════════════════
-function openAdminGate(){
+function openAdmin(){
   adminGateOpen=true;gestureStart=null;
   document.getElementById('admin-gate').classList.add('visible');
   document.getElementById('gesture-icon').textContent='😐';
@@ -1813,7 +1813,7 @@ function initSpeech(){
     }
     if(t.includes('auswahl'))triggerVoice();
     if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
-    if(t.includes('admin'))openAdminGate();
+    if(t.includes('admin'))openAdmin();
     if(t.includes('mikrofon aus'))stopMic();
     else if(t.includes('mikrofon an'))startMic();
     // Sidebar-Befehle: direkt und einfach
@@ -1939,12 +1939,4 @@ function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;doc
 function speak(text){
   if(micMuted)return; // Stille-Modus: keine Sprachausgabe
   if(window.speechSynthesis.speaking)window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';
-  window.speechSynthesis.speak(u);
-}
-
-loadSavedSettings(); // Einstellungen aus localStorage laden
-render();
-</script>
-</body>
-</html>
+  const u=new SpeechSynthesisUtterance(text
