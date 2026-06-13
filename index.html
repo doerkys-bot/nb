@@ -647,8 +647,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <div class="sb-item"><div id="sb-mic-dot"></div><span class="sb-label">MIC</span><span class="sb-value" id="sb-mic-text">AUS</span></div>
   <div class="sb-divider"></div>
   <div class="sb-item"><span class="sb-label">FOKUS</span><span class="sb-value" id="sb-focus-text">–</span></div>
-  <div class="sb-divider"></div>
-    <div class="sb-item"><span class="sb-label">ZONE</span><span class="sb-value" id="sb-zone-text">–</span></div>
+  <div class="sb-divider"></div><div class="sb-item"><span class="sb-label">ZONE</span><span class="sb-value" id="sb-zone-text">–</span></div>
   <div class="sb-divider"></div>
   <div class="sb-item"><span class="sb-label">LETZTES</span><span class="sb-value" id="sb-last-text">–</span></div>
 </div>
@@ -1125,8 +1124,179 @@ function renderKatItem(){
   });
   container.appendChild(itemDiv);container.appendChild(binsDiv);
   gc().innerHTML='';gc().appendChild(container);
-  if(settings['kat-speak']==='ja')speak
- //  7. BLITZ-ZIEL
+  if(settings['kat-speak']==='ja')speak(item.name);
+  katLocked=false;
+}
+
+function selectKatBin(bin){
+  if(katLocked)return;katLocked=true;
+  const ci=parseInt(bin.dataset.cat);
+  const item=katItems[katIdx];
+  const ok=ci===item.cat;
+  if(ok){
+    bin.classList.add('correct');katBinContents[ci].push(item.sym);
+    speak('Richtig!');katScore++;setLastAction(`✓ KAT: ${item.name} → ${katCats[ci]}`);
+    setTimeout(()=>{katIdx++;renderKatItem();},800);
+  } else {
+    bin.classList.add('wrong');
+    document.querySelectorAll('.kat-bin').forEach(b=>{if(parseInt(b.dataset.cat)===item.cat)b.classList.add('correct');});
+    speak('Falsch! '+item.name+' gehört zu '+katCats[item.cat]);
+    setLastAction(`✗ KAT: ${item.name}`);
+    setTimeout(()=>{katBinContents[item.cat].push(item.sym);katIdx++;renderKatItem();},1400);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  5. ODD-ONE-OUT
+// ═══════════════════════════════════════════════════
+function buildOddOne(){
+  oddPuzzles=shuffle(ODD_PUZZLES);oddIdx=0;oddScore=0;oddLocked=false;
+  setScore('PUNKTE: 0');renderOddPuzzle();
+}
+
+function renderOddPuzzle(){
+  if(currentGame!=='oddone')return;
+  if(oddTimerInt){clearInterval(oddTimerInt);oddTimerInt=null;}
+  if(oddIdx>=oddPuzzles.length){
+    gc().innerHTML=`<div class="result-screen">
+      <div class="result-icon">🎉</div><div class="result-title">FERTIG!</div>
+      <div class="result-score">${oddScore} PUNKTE</div>
+      <button class="start-btn" style="margin-top:12px" onclick="loadGame('oddone')">NOCHMAL</button>
+    </div>`;
+    speak(`Fertig! ${oddScore} Punkte.`);return;
+  }
+  const puz=oddPuzzles[oddIdx];
+  const n=parseInt(settings['odd-size']||4);
+  const items=shuffle([...Array(n-1).fill({sym:puz.base,name:puz.bname,odd:false}),{sym:puz.intruder,name:puz.iname,odd:true}]);
+
+  const wrap=document.createElement('div');wrap.className='game-col';
+
+  const info=document.createElement('div');info.className='game-hdr-info';
+  info.textContent=settings['odd-hint']==='ja'?`WAS PASST NICHT ZU: ${puz.bname.toUpperCase()}?`:'WAS PASST NICHT DAZU?';
+
+  // Timer-Balken
+  const tbar=document.createElement('div');tbar.className='odd-timer-bar';
+  const tfill=document.createElement('div');tfill.className='odd-timer-fill';tfill.style.width='100%';
+  tbar.appendChild(tfill);
+
+  const gf=document.createElement('div');gf.className='game-flex';
+  const cols=n<=3?3:n<=4?4:3,rows=Math.ceil(n/cols);
+  const g=document.createElement('div');g.className='grid-odd';g.style.cssText='width:100%;height:100%;';
+  g.style.gridTemplateColumns=`repeat(${cols},1fr)`;g.style.gridTemplateRows=`repeat(${rows},1fr)`;
+  items.forEach((item,i)=>{
+    const c=document.createElement('div');c.className='odd-cell';c.dataset.odd=item.odd?'1':'0';
+    c.innerHTML=`${item.sym}<span class="odd-lbl">${item.name}</span>`;
+    g.appendChild(c);
+  });
+  gf.appendChild(g);
+  wrap.appendChild(info);
+  if(settings['odd-time']==='ja')wrap.appendChild(tbar);
+  wrap.appendChild(gf);
+  gc().innerHTML='';gc().appendChild(wrap);
+  setScore(`PUNKTE: ${oddScore} | RUNDE: ${oddIdx+1}/${oddPuzzles.length}`);
+  oddLocked=false;
+
+  if(settings['odd-time']==='ja'){
+    oddTimeLeft=15;
+    oddTimerInt=setInterval(()=>{
+      if(currentGame!=='oddone'){clearInterval(oddTimerInt);return;}
+      oddTimeLeft--;tfill.style.width=Math.max(0,oddTimeLeft/15*100)+'%';
+      if(oddTimeLeft<=0){
+        clearInterval(oddTimerInt);oddTimerInt=null;
+        speak('Zeit abgelaufen');setLastAction('✗ ODD TIMEOUT');
+        setTimeout(()=>{oddIdx++;oddLocked=false;renderOddPuzzle();},800);
+      }
+    },1000);
+  }
+}
+
+function selectOddCell(cell){
+  if(oddLocked)return;oddLocked=true;
+  if(oddTimerInt){clearInterval(oddTimerInt);oddTimerInt=null;}
+  const ok=cell.dataset.odd==='1';
+  if(ok){
+    cell.classList.add('correct');speak('Richtig!');oddScore++;
+    setLastAction('✓ ODD: '+oddPuzzles[oddIdx].iname);
+    setScore(`PUNKTE: ${oddScore}`);
+    setTimeout(()=>{oddIdx++;renderOddPuzzle();},900);
+  } else {
+    cell.classList.add('wrong');
+    document.querySelectorAll('.odd-cell').forEach(c=>{if(c.dataset.odd==='1')c.classList.add('correct');});
+    speak('Falsch! '+oddPuzzles[oddIdx].iname+' wäre richtig.');
+    setLastAction('✗ ODD: '+oddPuzzles[oddIdx].iname);
+    setTimeout(()=>{oddIdx++;renderOddPuzzle();},1400);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  6. SUCHFELD
+// ═══════════════════════════════════════════════════
+function buildSuchfeld(){
+  const n=parseInt(settings['such-grid']||4);
+  const pool=SYMS[settings['sym-set']||'natur'];
+  const target=pool[Math.floor(Math.random()*pool.length)];
+  const distPool=pool.filter(s=>s!==target);
+  const gridSize=n*n;
+  const targetCount=Math.max(2,Math.floor(gridSize*0.2));
+  suchTarget=target;suchFound=0;suchTotal=targetCount;
+
+  let raw=[...Array(targetCount).fill(target)];
+  while(raw.length<gridSize)raw.push(distPool[Math.floor(Math.random()*distPool.length)]);
+  raw=shuffle(raw);
+
+  const wrap=document.createElement('div');wrap.className='game-col';
+
+  // Header
+  const hdr=document.createElement('div');hdr.className='game-hdr';
+  const timeSec=parseInt(settings['such-time']||30);
+  hdr.innerHTML=`<span class="game-hdr-sym">${target}</span>
+    <span class="game-hdr-text">SUCHE: ${NAMEN[target]||target}</span>
+    <span class="game-hdr-timer" id="such-timer-disp">${timeSec>0?timeSec+'s':''}</span>`;
+
+  const gf=document.createElement('div');gf.className='game-flex';
+  const g=document.createElement('div');g.className='grid-suchfeld';g.style.cssText='width:100%;height:100%;';
+  g.style.gridTemplateColumns=`repeat(${n},1fr)`;g.style.gridTemplateRows=`repeat(${n},1fr)`;
+  raw.forEach((sym,i)=>{
+    const c=document.createElement('div');c.className='such-cell';
+    c.dataset.target=(sym===target?'1':'0');c.textContent=sym;
+    g.appendChild(c);
+  });
+  gf.appendChild(g);wrap.appendChild(hdr);wrap.appendChild(gf);
+  gc().innerHTML='';gc().appendChild(wrap);
+  setScore(`GEFUNDEN: 0 / ${targetCount}`);
+
+  if(timeSec>0){
+    suchTimeLeft=timeSec;
+    suchTimerInt=setInterval(()=>{
+      if(currentGame!=='suchfeld'){clearInterval(suchTimerInt);return;}
+      suchTimeLeft--;
+      const td=document.getElementById('such-timer-disp');
+      if(td)td.textContent=suchTimeLeft+'s';
+      if(suchTimeLeft<=0){
+        clearInterval(suchTimerInt);suchTimerInt=null;
+        speak(`Zeit! ${suchFound} von ${suchTotal} gefunden.`);
+        setTimeout(()=>buildSuchfeld(),2000);
+      }
+    },1000);
+  }
+}
+
+function selectSuchCell(cell){
+  if(cell.classList.contains('found')||cell.classList.contains('wrong'))return;
+  if(cell.dataset.target==='1'){
+    cell.classList.add('found');speak(NAMEN[suchTarget]||'Gefunden');suchFound++;
+    setScore(`GEFUNDEN: ${suchFound} / ${suchTotal}`);setLastAction(`✓ SUCH: ${suchFound}/${suchTotal}`);
+    if(suchFound>=suchTotal){
+      if(suchTimerInt){clearInterval(suchTimerInt);suchTimerInt=null;}
+      flashWin();speak('Alle gefunden! Super!');setTimeout(()=>buildSuchfeld(),2500);
+    }
+  } else {
+    cell.classList.add('wrong');setTimeout(()=>cell.classList.remove('wrong'),600);
+    setLastAction('✗ SUCH: falsch');
+  }
+}
+
+// ═══════════════════════════════════════════════════//  7. BLITZ-ZIEL
 // ═══════════════════════════════════════════════════
 function buildBlitz(){
   blitzTotal=parseInt(settings['blitz-count']||10);
@@ -1604,4 +1774,177 @@ function checkBufferZone(x,y){
   document.getElementById('buf-top').classList.toggle('active',zone==='OBEN');
   document.getElementById('buf-bottom').classList.toggle('active',zone==='UNTEN');
   document.getElementById('buf-left').classList.toggle('active',zone==='LINKS');
-  document.getElementByI 
+  document.getElementById('buf-right').classList.toggle('active',zone==='RECHTS');
+  if(zone!==currentZone){
+    currentZone=zone;setZoneStatus(zone);
+    if(zone){setDotStatus('buf',zone);setTimeout(()=>{if(currentZone===zone)setDotStatus('idle','TRACKING');},500);}
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  SPRACHERKENNUNG
+// ═══════════════════════════════════════════════════
+function initSpeech(){
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!Speech){setMicStatus('','N/A');updateMicBtn();return;}
+  micMuted=false; // Mikrofon startet AN
+  recInstance=new Speech();
+  recInstance.lang='de-DE';recInstance.continuous=true;recInstance.interimResults=false;
+  recInstance.onstart=()=>{micActive=true;setMicStatus('on','AKTIV');updateMicBtn();};
+  recInstance.onresult=(e)=>{
+    const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
+    setLastAction('🎤 '+t); // immer zeigen — auch wenn stumm
+    if(micMuted)return;
+    if(t.includes('zurück')){closeSidebar();loadGame(currentGame||'memory');speak('Zurück');return;}
+
+    // Spiele per Stimme starten
+    const gameMap=[
+      ['memory','memory'],
+      ['sequence','sequence'],
+      ['wortbild','wortbild'],['wort bild','wortbild'],
+      ['kategorien','kategorien'],
+      ['odd one out','oddone'],['odd','oddone'],
+      ['suchfeld','suchfeld'],['suchen','suchfeld'],
+      ['blitz ziel','blitz'],['blitz','blitz'],
+    ];
+    for(const[kw,id]of gameMap){
+      if(t.includes(kw)){closeSidebar();loadGame(id);speak(kw+' gestartet');return;}
+    }
+    if(t.includes('auswahl'))triggerVoice();
+    if(t.includes('neustart')||t==='neu'){loadGame(currentGame);speak('Neues Spiel!');}
+    if(t.includes('admin'))openAdminGate();
+    if(t.includes('mikrofon aus'))stopMic();
+    else if(t.includes('mikrofon an'))startMic();
+    // Sidebar-Befehle: direkt und einfach
+    const words=t.split(/\s+/);
+    if(t.includes('schließen')||t.includes('weg')){closeSidebar();speak('Sidebar zu');return;}
+    if(words.includes('oben'))  {openSidebar('oben');  return;}
+    if(words.includes('rechts')){openSidebar('rechts'); return;}
+    if(words.includes('unten')) {openSidebar('unten');  return;}
+    if(words.includes('links')) {openSidebar('links');  return;}
+    if(currentSidebar==='links'&&!adminUnlocked&&t.trim()==='o')tryAdminPw('o');
+  };
+  recInstance.onend=()=>{if(camRunning&&!micMuted&&micActive)recInstance.start();};
+  recInstance.onerror=()=>{setTimeout(()=>{if(camRunning&&!micMuted)recInstance.start();},1000);};
+  recInstance.start();
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn,.pw-btn,.start-btn';
+
+function render(){
+  sX+=(tX-sX)*TS.smooth;sY+=(tY-sY)*TS.smooth;
+  document.getElementById('gaze-dot').style.left=sX+'px';
+  document.getElementById('gaze-dot').style.top=sY+'px';
+
+  const focEl=document.elementFromPoint(sX,sY)?.closest(FOCUS_SEL);
+  document.querySelectorAll(FOCUS_SEL).forEach(el=>el.classList.toggle('focused',el===focEl));
+  const focTab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
+  document.querySelectorAll('.game-tab').forEach(t=>t.classList.toggle('focused',t===focTab));
+  const focAdmin=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
+  document.querySelectorAll('.admin-game-btn').forEach(b=>b.classList.toggle('focused',b===focAdmin));
+
+  if(focEl)setFocusStatus(focEl.dataset.name||focEl.dataset.sym||focEl.textContent.slice(0,8).trim());
+  else if(focTab)setFocusStatus(focTab.textContent.trim());
+  else if(focAdmin)setFocusStatus(focAdmin.textContent.trim().slice(0,14));
+  else setFocusStatus('–');
+
+  checkBufferZone(sX,sY);
+
+  if(ctx){
+    trailHist.push({x:sX,y:sY});if(trailHist.length>10)trailHist.shift();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.beginPath();ctx.strokeStyle='rgba(0,242,255,0.45)';ctx.lineWidth=3;
+    for(let i=0;i<trailHist.length;i++){ctx.globalAlpha=i/trailHist.length;ctx.lineTo(trailHist[i].x,trailHist[i].y);}
+    ctx.stroke();ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(render);
+}
+
+document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clientY;}});
+document.addEventListener('touchmove',e=>{if(!camRunning&&e.touches[0]){tX=e.touches[0].clientX;tY=e.touches[0].clientY;}},{passive:true});
+document.addEventListener('touchstart',e=>{if(!camRunning&&e.touches[0]){tX=e.touches[0].clientX;tY=e.touches[0].clientY;}},{passive:true});
+
+// ═══════════════════════════════════════════════════
+//  SYSTEM START
+// ═══════════════════════════════════════════════════
+async function initSystem(){
+  console.log('initSystem aufgerufen');
+  document.getElementById('overlay').style.display='none';
+  loadGame('memory');
+  // Kamera & Mikrofon erst hier anfragen — nach bewusstem START-Klick
+  let stream;
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+  }catch(e){
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:true});
+      window._noAudio=true;
+    }catch(e2){
+      showStartError('verweigert');
+      return;
+    }
+  }
+  camRunning=true;
+  try{
+    canvas=document.getElementById('trail-canvas');
+    canvas.width=innerWidth;canvas.height=innerHeight;
+    ctx=canvas.getContext('2d');
+    const v=document.getElementById('v');
+    v.srcObject=stream;
+    const fm=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
+    fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
+    fm.onResults(onResults);
+    new Camera(v,{onFrame:async()=>{if(camRunning)await fm.send({image:v});},width:640,height:480}).start();
+    if(!window._noAudio){ initSpeech();micActive=true;micMuted=false;updateMicBtn(); }
+    else{ micActive=false;micMuted=true;updateMicBtn(); }
+    setDotStatus('idle','TRACKING');
+  }catch(e){ camRunning=false; showStartError('MediaPipe: '+e.message); }
+}
+
+function showStartError(reason){
+  const isBlocked=reason==='verweigert';
+  document.getElementById('overlay').style.display='flex';
+  document.getElementById('overlay').innerHTML=`
+    <h1 style="color:#ef4444;font-size:1.1rem;letter-spacing:4px">⚠ ${isBlocked?'Zugriff verweigert':'Fehler'}</h1>
+    ${isBlocked?`
+    <p style="color:rgba(255,255,255,0.6);font-size:0.7rem;text-align:center;line-height:2;max-width:88%">
+      <strong style="color:var(--neon)">Kamera freigeben:</strong><br><br>
+      📱 <strong>Chrome Android:</strong><br>
+      Kamerasymbol 🎥 mit rotem X in der Adressleiste antippen<br>
+      → Kamera &amp; Mikrofon → <strong>Erlauben</strong><br><br>
+      🍎 <strong>Safari iOS:</strong><br>
+      Einstellungen → Safari → Kamera → Erlauben<br><br>
+      🖥 <strong>Desktop:</strong><br>
+      Schloss 🔒 in der Adressleiste → Berechtigungen
+    </p>
+    <button class="start-btn" onclick="location.reload()" style="margin-top:8px">↺ Seite neu laden</button>
+    `:`
+    <p style="color:rgba(255,100,100,0.6);font-size:0.65rem;text-align:center">${reason}</p>
+    <button class="start-btn" onclick="initSystem()">Erneut versuchen</button>
+    <button class="start-btn" onclick="location.reload()" style="font-size:0.8rem;border-color:rgba(0,242,255,0.3)">Seite neu laden</button>
+    `}`;
+}
+
+// ═══════════════════════════════════════════════════
+//  STATUS HELPERS
+// ═══════════════════════════════════════════════════
+function setDotStatus(s,t){document.getElementById('sb-dot-state').className='s-'+s;document.getElementById('sb-dot-text').textContent=t;}
+function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=n||'–';}
+function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
+function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
+function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
+function speak(text){
+  if(micMuted)return; // Stille-Modus: keine Sprachausgabe
+  if(window.speechSynthesis.speaking)window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';
+  window.speechSynthesis.speak(u);
+}
+
+loadSavedSettings(); // Einstellungen aus localStorage laden
+render();
+</script>
+</body>
+</html>
