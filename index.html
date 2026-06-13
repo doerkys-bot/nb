@@ -1517,6 +1517,7 @@ function triggerAction(){
   const gd=document.getElementById('gaze-dot');gd.classList.add('fired');setTimeout(()=>gd.classList.remove('fired'),300);
   const el=document.elementFromPoint(sX,sY);if(!el)return;
   const adminBtn=el.closest('.admin-game-btn');if(adminBtn){adminBtn.click();return;}
+  const startBtn=el.closest('.start-btn');if(startBtn){startBtn.click();return;}
   const tab=el.closest('.game-tab');if(tab){handleTabSelect(tab);return;}
   dispatchAction(el);
 }
@@ -1833,7 +1834,7 @@ function initSpeech(){
 // ═══════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════
-const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn,.pw-btn';
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,#mic-btn,.pw-btn,.start-btn,.game-tab,.dev-tile';
 
 function render(){
   sX+=(tX-sX)*TS.smooth;sY+=(tY-sY)*TS.smooth;
@@ -1938,5 +1939,4 @@ function setLastAction(t){document.getElementById('sb-last-text').textContent=t;
 function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
 function speak(text){
   if(micMuted)return; // Stille-Modus: keine Sprachausgabe
-  if(window.speechSynthesis.speaking)window.speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u
+  if
