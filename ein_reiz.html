@@ -172,9 +172,9 @@ function onR(r){
   if(!r.multiFaceLandmarks?.[0]) return;
   const iris=r.multiFaceLandmarks[0][468];
   if(!iris) return;
-  const rawX=(0.5-iris.x)*10*innerWidth+innerWidth/2;
-  const rawY=(iris.y-0.5)*12*innerHeight+innerHeight/2;
-  sx+=(rawX-sx)*SMOOTH; sy+=(rawY-sy)*SMOOTH;
+  const rawX=(0.5-iris.x)*(window.SCALE_X||10)*innerWidth+innerWidth/2;
+  const rawY=(iris.y-0.5)*(window.SCALE_Y||12)*innerHeight+innerHeight/2;
+  sx+=(rawX-sx)*window.SMOOTH; sy+=(rawY-sy)*window.SMOOTH;
   const dot=document.getElementById('dot');
   dot.style.left=sx+'px'; dot.style.top=sy+'px';
   checkDwell();
@@ -195,6 +195,17 @@ function startMic(){
 }
 function stopMic(){if(recognition){recognition.onend=null;recognition.stop();recognition=null;}}
 function handleVoice(t){} // Seite kann diese Funktion überschreiben
+
+
+// Tracking-Parameter aus localStorage laden (gesetzt von index.html)
+(function(){
+  try {
+    const saved = JSON.parse(localStorage.getItem('aurion_settings_v1') || '{}');
+    if(saved.scaleX) window.SCALE_X = saved.scaleX;
+    if(saved.scaleY) window.SCALE_Y = saved.scaleY;
+    if(saved.smooth) window.SMOOTH  = saved.smooth;
+  } catch(e) {}
+})();
 
 </script>
 </body>
