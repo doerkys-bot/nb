@@ -208,5 +208,30 @@ function handleVoice(t){} // Seite kann diese Funktion überschreiben
 })();
 
 </script>
+  /**
+ * UI-Injection: Erstellt die Top-Bar, falls sie fehlt
+ */
+function injectTopBar() {
+  if (document.getElementById("topBar")) return; // Falls sie schon da ist, nichts tun
+
+  const topBar = document.createElement("div");
+  topBar.id = "topBar";
+  topBar.innerHTML = `
+    <svg class="status-icon" id="silhouette" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <div id="micIndicator" onclick="AurionBridge.startMicrophone()">
+      <div id="micDot"></div>
+      <span id="micLabel">MIC</span>
+    </div>
+    <button class="choiceBtn" style="width:120px; background:#16a34a; font-size:16px;" onclick="AurionBridge.startCamera()">CAM</button>
+  `;
+  document.body.prepend(topBar); // Fügt die Leiste ganz oben ein
+}
+
+// Beim Laden der Seite ausführen
+document.addEventListener("DOMContentLoaded", () => {
+  injectTopBar(); // Erst Bar einfügen...
+  AurionBridge.startCamera(); // ...dann Hardware checken
+});
+
 </body>
 </html>
