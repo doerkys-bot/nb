@@ -785,15 +785,6 @@ function togglePrivacy(){
 }
 
 function consentAndStart(){
-  // Geräte-Erkennung: Apple (iOS) → eigene iOS-Seite weiterleiten
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const isApple = /iPad|iPhone|iPod/.test(ua) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS 13+
-  if(isApple){
-    window.location.href = 'https://doerkys-bot.github.io/nb/lebenshilfe_ios.html';
-    return;
-  }
-  // Android / Desktop → normaler Start
   const ov=document.getElementById('consent-overlay');
   ov.style.transition='opacity 0.6s ease';
   ov.style.opacity='0';
