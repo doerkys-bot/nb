@@ -397,7 +397,7 @@ body, html { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; ba
 </div>
 
 <div id="gazeWrapper"><div id="gazeCursor"></div></div>
-<video id="videoElement" style="display:none;" playsinline></video>
+<video id="videoElement" style="display:none;" playsinline muted autoplay></video>
 
 <script>
 const EAR_THRESHOLD  = 0.150;
@@ -484,7 +484,13 @@ class AurionEngine {
   async powerOn() {
     if (this.isRunning) return;
     try {
-      await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      // Safari/iOS: Kamera und Mikro getrennt anfragen für bessere Kompatibilität
+      try {
+        await navigator.mediaDevices.getUserMedia({ video: true });
+      } catch(e) { throw new Error("Kamera verweigert"); }
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch(e) { /* Mikro optional, weiter ohne */ }
       this.faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
       this.faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
       this.faceMesh.onResults(r => this.processFace(r));
@@ -779,6 +785,15 @@ function togglePrivacy(){
 }
 
 function consentAndStart(){
+  // Geräte-Erkennung: Apple (iOS) → eigene iOS-Seite weiterleiten
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isApple = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS 13+
+  if(isApple){
+    window.location.href = 'https://doerkys-bot.github.io/nb/lebenshilfe_ios.html';
+    return;
+  }
+  // Android / Desktop → normaler Start
   const ov=document.getElementById('consent-overlay');
   ov.style.transition='opacity 0.6s ease';
   ov.style.opacity='0';
@@ -822,148 +837,3 @@ function dispatchAction(el){
 }
 
 </script>
-  /**
- * AurionBridge: Zentrale Hardware-Weiche & Fallback-Management
- * Inklusive Fehlerbehandlung für iOS/Android
- */
-
-const AurionBridge = {
-  isApple: /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1),
-
-  // 1. Weichen-Logik für Kamera
-  async startCamera() {
-    console.log("System: Prüfe Hardware für Kamera...");
-    try {
-      if (this.isApple) {
-        console.log("System: Apple-Modus - Initialisiere native iOS Schnittstelle.");
-        // Hier wird deine Apple-native Schnittstelle getriggert
-      } else {
-        console.log("System: Standard-Modus - Starte MediaPipe Routine.");
-        // Deine bestehende MediaPipe-Routine läuft hier
-      }
-    } catch (err) {
-      this.handleError("Kamera verweigert", "Kamera nicht verfügbar. Wechsle auf Mikrofon.");
-    }
-  },
-
-  // 2. Weichen-Logik für Mikrofon
-  startMicrophone() {
-    console.log("System: Mikrofon-Schnittstelle aktiv.");
-    // Deine Sprachsteuerungs-Logik
-  },
-
-  // 3. Fallback-Protokoll (Fehlerbehandlung)
-  handleError(title, message) {
-    console.error("Aurion Error:", title);
-    
-    // Visuelles Feedback im UI
-    const display = document.getElementById("outputDisplay");
-    if (display) {
-      display.innerText = message;
-      display.classList.add("dictating-active"); // Blink-Effekt für Aufmerksamkeit
-    }
-
-    // Mikrofon-Button hervorheben (UI-Anker)
-    const micBtn = document.getElementById("micIndicator");
-    if (micBtn) {
-      micBtn.style.border = "3px solid #fbbf24";
-      micBtn.style.animation = "pulse 1s infinite";
-    }
-
-    // Automatischer Fallback-Vorschlag
-    console.log("System: Schlage Mikrofon-Nutzung vor.");
-  }
-};
-
-// Initialisierung der Bridge beim Laden
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("AurionBridge: System bereit.");
-});
-  <script>
-/**
- * AurionBridge: Zentrale Steuerung & Fallback-Management
- * Integration für: Lebenshilfe/Aurion Pro
- */
-
-const AurionBridge = {
-  isApple: /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1),
-
-  // Weiche: Kamera-Start mit Fallback
-  async startCamera() {
-    console.log("System: Starte Kamera-Hardware-Check...");
-    try {
-      if (this.isApple) {
-        console.log("System: Apple-Modus (Native API)...");
-        // Platzhalter für native Apple-Kamera-Schnittstelle
-      } else {
-        console.log("System: Standard-Modus (MediaPipe)...");
-        // Hier läuft deine bewährte MediaPipe-Routine
-      }
-    } catch (err) {
-      this.handleError("Kamera verweigert", "Kamera nicht erreichbar. Mikrofon-Modus aktiv.");
-    }
-  },
-
-  // Weiche: Mikrofon-Start
-  startMicrophone() {
-    console.log("System: Mikrofon-Schnittstelle aktiv.");
-    // Deine bestehende Sprachsteuerungs-Logik
-  },
-
-  // Fallback-Protokoll: Sanfte Umleitung statt Absturz
-  handleError(title, message) {
-    console.error("Aurion Error:", title);
-    
-    // UI-Rückmeldung im Ausgabefeld
-    const display = document.getElementById("outputDisplay");
-    if (display) {
-      display.innerText = message;
-      display.classList.add("dictating-active");
-    }
-
-    // Mikrofon-Button optisch hervorheben als Alternative
-    const micBtn = document.getElementById("micIndicator");
-    if (micBtn) {
-      micBtn.style.border = "3px solid #fbbf24";
-      micBtn.style.animation = "pulse 1s infinite";
-    }
-  }
-};
-
-// Automatischer Initialisierer beim Laden
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("AurionBridge: System bereit.");
-  
-  // Verzögerte Abfrage, um dem User Zeit zu geben
-  setTimeout(() => {
-    console.log("System: Aktiviere Hardware-Erkennung...");
-    AurionBridge.startCamera(); 
-  }, 1000); 
-});
-</script>
-  /**
- * UI-Injection: Erstellt die Top-Bar, falls sie fehlt
- */
-function injectTopBar() {
-  if (document.getElementById("topBar")) return; // Falls sie schon da ist, nichts tun
-
-  const topBar = document.createElement("div");
-  topBar.id = "topBar";
-  topBar.innerHTML = `
-    <svg class="status-icon" id="silhouette" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-    <div id="micIndicator" onclick="AurionBridge.startMicrophone()">
-      <div id="micDot"></div>
-      <span id="micLabel">MIC</span>
-    </div>
-    <button class="choiceBtn" style="width:120px; background:#16a34a; font-size:16px;" onclick="AurionBridge.startCamera()">CAM</button>
-  `;
-  document.body.prepend(topBar); // Fügt die Leiste ganz oben ein
-}
-
-// Beim Laden der Seite ausführen
-document.addEventListener("DOMContentLoaded", () => {
-  injectTopBar(); // Erst Bar einfügen...
-  AurionBridge.startCamera(); // ...dann Hardware checken
-});
-
-  </html>
