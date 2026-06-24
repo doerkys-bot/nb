@@ -57,28 +57,32 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #cam{position:fixed;opacity:0;pointer-events:none;width:1px;height:1px;}
 
 /* Navigation */
-#nav-bar{position:fixed;top:10px;right:10px;z-index:9500;
-  display:flex;gap:8px;align-items:center;}
-.mic-btn{background:transparent;border:1.5px solid;border-radius:8px;
-  padding:6px 12px;font-family:monospace;font-size:0.6rem;letter-spacing:2px;
-  cursor:pointer;transition:background 0.2s;}
-.mic-on{border-color:rgba(16,185,129,0.6);color:rgba(16,185,129,0.8);}
-.mic-on:hover{background:rgba(16,185,129,0.12);}
-.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.7);}
-.mic-off:hover{background:rgba(239,68,68,0.1);}
-.back-link{color:rgba(255,255,255,0.2);font-family:monospace;font-size:0.58rem;
-  letter-spacing:2px;cursor:pointer;text-decoration:none;
-  transition:color 0.2s;}
+#cam-icon{position:fixed;top:10px;left:10px;z-index:9500;
+  width:42px;height:42px;border-radius:10px;
+  background:rgba(14,30,60,0.9);border:1.5px solid rgba(0,242,255,0.4);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+#cam-icon:hover{background:rgba(0,242,255,0.12);border-color:#00f2ff;}
+#cam-icon.active{border-color:#10b981;}
+#mic-icon{position:fixed;top:10px;right:10px;z-index:9500;
+  width:42px;height:42px;border-radius:10px;
+  background:rgba(14,30,60,0.9);border:1.5px solid rgba(0,242,255,0.4);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+#mic-icon:hover{background:rgba(0,242,255,0.12);border-color:#00f2ff;}
+#mic-icon.mic-active{border-color:#10b981;}
+#mic-icon.mic-inactive{border-color:rgba(239,68,68,0.5);}
+.back-link{position:fixed;top:60px;left:10px;z-index:9500;
+  color:rgba(255,255,255,0.25);font-family:monospace;font-size:0.55rem;
+  letter-spacing:1px;cursor:pointer;text-decoration:none;}
 .back-link:hover{color:rgba(255,255,255,0.5);}
 
 </style>
 </head>
 <body>
-<div id="nav-bar">
-  <a class="back-link" onclick="history.back()">← zurück</a>
-  <button class="mic-btn mic-on" onclick="startMic()">Mikrofon an</button>
-  <button class="mic-btn mic-off" onclick="stopMic()">Mikrofon aus</button>
-</div>
+<div id="cam-icon" onclick="location.reload()" title="Kamera neu starten">📷</div>
+<div id="mic-icon" class="mic-inactive" onclick="toggleMic()" title="Mikrofon an/aus">🎙️</div>
+<a class="back-link" onclick="history.back()">← zurück</a>
 
 <!-- CONSENT -->
 <div id="ov">
@@ -343,8 +347,8 @@ function onResults(r) {
   // Dot glätten
   const rawX = (0.5 - iris.x) * 10 * innerWidth  + innerWidth  / 2;
   const rawY = (iris.y - 0.5) * 12 * innerHeight + innerHeight / 2;
-  sx += (rawX - sx) * window.SMOOTH;
-  sy += (rawY - sy) * window.SMOOTH;
+  const sm=window.SMOOTH||0.09; sx += (rawX - sx) * sm;
+  sy += (rawY - sy) * sm;
 
   // Dot anzeigen
   const dot = document.getElementById('dot');
@@ -374,7 +378,19 @@ function startMic(){
   recognition.start();
 }
 function stopMic(){if(recognition){recognition.onend=null;recognition.stop();recognition=null;}}
-function handleVoice(t){} // Seite kann diese Funktion überschreiben
+function handleVoice(t){}
+
+let micActive=false;
+function toggleMic(){
+  const icon=document.getElementById('mic-icon');
+  if(micActive){
+    stopMic(); micActive=false;
+    icon.className='mic-inactive';
+  } else {
+    startMic(); micActive=true;
+    icon.className='mic-active';
+  }
+} // Seite kann diese Funktion überschreiben
 
 
 // Tracking-Parameter aus localStorage laden (gesetzt von index.html)
