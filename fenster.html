@@ -76,9 +76,32 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   letter-spacing:1px;cursor:pointer;text-decoration:none;}
 .back-link:hover{color:rgba(255,255,255,0.5);}
 
+
+/* Einheitliche Kopfleiste */
+#top-bar{position:fixed;top:0;left:0;right:0;height:56px;z-index:9400;
+  background:rgba(6,10,19,0.92);border-bottom:1px solid rgba(0,242,255,0.15);
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:0 12px;}
+.tb-btn{border:2px solid;border-radius:10px;padding:8px 18px;
+  font-family:'Courier New',monospace;font-size:0.7rem;letter-spacing:2px;
+  font-weight:bold;cursor:pointer;background:transparent;transition:background 0.2s;}
+.tb-start{border-color:#16a34a;color:#16a34a;}
+.tb-start:hover{background:rgba(22,163,74,0.15);}
+.tb-reload{border-color:#dc2626;color:#dc2626;}
+.tb-reload:hover{background:rgba(220,38,38,0.15);}
+.tb-clock{color:rgba(0,242,255,0.6);font-family:'Courier New',monospace;
+  font-size:0.85rem;letter-spacing:2px;margin-left:8px;}
+#cam-icon{top:64px !important;}
+#mic-icon{top:64px !important;}
+.back-link{top:116px !important;}
+
 </style>
 </head>
 <body>
+<div id="top-bar">
+  <button class="tb-btn tb-start" onclick="startExercise()">START</button>
+  <button class="tb-btn tb-reload" onclick="location.reload()">RELOAD</button>
+  <span class="tb-clock" id="tb-clock">--:--</span>
+</div>
 <div id="cam-icon" class="cam-off" onclick="location.reload()" title="Kamera neu starten">📷</div>
 <div id="mic-icon" class="mic-off" onclick="toggleMic()" title="Mikrofon an/aus">🎙️</div>
 <a class="back-link" onclick="history.back()">← zurück</a>
@@ -417,6 +440,16 @@ function toggleMic(){
   } catch(e) {}
 })();
 
+
+// Uhrzeit
+function updateClock(){
+  const n=new Date();
+  const el=document.getElementById('tb-clock');
+  if(el) el.textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');
+}
+setInterval(updateClock,1000); updateClock();
+
+function startExercise(){ startGame(); }
 </script>
 </body>
 </html>
