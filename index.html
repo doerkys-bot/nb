@@ -122,7 +122,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 .game-tab.active-game{background:rgba(16,185,129,0.15);border-color:var(--blink2);color:var(--blink2);}
 
 /* ── ADMIN ── */
-#admin-gate{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none !important;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+#admin-gate{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
 #admin-gate.visible{display:flex;}
 #admin-gate h2{color:#f59e0b;font-size:1.4rem;letter-spacing:6px;text-transform:uppercase;}
 #admin-gate p{color:rgba(255,255,255,0.4);font-size:0.8rem;letter-spacing:2px;text-align:center;line-height:1.8;}
@@ -181,103 +181,6 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #overlay p {color:rgba(0,242,255,0.5);font-size:0.85rem;letter-spacing:3px;}
 .start-btn{background:transparent;color:var(--neon);border:2px solid var(--neon);padding:14px 46px;font-size:1rem;font-weight:bold;letter-spacing:3px;border-radius:10px;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;margin-top:8px;}
 .start-btn:hover{background:rgba(0,242,255,0.08);box-shadow:0 0 20px rgba(0,242,255,0.3);}
-
-
-/* ── EINSTELLUNGS-SIDEBAR SLIDER ── */
-.sb-slider-wrap{display:flex;align-items:center;gap:7px;margin-top:5px;}
-.sb-slider{-webkit-appearance:none;appearance:none;flex:1;height:22px;background:transparent;outline:none;cursor:pointer;}
-.sb-slider::-webkit-slider-runnable-track{height:4px;background:rgba(0,242,255,0.2);border-radius:2px;}
-.sb-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
-  background:var(--neon);box-shadow:0 0 8px rgba(0,242,255,0.5);cursor:pointer;margin-top:-7px;}
-.sb-slider::-moz-range-track{height:4px;background:rgba(0,242,255,0.2);border-radius:2px;}
-.sb-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;border:none;
-  background:var(--neon);box-shadow:0 0 8px rgba(0,242,255,0.5);}
-.sb-slider-side{font-size:0.55rem;color:rgba(0,242,255,0.45);letter-spacing:1px;white-space:nowrap;}
-.sb-hint{font-size:0.57rem;color:rgba(255,255,255,0.35);line-height:1.65;margin-top:3px;letter-spacing:0.3px;}
-.sb-slider-val{font-size:0.65rem;color:var(--gold);min-width:36px;text-align:right;font-weight:bold;}
-.sb-section{font-size:0.58rem;color:rgba(0,242,255,0.4);letter-spacing:3px;text-transform:uppercase;
-  margin-top:12px;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(0,242,255,0.1);}
-
-/* ── MIC-BUTTON ── */
-#mic-btn{
-  position:fixed;top:8px;right:8px;z-index:900;
-  background:rgba(14,30,60,0.95);border:1.5px solid rgba(0,242,255,0.4);
-  border-radius:10px;padding:8px 14px;
-  font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(0,242,255,0.7);cursor:pointer;user-select:none;
-  display:flex;align-items:center;gap:6px;
-  transition:background 0.15s,border-color 0.15s,color 0.15s;
-}
-#mic-btn.focused{border-color:var(--neon);background:rgba(0,242,255,0.1);color:white;box-shadow:0 0 14px rgba(0,242,255,0.2);}
-#mic-btn.mic-on {border-color:var(--blink2);color:var(--blink2);}
-#mic-btn.mic-off{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
-#mic-btn.sprache-an{border-color:var(--blink2);color:var(--blink2);}
-#mic-btn.sprache-aus{border-color:rgba(239,68,68,0.5);color:rgba(239,68,68,0.6);}
-
-/* ── SEITLICHE SIDEBARS (oben / unten / links) ── */
-#sidebar-oben,#sidebar-unten{
-  position:fixed;z-index:600;left:0;right:0;
-  background:rgba(6,10,19,0.97);backdrop-filter:blur(10px);
-  opacity:0;pointer-events:none;
-  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1);
-  overflow-y:auto;
-}
-#sidebar-links{
-  position:fixed;z-index:600;top:0;bottom:0;left:0;
-  width:min(320px,88vw);
-  background:rgba(6,10,19,0.97);backdrop-filter:blur(10px);
-  opacity:0;pointer-events:none;
-  transition:opacity 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1);
-  overflow-y:auto;
-}
-#sidebar-oben{
-  top:0;height:min(48vh,320px);
-  border-bottom:2px solid rgba(0,242,255,0.2);
-  transform:translateY(-110%);
-}
-#sidebar-oben.visible{opacity:1;pointer-events:all;transform:translateY(0);}
-#sidebar-unten{
-  bottom:0;height:min(75vh,520px);
-  border-top:2px solid rgba(0,242,255,0.2);
-  transform:translateY(110%);
-}
-#sidebar-unten.visible{opacity:1;pointer-events:all;transform:translateY(0);}
-#sidebar-links{border-right:2px solid rgba(0,242,255,0.2);transform:translateX(-110%);}
-#sidebar-links.visible{opacity:1;pointer-events:all;transform:translateX(0);}
-
-/* Sidebar Inhalte */
-.sb-panel{padding:18px 20px;width:100%;height:100%;display:flex;flex-direction:column;gap:10px;}
-.sb-title{font-size:0.75rem;color:var(--neon);letter-spacing:5px;text-transform:uppercase;
-  padding-bottom:10px;border-bottom:1px solid rgba(0,242,255,0.15);flex-shrink:0;}
-.sb-row{display:flex;justify-content:space-between;align-items:center;
-  font-size:0.62rem;color:rgba(255,255,255,0.7);letter-spacing:1px;}
-.sb-row-label{color:rgba(0,242,255,0.5);font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;}
-.sb-bar-wrap{height:4px;background:rgba(0,242,255,0.1);border-radius:2px;flex:1;margin:0 8px;}
-.sb-bar-fill{height:100%;background:var(--neon);border-radius:2px;}
-.sb-opts{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
-.sb-opt{padding:5px 10px;border-radius:7px;font-size:0.6rem;letter-spacing:1px;cursor:pointer;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);
-  transition:background 0.15s,border-color 0.15s,color 0.15s;}
-.sb-opt.active{background:rgba(0,242,255,0.12);border-color:var(--neon);color:var(--neon);}
-.sb-setting{display:flex;flex-direction:column;gap:5px;}
-.sb-clear{margin-top:auto;padding:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);
-  border-radius:8px;color:rgba(239,68,68,0.7);font-family:'Courier New',monospace;
-  font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
-
-/* Admin-Passwort */
-.pw-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100%;gap:16px;padding:20px;}
-.pw-title{color:var(--neon);font-size:0.8rem;letter-spacing:4px;text-transform:uppercase;}
-.pw-hint{font-size:0.6rem;color:rgba(0,242,255,0.4);letter-spacing:2px;text-align:center;line-height:1.8;}
-.pw-btn{width:72px;height:72px;border-radius:50%;background:rgba(0,242,255,0.08);
-  border:2px solid rgba(0,242,255,0.4);color:var(--neon);font-size:2rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background 0.15s,box-shadow 0.15s;}
-.pw-btn:hover,.pw-btn.focused{background:rgba(0,242,255,0.2);box-shadow:0 0 20px rgba(0,242,255,0.3);}
-.admin-inner{padding:16px;display:flex;flex-direction:column;gap:10px;}
-.admin-inner h2{color:#f59e0b;font-size:0.75rem;letter-spacing:4px;text-transform:uppercase;
-  padding-bottom:8px;border-bottom:1px solid rgba(245,158,11,0.2);}
-
 #win-flash{position:fixed;inset:0;z-index:5000;background:rgba(16,185,129,0);pointer-events:none;transition:background 0.3s;}
 #win-flash.on{background:rgba(16,185,129,0.18);}
 </style>
@@ -287,9 +190,6 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <div id="overlay">
   <h1>Aurion · Gedächtnis</h1>
   <p>Sieben Spiele · Blick · Blink · Stimme</p>
-  <p style="font-size:0.65rem;color:rgba(0,242,255,0.35);letter-spacing:1px;text-align:center;line-height:1.8;">
-    Nach START: Browser fragt nach<br>📷 Kamera &amp; 🎤 Mikrofon → bitte erlauben
-  </p>
   <button class="start-btn" onclick="initSystem()">START</button>
 </div>
 
@@ -448,196 +348,7 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <button id="admin-close" onclick="closeAdmin()">✕ Adminbereich schließen</button>
 </div>
 
-
-<div id="mic-btn" class="sprache-aus"><span id="mic-icon">🎙</span><span id="mic-lbl">SPRACHE AUS</span></div>
 <div id="win-flash"></div>
-<!-- SIDEBAR OBEN: Statistik -->
-<div id="sidebar-oben">
-  <div class="sb-panel">
-    <div class="sb-title">✦ Statistik</div>
-    <div id="stats-content" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
-    <div style="font-size:0.52rem;color:rgba(0,242,255,0.25);letter-spacing:1px;">🔒 Lokal · Kein Server · Anonym</div>
-    <button class="sb-clear" onclick="clearStats()">Daten löschen</button>
-  </div>
-</div>
-
-<!-- SIDEBAR UNTEN: Einstellungen -->
-<div id="sidebar-unten">
-  <div class="sb-panel">
-    <div class="sb-title">⚙ Einstellungen</div>
-    <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px;">
-
-      <!-- Iris / Kopf -->
-      <div class="sb-section">Iris ↔ Kopf · Tracking-Quelle</div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Blending</div>
-        <div class="sb-hint"><b>Kopf (links):</b> Der Dot folgt nur der Kopfbewegung — stabiler, gut bei eingeschränkter Augenmotorik oder Zittern.<br><b>Iris (rechts):</b> Der Dot folgt direkt dem Auge — präziser, aber empfindlicher.<br><b>Mitte:</b> Kombination beider Signale.</div>
-        <div class="sb-slider-wrap">
-          <span class="sb-slider-side">Kopf</span>
-          <input type="range" class="sb-slider" min="0" max="1" step="0.05" value="1"
-            oninput="TS.irisHead=parseFloat(this.value);document.getElementById('ih-val').textContent=ihLabel(this.value);saveSettings()">
-          <span class="sb-slider-side">Iris</span>
-          <span class="sb-slider-val" id="ih-val">Iris</span>
-        </div>
-      </div>
-
-      <!-- Blick -->
-      <div class="sb-section">Blick-Tracking</div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Glättung des Dot</div>
-        <div class="sb-hint"><b>Sehr träge:</b> Dot bewegt sich langsam und ruhig — weniger Zittern, aber verzögerte Reaktion. Gut bei unruhigem Blick.<br><b>Direkt:</b> Dot reagiert sofort — schnell, kann aber zittern.<br>Empfehlung: Zittern vorhanden → träger einstellen.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="smooth" data-val="0.06">Sehr träge</div>
-          <div class="sb-opt" data-ts="smooth" data-val="0.09">Träge</div>
-          <div class="sb-opt active" data-ts="smooth" data-val="0.12">Normal</div>
-          <div class="sb-opt" data-ts="smooth" data-val="0.18">Direkt</div>
-          <div class="sb-opt" data-ts="smooth" data-val="0.25">Sehr direkt</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Empfindlichkeit Horizontal</div>
-        <div class="sb-hint">Wie weit der Dot nach links/rechts springt bei gleicher Augenbewegung.<br><b>Niedrig:</b> Kleine Augenbewegung reicht — gut bei eingeschränktem Blickfeld.<br><b>Hoch:</b> Auge muss weiter wandern — weniger versehentliche Aktivierung.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="scaleX" data-val="8">Niedrig</div>
-          <div class="sb-opt active" data-ts="scaleX" data-val="12">Normal</div>
-          <div class="sb-opt" data-ts="scaleX" data-val="16">Hoch</div>
-          <div class="sb-opt" data-ts="scaleX" data-val="20">Sehr hoch</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Empfindlichkeit Vertikal</div>
-        <div class="sb-hint">Wie weit der Dot nach oben/unten springt. Unabhängig von horizontal einstellbar — z.B. wenn Blick leichter horizontal als vertikal wandert.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="scaleY" data-val="10">Niedrig</div>
-          <div class="sb-opt active" data-ts="scaleY" data-val="15">Normal</div>
-          <div class="sb-opt" data-ts="scaleY" data-val="20">Hoch</div>
-          <div class="sb-opt" data-ts="scaleY" data-val="26">Sehr hoch</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Zentrum-Dämpfung</div>
-        <div class="sb-hint">Stabilisiert den Dot wenn geradeaus geschaut wird. Der Bildschirmmittelpunkt wirkt wie ein leichter Magnet.<br><b>Stark:</b> Dot bleibt gut zentriert, kleine Abweichungen werden gedämpft — weniger Drift.<br><b>Aus:</b> Keine Dämpfung, volle Freiheit in der Mitte.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="centerF" data-val="0.5">Aus</div>
-          <div class="sb-opt" data-ts="centerF" data-val="0.3">Schwach</div>
-          <div class="sb-opt active" data-ts="centerF" data-val="0.2">Normal</div>
-          <div class="sb-opt" data-ts="centerF" data-val="0.1">Stark</div>
-        </div>
-      </div>
-
-      <!-- Blink -->
-      <div class="sb-section">Blink-Erkennung</div>
-      <div class="sb-setting">
-        <div class="sb-row-label">EAR-Schwelle (Blink-Empfindlichkeit)</div>
-        <div class="sb-hint">EAR = Eye Aspect Ratio — misst wie weit die Augen geschlossen sind.<br><b>Sehr leicht (0.155):</b> Minimales Blinzeln genügt — reagiert schnell, aber auch auf ungewolltes Flattern.<br><b>Normal (0.175):</b> Standardwert für die meisten Nutzer.<br><b>Sehr fest (0.220):</b> Augen müssen vollständig geschlossen werden — bewusster Blink nötig, keine Verwechslungen.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="earThresh" data-val="0.145">Sehr leicht</div>
-          <div class="sb-opt" data-ts="earThresh" data-val="0.160">Leicht</div>
-          <div class="sb-opt active" data-ts="earThresh" data-val="0.175">Normal</div>
-          <div class="sb-opt" data-ts="earThresh" data-val="0.195">Fest</div>
-          <div class="sb-opt" data-ts="earThresh" data-val="0.220">Sehr fest</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Minimale Blink-Dauer</div>
-        <div class="sb-hint">Wie lange die Augen geschlossen sein müssen damit ein Blink zählt.<br><b>Kurz (50ms):</b> Sehr schnelle Blinks werden erkannt — für Nutzer die schnell blinken.<br><b>Lang (150ms):</b> Nur bewusste, lange Blinks zählen — filtert versehentliches Flattern heraus.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="blinkMin" data-val="50">Kurz (50ms)</div>
-          <div class="sb-opt active" data-ts="blinkMin" data-val="80">Normal (80ms)</div>
-          <div class="sb-opt" data-ts="blinkMin" data-val="110">Lang (110ms)</div>
-          <div class="sb-opt" data-ts="blinkMin" data-val="150">Sehr lang (150ms)</div>
-        </div>
-      </div>
-
-      <!-- Doppelblink -->
-      <div class="sb-section">Doppelblink · Timing</div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Doppelblink-Fenster</div>
-        <div class="sb-hint">Maximale Zeit zwischen zwei Blinks damit sie als Doppelblink gelten.<br><b>Weit (1s):</b> Mehr Zeit erlaubt — gut wenn Blinks langsamer kommen oder Augen sich erholen müssen.<br><b>Eng (0.4s):</b> Blinks müssen schnell folgen — weniger Verwechslungen mit zwei separaten Blinks.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="blinkWin" data-val="400">Eng (0.4s)</div>
-          <div class="sb-opt active" data-ts="blinkWin" data-val="600">Normal (0.6s)</div>
-          <div class="sb-opt" data-ts="blinkWin" data-val="800">Weit (0.8s)</div>
-          <div class="sb-opt" data-ts="blinkWin" data-val="1000">Sehr weit (1s)</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Sperrzeit nach Aktion</div>
-        <div class="sb-hint">Nach einer Auswahl per Doppelblink wird für diese Zeit kein weiterer Blink erkannt. Verhindert versehentliche Doppelaktionen.<br><b>Kurz (1s):</b> Schnelles Weitertippen möglich.<br><b>Sehr lang (3.5s):</b> Lange Pause — gut wenn Augen sich erholen müssen nach einer Aktion.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="cooldown" data-val="1000">Kurz (1s)</div>
-          <div class="sb-opt active" data-ts="cooldown" data-val="1800">Normal (1.8s)</div>
-          <div class="sb-opt" data-ts="cooldown" data-val="2500">Lang (2.5s)</div>
-          <div class="sb-opt" data-ts="cooldown" data-val="3500">Sehr lang (3.5s)</div>
-        </div>
-      </div>
-
-      <!-- Zonen -->
-      <div class="sb-section">Zonen &amp; Gesten</div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Pufferzone-Breite</div>
-        <div class="sb-hint">Wie breit die Randbereiche sind in denen Triple-Blink und die Mund+Brauen-Geste die Sidebars öffnen.<br><b>Schmal (10%):</b> Nur ganz am Rand erkannt — mehr Spielfläche in der Mitte.<br><b>Sehr breit (25%):</b> Großer Randbereich — leichter zu treffen, aber weniger Spielfläche.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-ts="bufPct" data-val="0.10">Schmal (10%)</div>
-          <div class="sb-opt" data-ts="bufPct" data-val="0.13">Klein (13%)</div>
-          <div class="sb-opt active" data-ts="bufPct" data-val="0.16">Normal (16%)</div>
-          <div class="sb-opt" data-ts="bufPct" data-val="0.20">Breit (20%)</div>
-          <div class="sb-opt" data-ts="bufPct" data-val="0.25">Sehr breit (25%)</div>
-        </div>
-      </div>
-    </div>
-    <button id="settings-save-btn" onclick="saveSettingsExplicit()"
-      style="margin-top:12px;flex-shrink:0;width:100%;padding:12px;
-      background:rgba(16,185,129,0.1);border:1.5px solid rgba(16,185,129,0.5);
-      border-radius:10px;color:rgba(16,185,129,0.9);font-family:'Courier New',monospace;
-      font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;
-      transition:background 0.2s,border-color 0.2s;">
-      💾 Einstellungen speichern
-    </button>
-  </div>
-</div>
-<div id="sidebar-links">
-  <div id="admin-pw-screen" class="pw-screen">
-    <div class="pw-title">⚙ Admin</div>
-    <div class="pw-btn" id="pw-o-btn" onclick="tryAdminPw('o')" data-pw="o">O</div>
-    <div class="pw-hint">Doppelblink auf O<br>oder sag das Passwort</div>
-  </div>
-  <div id="admin-content" style="display:none;">
-    <div class="admin-inner" style="overflow-y:auto;height:100%;">
-      <h2>⚙ Adminbereich</h2>
-      <div class="sb-section" style="margin-top:4px">Spieleinstellungen</div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Symbolset</div>
-        <div class="sb-hint">Welche Symbole in allen Spielen verwendet werden.</div>
-        <div class="sb-opts">
-          <div class="sb-opt active" data-key="sym-set" data-val="natur">Natur</div>
-          <div class="sb-opt" data-key="sym-set" data-val="alltag">Alltag</div>
-          <div class="sb-opt" data-key="sym-set" data-val="zahlen">Zahlen</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Memory · Paare</div>
-        <div class="sb-hint">4 = einfach (8 Karten) · 8 = anspruchsvoll (16 Karten)</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-key="memory-pairs" data-val="4">4 Paare</div>
-          <div class="sb-opt active" data-key="memory-pairs" data-val="6">6 Paare</div>
-          <div class="sb-opt" data-key="memory-pairs" data-val="8">8 Paare</div>
-        </div>
-      </div>
-      <div class="sb-setting">
-        <div class="sb-row-label">Memory · Umdeckzeit</div>
-        <div class="sb-hint">Wie lange falsche Karten sichtbar bleiben.</div>
-        <div class="sb-opts">
-          <div class="sb-opt" data-key="memory-flip" data-val="800">0.8s</div>
-          <div class="sb-opt active" data-key="memory-flip" data-val="1500">1.5s</div>
-          <div class="sb-opt" data-key="memory-flip" data-val="2500">2.5s</div>
-        </div>
-      </div>
-      <button class="sb-clear" style="margin-top:16px" onclick="lockAdmin()">🔒 Sperren</button>
-    </div>
-  </div>
-</div>
-
 <canvas id="trail-canvas"></canvas>
 <div id="gaze-dot"></div>
 
@@ -656,23 +367,6 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 <video id="v" style="display:none" autoplay playsinline muted></video>
 
 <script>
-
-// ═══════════════════════════════════════════════════
-//  TRACKING-EINSTELLUNGEN (live änderbar)
-// ═══════════════════════════════════════════════════
-const TS={
-  irisHead:1.0,   // 0=Kopf · 1=Iris
-  smooth:0.12,    // Glättung
-  scaleX:12,      // Empfindlichkeit horizontal
-  scaleY:15,      // Empfindlichkeit vertikal
-  centerF:0.2,    // Zentrum-Dämpfung
-  earThresh:0.175,// Blink-Schwelle (EAR)
-  blinkMin:80,    // min. Blink-Dauer ms
-  blinkWin:600,   // Doppelblink-Fenster ms
-  cooldown:1800,  // Sperrzeit nach Aktion ms
-  bufPct:0.16,    // Pufferzone-Breite
-};
-
 // ═══════════════════════════════════════════════════
 //  DATEN
 // ═══════════════════════════════════════════════════
@@ -844,10 +538,6 @@ let blitzHits=0,blitzTotal=10,blitzRemain=0,blitzTimeout=null,blitzSize=90;
 
 // Tracking
 let canvas,ctx,camRunning=false;
-let recInstance=null,micActive=false,micMuted=false;
-let zoneGestStart=null,lastZoneGest=0;
-const ZONE_GEST_HOLD=700,ZONE_GEST_CD=2500;
-let currentSidebar=null;
 let sX=innerWidth/2,sY=innerHeight/2,tX=sX,tY=sY;
 let bufX=[],bufY=[],trailHist=[];
 let blinkStart=null,lastBlinkEnd=0,blinkCooldown=0,waitTimer=null,blinkCount=0;
@@ -1125,7 +815,178 @@ function renderKatItem(){
   });
   container.appendChild(itemDiv);container.appendChild(binsDiv);
   gc().innerHTML='';gc().appendChild(container);
-  if(s
+  if(settings['kat-speak']==='ja')speak(item.name);
+  katLocked=false;
+}
+
+function selectKatBin(bin){
+  if(katLocked)return;katLocked=true;
+  const ci=parseInt(bin.dataset.cat);
+  const item=katItems[katIdx];
+  const ok=ci===item.cat;
+  if(ok){
+    bin.classList.add('correct');katBinContents[ci].push(item.sym);
+    speak('Richtig!');katScore++;setLastAction(`✓ KAT: ${item.name} → ${katCats[ci]}`);
+    setTimeout(()=>{katIdx++;renderKatItem();},800);
+  } else {
+    bin.classList.add('wrong');
+    document.querySelectorAll('.kat-bin').forEach(b=>{if(parseInt(b.dataset.cat)===item.cat)b.classList.add('correct');});
+    speak('Falsch! '+item.name+' gehört zu '+katCats[item.cat]);
+    setLastAction(`✗ KAT: ${item.name}`);
+    setTimeout(()=>{katBinContents[item.cat].push(item.sym);katIdx++;renderKatItem();},1400);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  5. ODD-ONE-OUT
+// ═══════════════════════════════════════════════════
+function buildOddOne(){
+  oddPuzzles=shuffle(ODD_PUZZLES);oddIdx=0;oddScore=0;oddLocked=false;
+  setScore('PUNKTE: 0');renderOddPuzzle();
+}
+
+function renderOddPuzzle(){
+  if(currentGame!=='oddone')return;
+  if(oddTimerInt){clearInterval(oddTimerInt);oddTimerInt=null;}
+  if(oddIdx>=oddPuzzles.length){
+    gc().innerHTML=`<div class="result-screen">
+      <div class="result-icon">🎉</div><div class="result-title">FERTIG!</div>
+      <div class="result-score">${oddScore} PUNKTE</div>
+      <button class="start-btn" style="margin-top:12px" onclick="loadGame('oddone')">NOCHMAL</button>
+    </div>`;
+    speak(`Fertig! ${oddScore} Punkte.`);return;
+  }
+  const puz=oddPuzzles[oddIdx];
+  const n=parseInt(settings['odd-size']||4);
+  const items=shuffle([...Array(n-1).fill({sym:puz.base,name:puz.bname,odd:false}),{sym:puz.intruder,name:puz.iname,odd:true}]);
+
+  const wrap=document.createElement('div');wrap.className='game-col';
+
+  const info=document.createElement('div');info.className='game-hdr-info';
+  info.textContent=settings['odd-hint']==='ja'?`WAS PASST NICHT ZU: ${puz.bname.toUpperCase()}?`:'WAS PASST NICHT DAZU?';
+
+  // Timer-Balken
+  const tbar=document.createElement('div');tbar.className='odd-timer-bar';
+  const tfill=document.createElement('div');tfill.className='odd-timer-fill';tfill.style.width='100%';
+  tbar.appendChild(tfill);
+
+  const gf=document.createElement('div');gf.className='game-flex';
+  const cols=n<=3?3:n<=4?4:3,rows=Math.ceil(n/cols);
+  const g=document.createElement('div');g.className='grid-odd';g.style.cssText='width:100%;height:100%;';
+  g.style.gridTemplateColumns=`repeat(${cols},1fr)`;g.style.gridTemplateRows=`repeat(${rows},1fr)`;
+  items.forEach((item,i)=>{
+    const c=document.createElement('div');c.className='odd-cell';c.dataset.odd=item.odd?'1':'0';
+    c.innerHTML=`${item.sym}<span class="odd-lbl">${item.name}</span>`;
+    g.appendChild(c);
+  });
+  gf.appendChild(g);
+  wrap.appendChild(info);
+  if(settings['odd-time']==='ja')wrap.appendChild(tbar);
+  wrap.appendChild(gf);
+  gc().innerHTML='';gc().appendChild(wrap);
+  setScore(`PUNKTE: ${oddScore} | RUNDE: ${oddIdx+1}/${oddPuzzles.length}`);
+  oddLocked=false;
+
+  if(settings['odd-time']==='ja'){
+    oddTimeLeft=15;
+    oddTimerInt=setInterval(()=>{
+      if(currentGame!=='oddone'){clearInterval(oddTimerInt);return;}
+      oddTimeLeft--;tfill.style.width=Math.max(0,oddTimeLeft/15*100)+'%';
+      if(oddTimeLeft<=0){
+        clearInterval(oddTimerInt);oddTimerInt=null;
+        speak('Zeit abgelaufen');setLastAction('✗ ODD TIMEOUT');
+        setTimeout(()=>{oddIdx++;oddLocked=false;renderOddPuzzle();},800);
+      }
+    },1000);
+  }
+}
+
+function selectOddCell(cell){
+  if(oddLocked)return;oddLocked=true;
+  if(oddTimerInt){clearInterval(oddTimerInt);oddTimerInt=null;}
+  const ok=cell.dataset.odd==='1';
+  if(ok){
+    cell.classList.add('correct');speak('Richtig!');oddScore++;
+    setLastAction('✓ ODD: '+oddPuzzles[oddIdx].iname);
+    setScore(`PUNKTE: ${oddScore}`);
+    setTimeout(()=>{oddIdx++;renderOddPuzzle();},900);
+  } else {
+    cell.classList.add('wrong');
+    document.querySelectorAll('.odd-cell').forEach(c=>{if(c.dataset.odd==='1')c.classList.add('correct');});
+    speak('Falsch! '+oddPuzzles[oddIdx].iname+' wäre richtig.');
+    setLastAction('✗ ODD: '+oddPuzzles[oddIdx].iname);
+    setTimeout(()=>{oddIdx++;renderOddPuzzle();},1400);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  6. SUCHFELD
+// ═══════════════════════════════════════════════════
+function buildSuchfeld(){
+  const n=parseInt(settings['such-grid']||4);
+  const pool=SYMS[settings['sym-set']||'natur'];
+  const target=pool[Math.floor(Math.random()*pool.length)];
+  const distPool=pool.filter(s=>s!==target);
+  const gridSize=n*n;
+  const targetCount=Math.max(2,Math.floor(gridSize*0.2));
+  suchTarget=target;suchFound=0;suchTotal=targetCount;
+
+  let raw=[...Array(targetCount).fill(target)];
+  while(raw.length<gridSize)raw.push(distPool[Math.floor(Math.random()*distPool.length)]);
+  raw=shuffle(raw);
+
+  const wrap=document.createElement('div');wrap.className='game-col';
+
+  // Header
+  const hdr=document.createElement('div');hdr.className='game-hdr';
+  const timeSec=parseInt(settings['such-time']||30);
+  hdr.innerHTML=`<span class="game-hdr-sym">${target}</span>
+    <span class="game-hdr-text">SUCHE: ${NAMEN[target]||target}</span>
+    <span class="game-hdr-timer" id="such-timer-disp">${timeSec>0?timeSec+'s':''}</span>`;
+
+  const gf=document.createElement('div');gf.className='game-flex';
+  const g=document.createElement('div');g.className='grid-suchfeld';g.style.cssText='width:100%;height:100%;';
+  g.style.gridTemplateColumns=`repeat(${n},1fr)`;g.style.gridTemplateRows=`repeat(${n},1fr)`;
+  raw.forEach((sym,i)=>{
+    const c=document.createElement('div');c.className='such-cell';
+    c.dataset.target=(sym===target?'1':'0');c.textContent=sym;
+    g.appendChild(c);
+  });
+  gf.appendChild(g);wrap.appendChild(hdr);wrap.appendChild(gf);
+  gc().innerHTML='';gc().appendChild(wrap);
+  setScore(`GEFUNDEN: 0 / ${targetCount}`);
+
+  if(timeSec>0){
+    suchTimeLeft=timeSec;
+    suchTimerInt=setInterval(()=>{
+      if(currentGame!=='suchfeld'){clearInterval(suchTimerInt);return;}
+      suchTimeLeft--;
+      const td=document.getElementById('such-timer-disp');
+      if(td)td.textContent=suchTimeLeft+'s';
+      if(suchTimeLeft<=0){
+        clearInterval(suchTimerInt);suchTimerInt=null;
+        speak(`Zeit! ${suchFound} von ${suchTotal} gefunden.`);
+        setTimeout(()=>buildSuchfeld(),2000);
+      }
+    },1000);
+  }
+}
+
+function selectSuchCell(cell){
+  if(cell.classList.contains('found')||cell.classList.contains('wrong'))return;
+  if(cell.dataset.target==='1'){
+    cell.classList.add('found');speak(NAMEN[suchTarget]||'Gefunden');suchFound++;
+    setScore(`GEFUNDEN: ${suchFound} / ${suchTotal}`);setLastAction(`✓ SUCH: ${suchFound}/${suchTotal}`);
+    if(suchFound>=suchTotal){
+      if(suchTimerInt){clearInterval(suchTimerInt);suchTimerInt=null;}
+      flashWin();speak('Alle gefunden! Super!');setTimeout(()=>buildSuchfeld(),2500);
+    }
+  } else {
+    cell.classList.add('wrong');setTimeout(()=>cell.classList.remove('wrong'),600);
+    setLastAction('✗ SUCH: falsch');
+  }
+}
+
 // ═══════════════════════════════════════════════════
 //  7. BLITZ-ZIEL
 // ═══════════════════════════════════════════════════
@@ -1192,7 +1053,7 @@ function toggleSidebar(){
 // ═══════════════════════════════════════════════════
 //  ADMIN
 // ═══════════════════════════════════════════════════
-function openAdmin(){
+function openAdminGate(){
   adminGateOpen=true;gestureStart=null;
   document.getElementById('admin-gate').classList.add('visible');
   document.getElementById('gesture-icon').textContent='😐';
@@ -1242,77 +1103,42 @@ function checkAdminGesture(lm){
 }
 
 // ═══════════════════════════════════════════════════
-//  ZONEN-GESTE: Mund offen + Augenbrauen hoch
-// ═══════════════════════════════════════════════════
-function checkZoneGesture(lm){
-  if(adminGateOpen)return;
-  if(micActive&&!micMuted)return; // Sprechen = Mund offen → Geste ignorieren
-  const now=Date.now();
-  if(now-lastZoneGest<ZONE_GEST_CD)return;
-  const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
-  const browAvg=(d(70,159)+d(300,386))/2;
-  const ok=browAvg>BROW_THRESH; // nur Augenbrauen hochziehen
-  if(ok){
-    if(!zoneGestStart)zoneGestStart=now;
-    const pct=Math.min(100,Math.round((now-zoneGestStart)/ZONE_GEST_HOLD*100));
-    if(pct>15)setZoneStatus('😮↑ '+pct+'%'); // Zone-Status statt Last-Action
-    if(now-zoneGestStart>=ZONE_GEST_HOLD){
-      zoneGestStart=null;lastZoneGest=now;
-      const bx=innerWidth*TS.bufPct,by=innerHeight*TS.bufPct;
-      let zone=null;
-      if(sY<by)zone='OBEN';
-      else if(sY>innerHeight-by)zone='UNTEN';
-      else if(sX<bx)zone='LINKS';
-      else if(sX>innerWidth-bx)zone='RECHTS';
-      if(zone){speak('Zone '+zone);activateZone(zone);}
-      else speak('Geste erkannt – bitte in eine Randzone schauen');
-      setLastAction('GESTE: '+(zone||'Mitte'));
-    }
-  } else { zoneGestStart=null; }
-}
-
-// ═══════════════════════════════════════════════════
 //  FACE MESH / BLINK
 // ═══════════════════════════════════════════════════
 function onResults(r){
   if(!r.multiFaceLandmarks?.[0]){setDotStatus('idle','KEIN GESICHT');return;}
   const lm=r.multiFaceLandmarks[0];
   checkAdminGesture(lm);
-  // checkZoneGesture(lm); // deaktiviert → nur Triple-Blink öffnet Sidebars
   const iris=lm[468];
-  // Kopf-Referenz (Mittelpunkt äußere Augenwinkel) für Iris↔Kopf-Blend
-  const headRef={x:(lm[33].x+lm[263].x)/2,y:(lm[33].y+lm[263].y)/2};
-  const blendX=headRef.x+TS.irisHead*(iris.x-headRef.x);
-  const blendY=headRef.y+TS.irisHead*(iris.y-headRef.y);
-  let rawX=(0.5-blendX)*TS.scaleX*innerWidth+innerWidth/2;
-  let rawY=(blendY-0.5)*TS.scaleY*innerHeight+innerHeight/2;
+  let rawX=(0.5-iris.x)*SCALE_X*innerWidth+innerWidth/2;
+  let rawY=(iris.y-0.5)*SCALE_Y*innerHeight+innerHeight/2;
   bufX.push(rawX);bufY.push(rawY);
   if(bufX.length>BUFFER_SZ){bufX.shift();bufY.shift();}
   let avgX=bufX.reduce((a,b)=>a+b,0)/bufX.length,avgY=bufY.reduce((a,b)=>a+b,0)/bufY.length;
   const cX=innerWidth/2,cY=innerHeight/2,dist=Math.hypot(avgX-cX,avgY-cY);
-  tX=dist<CENTER_R?cX+(avgX-cX)*TS.centerF:avgX;
-  tY=dist<CENTER_R?cY+(avgY-cY)*TS.centerF:avgY;
+  tX=dist<CENTER_R?cX+(avgX-cX)*CENTER_F:avgX;
+  tY=dist<CENTER_R?cY+(avgY-cY)*CENTER_F:avgY;
   tX=Math.max(BORDER,Math.min(innerWidth-BORDER,tX));
   tY=Math.max(BORDER,Math.min(innerHeight-BORDER,tY));
   const d=(p1,p2)=>Math.hypot(lm[p1].x-lm[p2].x,lm[p1].y-lm[p2].y);
   const ear=(d(159,145)/d(33,133)+d(386,374)/d(362,263))/2;
   const now=Date.now();
-  if(ear<TS.earThresh){if(!blinkStart)blinkStart=now;}
+  if(ear<EAR_THRESH){if(!blinkStart)blinkStart=now;}
   else{
     if(blinkStart){
       const dur=now-blinkStart;blinkStart=null;
-      if(dur>=TS.blinkMin){
+      if(dur>=BLINK_MIN){
         const gap=now-lastBlinkEnd;
-        if(lastBlinkEnd>0&&gap<TS.blinkWin&&gap>BLINK_GAP_MIN)blinkCount++;else blinkCount=1;
+        if(lastBlinkEnd>0&&gap<BLINK_WIN&&gap>BLINK_GAP_MIN)blinkCount++;else blinkCount=1;
         lastBlinkEnd=now;clearTimeout(waitTimer);
         if(blinkCount===1)setDotStatus('waiting','1× BLINK');
         else if(blinkCount===2)setDotStatus('waiting','2× BLINK…');
         waitTimer=setTimeout(()=>{
           const fc=blinkCount;blinkCount=0;lastBlinkEnd=0;
-          if(fc>=3&&(now-blinkCooldown)>TS.cooldown){blinkCooldown=now;triggerTriple();}
-          else if(fc===2&&(now-blinkCooldown)>TS.cooldown){blinkCooldown=now;triggerAction();}
+          if(fc>=3&&(now-blinkCooldown)>COOLDOWN){blinkCooldown=now;triggerTriple();}
+          else if(fc===2&&(now-blinkCooldown)>COOLDOWN){blinkCooldown=now;triggerAction();}
           else setDotStatus('idle','TRACKING');
-        },TS.blinkWin);
+        },BLINK_WIN);
       }
     }
   }
@@ -1325,7 +1151,7 @@ function triggerTriple(){
   setDotStatus('buf','3× TRIPLE');setTimeout(()=>setDotStatus('idle','TRACKING'),900);
   const gd=document.getElementById('gaze-dot');gd.classList.add('buf');setTimeout(()=>gd.classList.remove('buf'),400);
   setLastAction('3× TRIPLE-BLINK');
-  const bx=innerWidth*TS.bufPct,by=innerHeight*TS.bufPct;
+  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
   let zone=null;
   if(sY<by)zone='OBEN';else if(sY>innerHeight-by)zone='UNTEN';
   else if(sX<bx)zone='LINKS';else if(sX>innerWidth-bx)zone='RECHTS';
@@ -1334,11 +1160,9 @@ function triggerTriple(){
 }
 
 function activateZone(zone){
-  if(zone==='OBEN')  openSidebar('oben');
-  else if(zone==='RECHTS')openSidebar('rechts');
-  else if(zone==='UNTEN') openSidebar('unten');
-  else if(zone==='LINKS') openSidebar('links');
-  setLastAction('ZONE: '+zone);
+  if(zone==='LINKS'&&!adminGateOpen)openAdminGate();
+  if(zone==='RECHTS')toggleSidebar();
+  setLastAction('ZONE: '+zone+' aktiviert');
 }
 
 function triggerAction(){
@@ -1360,8 +1184,6 @@ function triggerVoice(){
 }
 
 function dispatchAction(el){
-  if(el.closest('#mic-btn')){toggleMic();return;}
-  const pwb=el.closest('.pw-btn');if(pwb){tryAdminPw(pwb.dataset.pw||'');return;}
   if(currentGame==='memory'){const c=el.closest('.mem-card');if(c)selectCard(c);}
   else if(currentGame==='sequence'){const c=el.closest('.seq-cell');if(c)selectSeqCell(c);}
   else if(currentGame==='wortbild'){const c=el.closest('.wb-opt');if(c)selectWbOpt(c);}
@@ -1370,221 +1192,6 @@ function dispatchAction(el){
   else if(currentGame==='suchfeld'){const c=el.closest('.such-cell');if(c)selectSuchCell(c);}
   else if(currentGame==='blitz'){const c=el.closest('.blitz-target');if(c)hitBlitz(c);}
 }
-
-
-
-
-// ═══════════════════════════════════════════════════
-//  EINSTELLUNGEN: localStorage
-// ═══════════════════════════════════════════════════
-const SETTINGS_STORE='aurion_settings_v1';
-
-function saveSettingsExplicit(){
-  saveSettings();
-  const btn=document.getElementById('settings-save-btn');
-  if(!btn)return;
-  const orig=btn.innerHTML;
-  btn.innerHTML='✓ Gespeichert!';
-  btn.style.background='rgba(16,185,129,0.25)';
-  btn.style.borderColor='var(--blink2)';
-  setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';btn.style.borderColor='';},2000);
-  speak('Einstellungen gespeichert');
-}
-
-function saveSettings(){
-  localStorage.setItem(SETTINGS_STORE,JSON.stringify({ts:TS,game:settings}));
-}
-
-function loadSavedSettings(){
-  try{
-    const d=JSON.parse(localStorage.getItem(SETTINGS_STORE));
-    if(!d)return;
-    if(d.ts)Object.keys(d.ts).forEach(k=>{if(k in TS)TS[k]=d.ts[k];});
-    if(d.game)Object.keys(d.game).forEach(k=>{settings[k]=d.game[k];});
-  }catch(e){}
-}
-
-function syncSettingButtons(){
-  // TS-Buttons (data-ts)
-  Object.keys(TS).forEach(key=>{
-    document.querySelectorAll(`[data-ts="${key}"]`).forEach(o=>{
-      o.classList.toggle('active',Math.abs(parseFloat(o.dataset.val)-TS[key])<0.0001);
-    });
-  });
-  // settings-Buttons (data-key)
-  Object.keys(settings).forEach(key=>{
-    document.querySelectorAll(`[data-key="${key}"]`).forEach(o=>{
-      o.classList.toggle('active',o.dataset.val===settings[key]);
-    });
-  });
-  // Slider
-  const sl=document.getElementById('ih-val');
-  const sli=document.querySelector('.sb-slider');
-  if(sl)sl.textContent=ihLabel(TS.irisHead);
-  if(sli)sli.value=TS.irisHead;
-}
-
-// ═══════════════════════════════════════════════════
-//  STATISTIK (lokal, anonym)
-// ═══════════════════════════════════════════════════
-const STATS_KEY='aurion_stats_v1';
-const GAME_NAMES={memory:'Memory',sequence:'Sequence',wortbild:'Wort-Bild',
-  kategorien:'Kategorien',oddone:'Odd-One-Out',suchfeld:'Suchfeld',blitz:'Blitz-Ziel'};
-
-function loadStats(){
-  try{return JSON.parse(localStorage.getItem(STATS_KEY))||{games:{}};}
-  catch{return {games:{}};}
-}
-function recordStat(game,correct,total){
-  if(total<=0)return;
-  const s=loadStats();
-  if(!s.games[game])s.games[game]={played:0,correct:0,total:0};
-  s.games[game].played++;
-  s.games[game].correct+=correct;
-  s.games[game].total+=total;
-  localStorage.setItem(STATS_KEY,JSON.stringify(s));
-}
-function clearStats(){
-  localStorage.removeItem(STATS_KEY);
-  renderStats();
-  speak('Statistik gelöscht');
-}
-function renderStats(){
-  const el=document.getElementById('stats-content');
-  if(!el)return;
-  const s=loadStats();
-  let html='';
-  Object.entries(GAME_NAMES).forEach(([id,name])=>{
-    const g=s.games[id]||{played:0,correct:0,total:0};
-    const pct=g.total>0?Math.round(g.correct/g.total*100):0;
-    html+=`<div>
-      <div class="sb-row"><span>${name}</span><span style="color:var(--gold)">${g.played>0?pct+'%':'–'}</span></div>
-      <div class="sb-bar-wrap"><div class="sb-bar-fill" style="width:${pct}%"></div></div>
-      <div style="font-size:0.54rem;color:rgba(0,242,255,0.3);letter-spacing:1px">${g.played} Runden</div>
-    </div>`;
-  });
-  if(!html)html='<div style="font-size:0.6rem;color:rgba(0,242,255,0.3);letter-spacing:2px;text-align:center;margin-top:20px">Noch keine Daten</div>';
-  el.innerHTML=html;
-}
-
-// ═══════════════════════════════════════════════════
-//  ADMIN PASSWORT
-// ═══════════════════════════════════════════════════
-const ADMIN_PW='o';
-let adminUnlocked=false;
-
-function tryAdminPw(pw){
-  if(pw.toLowerCase()===ADMIN_PW){
-    adminUnlocked=true;
-    document.getElementById('admin-pw-screen').style.display='none';
-    document.getElementById('admin-content').style.display='block';
-    speak('Adminbereich geöffnet');
-  } else {
-    speak('Falsches Passwort');
-  }
-}
-function lockAdmin(){
-  adminUnlocked=false;
-  document.getElementById('admin-pw-screen').style.display='flex';
-  document.getElementById('admin-content').style.display='none';
-  closeSidebar();
-}
-
-// ═══════════════════════════════════════════════════
-//  EINSTELLUNGEN SYNC (sb-opt Klicks)
-// ═══════════════════════════════════════════════════
-function ihLabel(v){
-  const n=parseFloat(v);
-  if(n<=0.1)return'Kopf';if(n<=0.35)return'Kopf+';
-  if(n<=0.6)return'Mix';if(n<=0.85)return'Iris–';return'Iris';
-}
-document.addEventListener('click',e=>{
-  // data-ts → TS-Objekt (Tracking)
-  const tsOpt=e.target.closest('[data-ts]');
-  if(tsOpt){
-    const key=tsOpt.dataset.ts,val=parseFloat(tsOpt.dataset.val);
-    document.querySelectorAll(`[data-ts="${key}"]`).forEach(o=>o.classList.remove('active'));
-    tsOpt.classList.add('active');
-    TS[key]=val;
-    saveSettings();
-    return;
-  }
-  // data-key → settings-Objekt (Spieleinstellungen)
-  const opt=e.target.closest('.sb-opt,.setting-opt');
-  if(!opt)return;
-  const key=opt.dataset.key,val=opt.dataset.val;
-  if(!key)return;
-  document.querySelectorAll(`[data-key="${key}"]`).forEach(o=>o.classList.remove('active'));
-  opt.classList.add('active');
-  settings[key]=val;
-  saveSettings();
-  // Spieleinstellungen sofort übernehmen → aktuelles Spiel neu starten
-  if(['sym-set','memory-pairs','memory-flip'].includes(key)){
-    if(typeof currentGame!=='undefined') setTimeout(()=>loadGame(currentGame),300);
-  }
-});
-
-// ═══════════════════════════════════════════════════
-//  SIDEBAR STEUERUNG (alle 4 Richtungen)
-// ═══════════════════════════════════════════════════
-function openSidebar(dir){
-  if(currentSidebar===dir)return; // bereits offen
-  closeSidebar();
-  currentSidebar=dir;
-  const el=dir==='rechts'
-    ?document.getElementById('sidebar')
-    :document.getElementById('sidebar-'+dir);
-  if(el){
-    el.classList.add('visible');
-    speak('Sidebar '+dir);
-    syncSettingButtons();
-    if(dir==='oben')renderStats();
-    // Admin: bei erneutem Öffnen Passwort-Screen zeigen falls nicht entsperrt
-    if(dir==='links'&&!adminUnlocked){
-      document.getElementById('admin-pw-screen').style.display='flex';
-      document.getElementById('admin-content').style.display='none';
-    }
-  }
-}
-function closeSidebar(){
-  if(!currentSidebar)return;
-  const el=currentSidebar==='rechts'
-    ?document.getElementById('sidebar')
-    :document.getElementById('sidebar-'+currentSidebar);
-  if(el)el.classList.remove('visible');
-  currentSidebar=null;
-}
-function toggleSidebar(){
-  if(currentSidebar==='rechts')closeSidebar();
-  else openSidebar('rechts');
-}
-
-// ═══════════════════════════════════════════════════
-//  MIKROFON AN / AUS
-// ═══════════════════════════════════════════════════
-function updateMicBtn(){
-  const btn=document.getElementById('mic-btn');
-  const icon=document.getElementById('mic-icon');
-  const lbl=document.getElementById('mic-lbl');
-  if(!btn)return;
-  const an=micActive&&!micMuted;
-  btn.className=an?'sprache-an':'sprache-aus';
-  if(icon)icon.textContent=an?'🎤':'🎙';
-  if(lbl)lbl.textContent=an?'SPRACHE AN':'SPRACHE AUS';
-}
-function startMic(){
-  if(!recInstance)return;
-  micMuted=false;
-  try{recInstance.start();}catch(e){}
-  setMicStatus('on','AKTIV');updateMicBtn();
-}
-function stopMic(){
-  if(!recInstance)return;
-  micMuted=true;
-  try{recInstance.stop();}catch(e){}  // Wirklich stoppen → kein Click-Sound mehr
-  setMicStatus('','AUS');updateMicBtn();
-}
-function toggleMic(){if(micMuted)startMic();else stopMic();}
 
 function handleTabSelect(tab){
   const id=tab.dataset.game;
@@ -1597,11 +1204,111 @@ function handleTabSelect(tab){
 //  PUFFERZONE
 // ═══════════════════════════════════════════════════
 function checkBufferZone(x,y){
-  const bx=innerWidth*TS.bufPct,by=innerHeight*TS.bufPct;
+  const bx=innerWidth*BUF_PCT,by=innerHeight*BUF_PCT;
   let zone=null;
   if(y<by)zone='OBEN';else if(y>innerHeight-by)zone='UNTEN';
   else if(x<bx)zone='LINKS';else if(x>innerWidth-bx)zone='RECHTS';
   document.getElementById('buf-top').classList.toggle('active',zone==='OBEN');
   document.getElementById('buf-bottom').classList.toggle('active',zone==='UNTEN');
   document.getElementById('buf-left').classList.toggle('active',zone==='LINKS');
-  document.getElementById('buf-right').classList.togg
+  document.getElementById('buf-right').classList.toggle('active',zone==='RECHTS');
+  if(zone!==currentZone){
+    currentZone=zone;setZoneStatus(zone);
+    if(zone){setDotStatus('buf',zone);setTimeout(()=>{if(currentZone===zone)setDotStatus('idle','TRACKING');},500);}
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  SPRACHERKENNUNG
+// ═══════════════════════════════════════════════════
+function initSpeech(){
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!Speech){setMicStatus('','N/A');return;}
+  const rec=new Speech();rec.lang='de-DE';rec.continuous=true;rec.interimResults=false;
+  rec.onstart=()=>setMicStatus('on','AKTIV');
+  rec.onresult=(e)=>{
+    const t=e.results[e.results.length-1][0].transcript.trim().toLowerCase();
+    setMicStatus('listening','HÖRT…');setTimeout(()=>setMicStatus('on','AKTIV'),800);
+    if(t.includes('auswahl'))triggerVoice();
+    if(t.includes('neu')||t.includes('neustart')){loadGame(currentGame);speak('Neues Spiel!');}
+    if(t.includes('admin'))openAdminGate();
+    if(t.includes('spiele')||t.includes('sidebar'))toggleSidebar();
+  };
+  rec.onend=()=>{if(camRunning)rec.start();};
+  rec.onerror=()=>{setTimeout(()=>{if(camRunning)rec.start();},1000);};
+  rec.start();
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════════
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target';
+
+function render(){
+  sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
+  document.getElementById('gaze-dot').style.left=sX+'px';
+  document.getElementById('gaze-dot').style.top=sY+'px';
+
+  const focEl=document.elementFromPoint(sX,sY)?.closest(FOCUS_SEL);
+  document.querySelectorAll(FOCUS_SEL).forEach(el=>el.classList.toggle('focused',el===focEl));
+  const focTab=document.elementFromPoint(sX,sY)?.closest('.game-tab');
+  document.querySelectorAll('.game-tab').forEach(t=>t.classList.toggle('focused',t===focTab));
+  const focAdmin=document.elementFromPoint(sX,sY)?.closest('.admin-game-btn');
+  document.querySelectorAll('.admin-game-btn').forEach(b=>b.classList.toggle('focused',b===focAdmin));
+
+  if(focEl)setFocusStatus(focEl.dataset.name||focEl.dataset.sym||focEl.textContent.slice(0,8).trim());
+  else if(focTab)setFocusStatus(focTab.textContent.trim());
+  else if(focAdmin)setFocusStatus(focAdmin.textContent.trim().slice(0,14));
+  else setFocusStatus('–');
+
+  checkBufferZone(sX,sY);
+
+  if(ctx){
+    trailHist.push({x:sX,y:sY});if(trailHist.length>10)trailHist.shift();
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.beginPath();ctx.strokeStyle='rgba(0,242,255,0.45)';ctx.lineWidth=3;
+    for(let i=0;i<trailHist.length;i++){ctx.globalAlpha=i/trailHist.length;ctx.lineTo(trailHist[i].x,trailHist[i].y);}
+    ctx.stroke();ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(render);
+}
+
+document.addEventListener('mousemove',e=>{if(!camRunning){tX=e.clientX;tY=e.clientY;}});
+
+// ═══════════════════════════════════════════════════
+//  SYSTEM START
+// ═══════════════════════════════════════════════════
+async function initSystem(){
+  document.getElementById('overlay').style.display='none';
+  loadGame('memory');
+  try{
+    await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    camRunning=true;
+    canvas=document.getElementById('trail-canvas');
+    canvas.width=innerWidth;canvas.height=innerHeight;
+    ctx=canvas.getContext('2d');
+    const fm=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
+    fm.setOptions({refineLandmarks:true,minDetectionConfidence:0.55,maxNumFaces:1});
+    fm.onResults(onResults);
+    new Camera(document.getElementById('v'),{
+      onFrame:async()=>{if(camRunning)await fm.send({image:document.getElementById('v')});},
+      width:640,height:480
+    }).start();
+    initSpeech();setDotStatus('idle','TRACKING');
+  }catch(e){setDotStatus('idle','FEHLER');}
+}
+
+// ═══════════════════════════════════════════════════
+//  STATUS HELPERS
+// ═══════════════════════════════════════════════════
+function setDotStatus(s,t){document.getElementById('sb-dot-state').className='s-'+s;document.getElementById('sb-dot-text').textContent=t;}
+function setFocusStatus(n){document.getElementById('sb-focus-text').textContent=n||'–';}
+function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z||'–';}
+function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
+function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
+function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
+
+render();
+</script>
+</body>
+</html>
