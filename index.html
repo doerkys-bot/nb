@@ -183,9 +183,29 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 .start-btn:hover{background:rgba(0,242,255,0.08);box-shadow:0 0 20px rgba(0,242,255,0.3);}
 #win-flash{position:fixed;inset:0;z-index:5000;background:rgba(16,185,129,0);pointer-events:none;transition:background 0.3s;}
 #win-flash.on{background:rgba(16,185,129,0.18);}
+
+/* ── CAM/MIC SYMBOLE ── */
+#cam-icon{position:fixed;top:8px;left:8px;z-index:9500;
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(14,30,60,0.9);border:2px solid rgba(239,68,68,0.6);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  cursor:pointer;user-select:none;transition:border-color 0.3s,background 0.3s;}
+#cam-icon.cam-on{border-color:#10b981;background:rgba(16,185,129,0.15);}
+#cam-icon.cam-off{border-color:rgba(239,68,68,0.6);background:rgba(239,68,68,0.1);}
+#mic-icon-btn{position:fixed;top:8px;right:8px;z-index:9500;
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(14,30,60,0.9);border:2px solid rgba(239,68,68,0.6);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+  cursor:pointer;user-select:none;transition:border-color 0.3s,background 0.3s;}
+#mic-icon-btn.mic-on{border-color:#10b981;background:rgba(16,185,129,0.15);}
+#mic-icon-btn.mic-off{border-color:rgba(239,68,68,0.6);background:rgba(239,68,68,0.1);}
+
 </style>
 </head>
 <body>
+
+<div id="cam-icon" class="cam-off" title="Kamera-Status">📷</div>
+<div id="mic-icon-btn" class="mic-off" onclick="toggleMicSound()" title="Mikrofon an/aus">🎙️</div>
 
 <div id="overlay">
   <h1>Aurion · Gedächtnis</h1>
@@ -1184,6 +1204,7 @@ function triggerVoice(){
 }
 
 function dispatchAction(el){
+  const sb=el.closest('.start-btn');if(sb){sb.click();return;}
   if(currentGame==='memory'){const c=el.closest('.mem-card');if(c)selectCard(c);}
   else if(currentGame==='sequence'){const c=el.closest('.seq-cell');if(c)selectSeqCell(c);}
   else if(currentGame==='wortbild'){const c=el.closest('.wb-opt');if(c)selectWbOpt(c);}
@@ -1234,15 +1255,34 @@ function initSpeech(){
     if(t.includes('admin'))openAdminGate();
     if(t.includes('spiele')||t.includes('sidebar'))toggleSidebar();
   };
-  rec.onend=()=>{if(camRunning)rec.start();};
-  rec.onerror=()=>{setTimeout(()=>{if(camRunning)rec.start();},1000);};
-  rec.start();
+  rec.onend=()=>{if(camRunning&&window.micSoundOn)rec.start();};
+  rec.onerror=()=>{setTimeout(()=>{if(camRunning&&window.micSoundOn)rec.start();},1000);};
+  window._rec=rec;
+  if(window.micSoundOn) rec.start();
+}
+window.micSoundOn=false;
+function toggleMicSound(){
+  window.micSoundOn=!window.micSoundOn;
+  const btn=document.getElementById('mic-icon-btn');
+  if(window.micSoundOn){
+    if(btn){btn.className='mic-on';}
+    try{ if(window._rec) window._rec.start(); }catch(e){}
+    setMicStatus('on','AKTIV');
+  } else {
+    if(btn){btn.className='mic-off';}
+    try{ if(window._rec) window._rec.stop(); }catch(e){}
+    setMicStatus('','AUS');
+  }
+}
+function setCamIcon(on){
+  const el=document.getElementById('cam-icon');
+  if(el) el.className = on ? 'cam-on' : 'cam-off';
 }
 
 // ═══════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════
-const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target';
+const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,.start-btn';
 
 function render(){
   sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
@@ -1294,7 +1334,7 @@ async function initSystem(){
       onFrame:async()=>{if(camRunning)await fm.send({image:document.getElementById('v')});},
       width:640,height:480
     }).start();
-    initSpeech();setDotStatus('idle','TRACKING');
+    initSpeech();setCamIcon(true);setDotStatus('idle','TRACKING');
   }catch(e){setDotStatus('idle','FEHLER');}
 }
 
