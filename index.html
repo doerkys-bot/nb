@@ -200,11 +200,40 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
 #mic-icon-btn.mic-on{border-color:#10b981;background:rgba(16,185,129,0.15);}
 #mic-icon-btn.mic-off{border-color:rgba(239,68,68,0.6);background:rgba(239,68,68,0.1);}
 
+
+/* ── KALIBRIERUNGS-SIDEBAR UNTEN ── */
+#calib-bar{position:fixed;left:0;right:0;bottom:0;z-index:1000001;
+  background:rgba(8,14,30,0.97);backdrop-filter:blur(12px);
+  border-top:2px solid rgba(0,242,255,0.3);
+  transform:translateY(110%);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  padding:20px 24px 28px;}
+#calib-bar.open{transform:translateY(0);}
+#calib-bar h2{color:var(--neon);font-size:0.9rem;letter-spacing:4px;
+  text-transform:uppercase;margin-bottom:16px;text-align:center;}
+.calib-row{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;
+  max-width:480px;margin-left:auto;margin-right:auto;}
+.calib-label{display:flex;justify-content:space-between;
+  color:rgba(0,242,255,0.6);font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;}
+.calib-val{color:var(--gold);font-weight:bold;}
+.calib-slider{-webkit-appearance:none;appearance:none;width:100%;height:24px;
+  background:transparent;cursor:pointer;}
+.calib-slider::-webkit-slider-runnable-track{height:5px;background:rgba(0,242,255,0.2);border-radius:3px;}
+.calib-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;
+  border-radius:50%;background:var(--neon);box-shadow:0 0 10px rgba(0,242,255,0.6);
+  cursor:pointer;margin-top:-9px;}
+.calib-slider::-moz-range-track{height:5px;background:rgba(0,242,255,0.2);border-radius:3px;}
+.calib-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;border:none;
+  background:var(--neon);box-shadow:0 0 10px rgba(0,242,255,0.6);}
+#calib-close{display:block;margin:8px auto 0;padding:10px 30px;
+  background:rgba(0,242,255,0.08);border:1.5px solid var(--neon);border-radius:10px;
+  color:var(--neon);font-family:'Courier New',monospace;font-size:0.7rem;
+  letter-spacing:3px;text-transform:uppercase;cursor:pointer;}
+
 </style>
 </head>
 <body>
 
-<div id="cam-icon" class="cam-off" title="Kamera-Status">📷</div>
+<div id="cam-icon" class="cam-off" onclick="toggleCam()" title="Kamera an/aus">📷</div>
 <div id="mic-icon-btn" class="mic-off" onclick="toggleMicSound()" title="Mikrofon an/aus">🎙️</div>
 
 <div id="overlay">
@@ -232,6 +261,28 @@ body,html{width:100vw;height:100vh;background:var(--bg);overflow:hidden;font-fam
   <div class="game-tab" data-game="oddone">Odd-One-Out</div>
   <div class="game-tab" data-game="suchfeld">Suchfeld</div>
   <div class="game-tab" data-game="blitz">Blitz-Ziel</div>
+
+<!-- KALIBRIERUNG UNTEN -->
+<div id="calib-bar">
+  <h2>⚙ Kalibrierung</h2>
+  <div class="calib-row">
+    <div class="calib-label"><span>Empfindlichkeit X</span><span class="calib-val" id="cv-x">12</span></div>
+    <input type="range" class="calib-slider" id="sl-x" min="6" max="20" step="0.5" value="12"
+      oninput="setCalib('x',this.value)">
+  </div>
+  <div class="calib-row">
+    <div class="calib-label"><span>Empfindlichkeit Y</span><span class="calib-val" id="cv-y">15</span></div>
+    <input type="range" class="calib-slider" id="sl-y" min="8" max="24" step="0.5" value="15"
+      oninput="setCalib('y',this.value)">
+  </div>
+  <div class="calib-row">
+    <div class="calib-label"><span>Glättung (Ruhe)</span><span class="calib-val" id="cv-s">0.12</span></div>
+    <input type="range" class="calib-slider" id="sl-s" min="0.04" max="0.30" step="0.01" value="0.12"
+      oninput="setCalib('s',this.value)">
+  </div>
+  <button id="calib-close" onclick="closeCalib()">Schließen</button>
+</div>
+
 </div>
 
 <div id="admin-gate">
@@ -525,8 +576,9 @@ const ODD_PUZZLES = [
 // ═══════════════════════════════════════════════════
 //  TRACKING PARAMETER
 // ═══════════════════════════════════════════════════
-const EAR_THRESH=0.175,BLINK_MIN=80,BLINK_GAP_MIN=150,BLINK_WIN=600,COOLDOWN=1800;
-const SCALE_X=12,SCALE_Y=15,BUFFER_SZ=5,CENTER_R=80,CENTER_F=0.2,BORDER=15,SMOOTH=0.12;
+const EAR_THRESH=0.175,BLINK_MIN=70,BLINK_GAP_MIN=120,BLINK_WIN=350,COOLDOWN=800;
+const BUFFER_SZ=5,CENTER_R=80,CENTER_F=0.2,BORDER=15;
+window.SCALE_X=12;window.SCALE_Y=15;window.SMOOTH=0.12;
 const BUF_PCT=0.16;
 const BROW_THRESH=0.072,MOUTH_VERT=0.045,MOUTH_RATIO=0.55,GESTURE_HOLD_MS=1000;
 
@@ -670,7 +722,7 @@ function checkMemPair(){
     memFlipped=[];memLocked=false;
   } else {
     all[i1].classList.add('wrong');all[i2].classList.add('wrong');
-    setLastAction('✗ '+memCards[i1].name+' ≠ '+memCards[i2].name);
+      setLastAction('✗ '+memCards[i1].name+' ≠ '+memCards[i2].name);
     setTimeout(()=>{
       all[i1].classList.remove('flipped','wrong');all[i2].classList.remove('flipped','wrong');
       memFlipped=[];memLocked=false;
@@ -1032,7 +1084,7 @@ function spawnBlitz(){
   const sym=pool[Math.floor(Math.random()*pool.length)];
   const t=document.createElement('div');t.className='blitz-target';
   t.style.left=x+'px';t.style.top=y+'px';
-  t.style.width=blitzSize+'px';t.style.height=blitzSize+'px';
+    t.style.width=blitzSize+'px';t.style.height=blitzSize+'px';
   t.style.fontSize=(blitzSize*0.4)+'px';t.textContent=sym;
   area.appendChild(t);
   const dur=parseInt(settings['blitz-dur']||1000);
@@ -1130,8 +1182,8 @@ function onResults(r){
   const lm=r.multiFaceLandmarks[0];
   checkAdminGesture(lm);
   const iris=lm[468];
-  let rawX=(0.5-iris.x)*SCALE_X*innerWidth+innerWidth/2;
-  let rawY=(iris.y-0.5)*SCALE_Y*innerHeight+innerHeight/2;
+  let rawX=(0.5-iris.x)*window.SCALE_X*innerWidth+innerWidth/2;
+  let rawY=(iris.y-0.5)*window.SCALE_Y*innerHeight+innerHeight/2;
   bufX.push(rawX);bufY.push(rawY);
   if(bufX.length>BUFFER_SZ){bufX.shift();bufY.shift();}
   let avgX=bufX.reduce((a,b)=>a+b,0)/bufX.length,avgY=bufY.reduce((a,b)=>a+b,0)/bufY.length;
@@ -1180,8 +1232,8 @@ function triggerTriple(){
 }
 
 function activateZone(zone){
-  if(zone==='LINKS'&&!adminGateOpen)openAdminGate();
   if(zone==='RECHTS')toggleSidebar();
+  if(zone==='UNTEN')toggleCalib();
   setLastAction('ZONE: '+zone+' aktiviert');
 }
 
@@ -1252,8 +1304,8 @@ function initSpeech(){
     setMicStatus('listening','HÖRT…');setTimeout(()=>setMicStatus('on','AKTIV'),800);
     if(t.includes('auswahl'))triggerVoice();
     if(t.includes('neu')||t.includes('neustart')){loadGame(currentGame);speak('Neues Spiel!');}
-    if(t.includes('admin'))openAdminGate();
-    if(t.includes('spiele')||t.includes('sidebar'))toggleSidebar();
+    if(t.includes('rechts')||t.includes('spiele'))toggleSidebar();
+    if(t.includes('unten')||t.includes('kalibr')||t.includes('einstell'))toggleCalib();
   };
   rec.onend=()=>{if(camRunning&&window.micSoundOn)rec.start();};
   rec.onerror=()=>{setTimeout(()=>{if(camRunning&&window.micSoundOn)rec.start();},1000);};
@@ -1274,6 +1326,17 @@ function toggleMicSound(){
     setMicStatus('','AUS');
   }
 }
+function toggleCam(){
+  if(camRunning){
+    camRunning=false;
+    try{ if(window._camStream) window._camStream.getTracks().forEach(t=>t.stop()); }catch(e){}
+    setCamIcon(false);
+    setDotStatus('idle','KAMERA AUS');
+    speak('Kamera aus');
+  } else {
+    location.reload(); // Kamera neu starten am einfachsten per Reload
+  }
+}
 function setCamIcon(on){
   const el=document.getElementById('cam-icon');
   if(el) el.className = on ? 'cam-on' : 'cam-off';
@@ -1285,7 +1348,7 @@ function setCamIcon(on){
 const FOCUS_SEL='.mem-card,.seq-cell,.wb-opt,.kat-bin,.odd-cell,.such-cell,.blitz-target,.start-btn';
 
 function render(){
-  sX+=(tX-sX)*SMOOTH;sY+=(tY-sY)*SMOOTH;
+  sX+=(tX-sX)*window.SMOOTH;sY+=(tY-sY)*window.SMOOTH;
   document.getElementById('gaze-dot').style.left=sX+'px';
   document.getElementById('gaze-dot').style.top=sY+'px';
 
@@ -1322,7 +1385,7 @@ async function initSystem(){
   document.getElementById('overlay').style.display='none';
   loadGame('memory');
   try{
-    await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    window._camStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
     camRunning=true;
     canvas=document.getElementById('trail-canvas');
     canvas.width=innerWidth;canvas.height=innerHeight;
@@ -1347,6 +1410,39 @@ function setZoneStatus(z){document.getElementById('sb-zone-text').textContent=z|
 function setLastAction(t){document.getElementById('sb-last-text').textContent=t;}
 function setMicStatus(s,t){document.getElementById('sb-mic-dot').className=s;document.getElementById('sb-mic-text').textContent=t;}
 function speak(text){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='de-DE';window.speechSynthesis.speak(u);}
+
+
+// ── KALIBRIERUNG ──
+function setCalib(axis,val){
+  const v=parseFloat(val);
+  if(axis==='x'){window.SCALE_X=v;document.getElementById('cv-x').textContent=v;}
+  if(axis==='y'){window.SCALE_Y=v;document.getElementById('cv-y').textContent=v;}
+  if(axis==='s'){window.SMOOTH=v;document.getElementById('cv-s').textContent=v;}
+  try{localStorage.setItem('aurion_settings_v1',JSON.stringify({
+    scaleX:window.SCALE_X,scaleY:window.SCALE_Y,smooth:window.SMOOTH
+  }));}catch(e){}
+}
+function toggleCalib(){
+  const el=document.getElementById('calib-bar');
+  if(el.classList.contains('open'))el.classList.remove('open');
+  else{el.classList.add('open');speak('Kalibrierung geöffnet');}
+}
+function closeCalib(){document.getElementById('calib-bar').classList.remove('open');}
+// Gespeicherte Werte laden
+(function(){
+  try{
+    const s=JSON.parse(localStorage.getItem('aurion_settings_v1')||'{}');
+    if(s.scaleX){window.SCALE_X=s.scaleX;}
+    if(s.scaleY){window.SCALE_Y=s.scaleY;}
+    if(s.smooth){window.SMOOTH=s.smooth;}
+    // Slider-Werte setzen wenn DOM bereit
+    document.addEventListener('DOMContentLoaded',()=>{
+      if(s.scaleX){const e=document.getElementById('sl-x');if(e){e.value=s.scaleX;document.getElementById('cv-x').textContent=s.scaleX;}}
+      if(s.scaleY){const e=document.getElementById('sl-y');if(e){e.value=s.scaleY;document.getElementById('cv-y').textContent=s.scaleY;}}
+      if(s.smooth){const e=document.getElementById('sl-s');if(e){e.value=s.smooth;document.getElementById('cv-s').textContent=s.smooth;}}
+    });
+  }catch(e){}
+})();
 
 render();
 </script>
