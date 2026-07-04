@@ -4,7 +4,25 @@
 <meta charset="UTF-8" />
 <title>Aurion Pro - Root Styled & Safe Navigation</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous">
+// ── Kamera beim Verlassen der Seite stoppen ──────────────────────
+// Kamera aus wenn Seite in Hintergrund, an wenn wieder im Vordergrund
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') {
+    if (engine && engine.cam) { try { engine.cam.stop(); } catch(e){} }
+    const v = document.getElementById('videoElement');
+    if (v && v.srcObject) { v.srcObject.getTracks().forEach(t=>t.stop()); v.srcObject=null; }
+    if (engine) engine.isRunning = false;
+  } else if (document.visibilityState === 'visible') {
+    if (engine && !engine.isRunning) { engine.powerOn(); }
+  }
+});
+window.addEventListener('pagehide', () => {
+  if (engine && engine.cam) { try { engine.cam.stop(); } catch(e){} }
+  const v = document.getElementById('videoElement');
+  if (v && v.srcObject) { v.srcObject.getTracks().forEach(t=>t.stop()); v.srcObject=null; }
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 
 <style>
@@ -253,7 +271,7 @@ body, html { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; ba
       <div id="dev-fp-stance"></div>
     </div>
 
-    <a id="dev-fp-link" target="_blank" href="#"></a>
+    <a id="dev-fp-link" href="#"></a>
   </div>
 </div>
 <div id="consent-overlay">
@@ -397,10 +415,16 @@ body, html { margin:0; padding:0; width:100vw; height:100vh; overflow:hidden; ba
 </div>
 
 <div id="gazeWrapper"><div id="gazeCursor"></div></div>
-<video id="videoElement" style="display:none;" playsinline muted autoplay></video>
+<video id="videoElement" style="display:none;" playsinline></video>
 
 <script>
-const EAR_THRESHOLD  = 0.150;
+// ── localStorage Einstellungen (kompatibel mit nb/index.html) ──
+function loadAurionSettings() {
+  try { const s = localStorage.getItem('aurion_settings'); if (s) return JSON.parse(s); } catch(e){}
+  return {};
+}
+const _cfg = loadAurionSettings();
+const EAR_THRESHOLD  = _cfg.ear ?? 0.150;
 const BLINK_MIN_MS   = 25;   
 const BLINK_GAP_MIN  = 60;   
 const BLINK_WIN_MS   = 850;  
@@ -462,10 +486,13 @@ class AurionEngine {
         }
       };
 
-      this.recognition.onstart = () => { if (!this.isDictating) this.setMicStatus("active"); };
+      this.micActive = false;
+      this.recognition.onstart = () => { this.micActive = true; if (!this.isDictating) this.setMicStatus("active"); };
       this.recognition.onend = () => {
-        if (this.isRunning && !this.isDictating) { this.recognition.start(); } 
-        else if (!this.isRunning) { this.setMicStatus("off"); }
+        this.micActive = false;
+        if (this.isRunning && !this.isDictating) {
+          setTimeout(() => { if (!this.micActive) { try { this.recognition.start(); } catch(e){} } }, 300);
+        } else if (!this.isRunning) { this.setMicStatus("off"); }
       };
     }
 
@@ -484,13 +511,7 @@ class AurionEngine {
   async powerOn() {
     if (this.isRunning) return;
     try {
-      // Safari/iOS: Kamera und Mikro getrennt anfragen für bessere Kompatibilität
-      try {
-        await navigator.mediaDevices.getUserMedia({ video: true });
-      } catch(e) { throw new Error("Kamera verweigert"); }
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch(e) { /* Mikro optional, weiter ohne */ }
+      await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
       this.faceMesh = new FaceMesh({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
       this.faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5 });
       this.faceMesh.onResults(r => this.processFace(r));
@@ -500,7 +521,7 @@ class AurionEngine {
       });
       await this.cam.start();
       this.isRunning = true;
-      try { this.recognition.start(); } catch(e){}
+      if (!this.micActive) { try { this.recognition.start(); } catch(e){} }
       this.wakeUp();
     } catch(e) { alert("Mikro/Kamera Fehler"); }
   }
@@ -705,7 +726,7 @@ class AurionEngine {
     try { this.recognition.stop(); } catch(e) {}
     setTimeout(() => {
       this.recognition.continuous = false;
-      this.recognition.start();
+      if (!this.micActive) { try { this.recognition.start(); } catch(e){} }
     }, 300);
   }
 
@@ -721,7 +742,7 @@ class AurionEngine {
     setTimeout(() => {
       document.getElementById(this.targetField).innerText = text;
       this.recognition.continuous = true;
-      if (this.isRunning) this.recognition.start();
+      if (this.isRunning && !this.micActive) { try { this.recognition.start(); } catch(e){} }
     }, 300);
   }
 }
